@@ -1,0 +1,20 @@
+@import '@/style/mixins.scss';
+
+.operations-log {
+	@include basePageWithBorder;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	&::after {
+		background: url('@/assets/images/bg/bg_operations_log.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+	&__title-block {
+		padding: 20px 0 0 30px;
+	}
+	&__title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #fff;
+	}
+}

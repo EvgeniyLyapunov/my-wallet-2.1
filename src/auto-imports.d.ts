@@ -75,6 +75,7 @@ declare global {
   const useRtl: typeof import('vuetify')['useRtl']
   const useSlots: typeof import('vue')['useSlots']
   const useTheme: typeof import('vuetify')['useTheme']
+  const useWalletStore: typeof import('./stores/walletStore')['useWalletStore']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
   const watchPostEffect: typeof import('vue')['watchPostEffect']

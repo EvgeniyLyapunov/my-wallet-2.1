@@ -5,15 +5,15 @@
 			<span class="home__under-title">by little wing studio</span>
 		</div>
 		<div class="home__menu">
-			<router-link :to="''" class="home__menu-link">
+			<router-link :to="{ name: 'wallet_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Wallet</span>
 			</router-link>
 
-			<router-link :to="''" class="home__menu-link">
+			<router-link :to="{ name: 'currentState_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Current State</span>
 			</router-link>
 
-			<router-link :to="''" class="home__menu-link">
+			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Operation Log</span>
 			</router-link>
 		</div>
@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 	definePage({
+		name: 'home_view',
 		path: '/',
 	});
 </script>

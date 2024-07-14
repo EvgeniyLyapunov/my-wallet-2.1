@@ -1,0 +1,27 @@
+@import '@/style/mixins.scss';
+
+.cards {
+	@include basePageWithBorder;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	&::after {
+		background: url('@/assets/images/bg/bg_wallet.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+	&__title-block {
+		padding: 20px 0 0 30px;
+	}
+	&__title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #fff;
+	}
+	&__under-title {
+		position: relative;
+		z-index: 1;
+		padding: 0;
+		font-size: 12px;
+		color: #fff;
+	}
+}
