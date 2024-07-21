@@ -15,6 +15,13 @@
 					v-if="obj !== 'empty'"
 					:card-name="getCardObjName(obj)"
 					:card-icon="getCardIcon(obj)"
+					:data-cardname="obj"
+					@mousedown="startLongPress"
+					@mouseup="endLongPress"
+					@mouseleave="endLongPress"
+					@touchstart="startLongPress"
+					@touchend="endLongPress"
+					@touchmove="endLongPress"
 				/>
 			</div>
 		</div>
@@ -40,6 +47,10 @@
 
 	const router = useRouter();
 	const walletStore = useWalletStore();
+
+	const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+	const targetElement = ref<HTMLElement | null>(null); // Состояние для хранения целевого элемента
+	const isLongPress = ref<boolean>(false);
 
 	onMounted(() => {
 		const places = document.querySelectorAll('.card-place');
@@ -79,6 +90,31 @@
 		const iconPath = walletStore.cardList.find((item) => item.cardName === cardName)!.cardIcon!;
 
 		return iconPath;
+	}
+
+	function startLongPress(e: MouseEvent | TouchEvent) {
+		targetElement.value = e.currentTarget as HTMLElement; // Сохраняем текущий элемент
+		longPressTimeout.value = setTimeout(() => {
+			// Здесь код, который выполнится при долгом нажатии
+			if (targetElement.value) {
+				console.log(e.target);
+				console.log(targetElement.value);
+				isLongPress.value = true;
+				targetElement.value.classList.add('cards__obj-dropped');
+				console.log('Долгий тап!');
+			}
+		}, 500); // Время задержки для долгого тапа (в миллисекундах)
+	}
+
+	function endLongPress(e: MouseEvent | TouchEvent) {
+		e.preventDefault();
+		if (longPressTimeout.value) {
+			clearTimeout(longPressTimeout.value);
+			longPressTimeout.value = null;
+			isLongPress.value = false;
+			targetElement.value!.classList.remove('cards__obj-dropped');
+			targetElement.value = null;
+		}
 	}
 
 	function handleGoHome() {
