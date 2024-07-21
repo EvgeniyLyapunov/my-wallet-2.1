@@ -55,12 +55,13 @@ export const useWalletStore = defineStore(
 
 		const addCard_ToList = (card: Card) => {
 			cardList.value.push(card);
-			addNewCardOnView(card.cardName);
+			addNewCardOnView(card);
 		};
 
-		const addNewCardOnView = (cardName: string) => {
+		const addNewCardOnView = (card: Card) => {
 			const index = сardsPlacesList.value.indexOf('empty');
-			сardsPlacesList.value.splice(index, 1, cardName);
+			card.screenLocation = index;
+			сardsPlacesList.value.splice(index, 1, card.cardName);
 		};
 
 		const removeCard_FromList = (removingCardId: string) => {

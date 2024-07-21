@@ -4,14 +4,13 @@
 	@include basePageWithBorder;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-start;
+	justify-content: space-between;
 	&::after {
 		background: url('@/assets/images/bg/bg_wallet.jpg') center / cover no-repeat;
 		filter: blur(3px);
 	}
 	&__title-block {
 		padding: 20px 0 0 30px;
-		margin-bottom: 10vh;
 	}
 	&__title {
 		font-size: 24px;
@@ -39,4 +38,9 @@
 		display: flex;
 		justify-content: space-between;
 	}
+}
+
+:deep(.v-btn.v-btn--density-compact) {
+	font-size: 13px;
+	text-transform: none;
 }

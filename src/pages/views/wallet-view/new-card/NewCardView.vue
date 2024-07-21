@@ -42,9 +42,29 @@
 			></v-text-field>
 		</v-form>
 		<div class="new-card__btn-block">
-			<v-btn class="new-card__base-btn new-card__cancel-btn" @click="handleCancel">Cancel</v-btn>
-			<v-btn class="new-card__base-btn new-card__clear-btn" @click="handleReset">Clear</v-btn>
-			<v-btn class="new-card__base-btn new-card__next-btn" @click="submit">Create</v-btn>
+			<v-btn
+				class="new-card__base-btn new-card__next-btn"
+				width="90"
+				density="compact"
+				color="green-accent-3"
+				@click="submit"
+				>Create</v-btn
+			>
+			<v-btn
+				class="new-card__base-btn new-card__clear-btn"
+				width="90"
+				density="compact"
+				@click="handleReset"
+				>Clear</v-btn
+			>
+			<v-btn
+				class="new-card__base-btn new-card__cancel-btn"
+				width="90"
+				density="compact"
+				color="blue-lighten-3"
+				@click="handleCancel"
+				>Cancel</v-btn
+			>
 		</div>
 	</div>
 </template>
@@ -87,16 +107,6 @@
 
 	const selectBase = ref<string>('');
 	const selectBaseItems = ref<string[]>([]);
-	// const selectBaseItems = computed<string[]>(() => {
-	// 	if (!selectType.value) return [];
-	// 	if (selectType.value === 'cash') {
-	// 		return walletStore.baseCards_CashMoney_NamesList;
-	// 	}
-	// 	if (selectType.value === 'bank') {
-	// 		return walletStore.baseCards_BankMoney_NamesList;
-	// 	}
-	// 	return [];
-	// });
 
 	watch(selectType, (newValue) => {
 		if (newValue) {
