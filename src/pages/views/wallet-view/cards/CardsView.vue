@@ -4,7 +4,7 @@
 			<h1 class="cards__title">Cards</h1>
 			<v-breadcrumbs class="cards__under-title" :items="items"></v-breadcrumbs>
 		</div>
-		<div ref="cardsArea" class="cards__area">
+		<div :key="refreshKey" ref="cardsArea" class="cards__area">
 			<div
 				v-for="(obj, i) in walletStore.сardsPlacesList"
 				:key="i"
@@ -16,12 +16,12 @@
 					:card-name="getCardObjName(obj)"
 					:card-icon="getCardIcon(obj)"
 					:data-cardname="obj"
-					@mousedown="startLongPress($event, i)"
-					@mouseup="endLongPress"
-					@mouseleave="endLongPress"
-					@touchstart="startLongPress($event, i)"
-					@touchend="endLongPress"
+					@mousedown="startLongPress($event, i, obj)"
+					@touchstart="startLongPress($event, i, obj)"
+					@mousemove="handleMove($event, i)"
 					@touchmove="handleMove($event, i)"
+					@touchend="endLongPress"
+					@mouseup="endLongPress"
 				/>
 			</div>
 		</div>
@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 	import Card from '@/models/Card';
+	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
 	import CardObjectComponent from '@/pages/components/cards-view/CardObjectComponent.vue';
 
@@ -49,15 +50,21 @@
 	const walletStore = useWalletStore();
 
 	const cardsArea = ref();
+	const refreshKey = ref<string>(nanoid());
+	const parentRect = ref<DOMRect>();
 
 	const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+	const draggedCardName = ref<string>('');
 	const targetElement = ref<HTMLElement | null>(null); // Состояние для хранения целевого элемента
 	const isLongPress = ref<boolean>(false);
 	const elemTouchX = ref<number | null>(null);
 	const elemTouchY = ref<number | null>(null);
+
 	const draggedElementIndex = ref<number | null>(null);
 
-	onMounted(() => {});
+	onMounted(() => {
+		parentRect.value = cardsArea.value.getBoundingClientRect();
+	});
 
 	const items = [
 		{
@@ -92,7 +99,9 @@
 		return iconPath;
 	}
 
-	function startLongPress(e: MouseEvent | TouchEvent, index: number) {
+	function startLongPress(e: MouseEvent | TouchEvent, index: number, cardName: string) {
+		e.preventDefault();
+		draggedCardName.value = cardName;
 		targetElement.value = e.currentTarget as HTMLElement; // Сохраняем текущий элемент
 		longPressTimeout.value = setTimeout(() => {
 			if (e instanceof TouchEvent) {
@@ -101,15 +110,17 @@
 					draggedElementIndex.value = index;
 					targetElement.value.classList.add('cards__obj-dropped');
 
-					const parentRect = cardsArea.value.getBoundingClientRect();
 					const elem = targetElement.value.getBoundingClientRect();
 
-					const startAbsX = e.touches[0].clientX - parentRect.left;
-					const startAbsY = e.touches[0].clientY - parentRect.top;
+					// координаты точки тапа или клика относительно родительского элемента всего списка карт
+					const startAbsX = e.touches[0].clientX - parentRect.value!.left;
+					const startAbsY = e.touches[0].clientY - parentRect.value!.top;
 
+					// константы не меняющиеся при событии перетаскивания - координаты тапа относительно краёв карты
 					elemTouchX.value = e.touches[0].clientX - elem.left;
 					elemTouchY.value = e.touches[0].clientY - elem.top;
 
+					// координаты карты внутри родителя, используются для позиционирования карты при добавлении ей position: absolute
 					const absPosElemX = startAbsX - elemTouchX.value;
 					const absPosElemY = startAbsY - elemTouchY.value;
 
@@ -124,21 +135,54 @@
 				}
 			} else {
 				if (targetElement.value) {
+					isLongPress.value = true;
+					draggedElementIndex.value = index;
+					targetElement.value.classList.add('cards__obj-dropped');
+
+					const elem = targetElement.value.getBoundingClientRect();
+
+					const startAbsX = e.clientX - parentRect.value!.left;
+					const startAbsY = e.clientY - parentRect.value!.top;
+
+					elemTouchX.value = e.clientX - elem.left;
+					elemTouchY.value = e.clientY - elem.top;
+
+					const absPosElemX = startAbsX - elemTouchX.value;
+					const absPosElemY = startAbsY - elemTouchY.value;
+
+					const width = targetElement.value.clientWidth;
+					const height = targetElement.value.clientHeight;
+					targetElement.value.style.width = `${width}px`;
+					targetElement.value.style.height = `${height}px`;
+
+					targetElement.value.style.position = 'absolute';
+					targetElement.value.style.top = `${absPosElemY}px`;
+					targetElement.value.style.left = `${absPosElemX}px`;
 				}
 			}
 		}, 500); // Время задержки для долгого тапа (в миллисекундах)
 	}
 
 	function handleMove(e: MouseEvent | TouchEvent, index: number) {
+		e.preventDefault();
 		if (isLongPress.value && draggedElementIndex.value === index) {
 			if (e instanceof TouchEvent) {
 				if (targetElement.value) {
-					const parentRect = cardsArea.value.getBoundingClientRect();
-					const elem = targetElement.value.getBoundingClientRect();
+					// координаты тапа в текущей итерации события move относительно родительского элемента для всех карт
+					const startAbsX = e.touches[0].clientX - parentRect.value!.left;
+					const startAbsY = e.touches[0].clientY - parentRect.value!.top;
 
-					const startAbsX = e.touches[0].clientX - parentRect.left;
-					const startAbsY = e.touches[0].clientY - parentRect.top;
+					// случай выхода move за границы родительского элемента
+					if (
+						e.touches[0].clientX < parentRect.value!.left ||
+						e.touches[0].clientX > parentRect.value!.right ||
+						e.touches[0].clientY < parentRect.value!.top ||
+						e.touches[0].clientY > parentRect.value!.bottom
+					) {
+						return;
+					}
 
+					// текущая позиция перемещаемой	карты относительно родителя
 					const absPosElemX = startAbsX - elemTouchX.value!;
 					const absPosElemY = startAbsY - elemTouchY.value!;
 
@@ -146,18 +190,99 @@
 					targetElement.value.style.left = `${absPosElemX}px`;
 				}
 			} else {
+				if (targetElement.value) {
+					const startAbsX = e.clientX - parentRect.value!.left;
+					const startAbsY = e.clientY - parentRect.value!.top;
+
+					if (
+						e.clientX < parentRect.value!.left ||
+						e.clientX > parentRect.value!.right ||
+						e.clientY < parentRect.value!.top ||
+						e.clientY > parentRect.value!.bottom
+					) {
+						return;
+					}
+
+					const absPosElemX = startAbsX - elemTouchX.value!;
+					const absPosElemY = startAbsY - elemTouchY.value!;
+
+					targetElement.value.style.top = `${absPosElemY}px`;
+					targetElement.value.style.left = `${absPosElemX}px`;
+				}
 			}
 		}
 	}
 
 	function endLongPress(e: MouseEvent | TouchEvent) {
 		e.preventDefault();
+		let newPlaceIndex: number;
+		let endX: number;
+		let endY: number;
+		const cardsPlacesList: HTMLElement[] = cardsArea.value.querySelectorAll('.cards__area-place');
+
+		if (e instanceof TouchEvent) {
+			// определение координат места выхода move за пределы родителя для получения index места для карты
+			// или координат того места внутри родителя где закончился move
+			if (
+				e.changedTouches[0].clientX < parentRect.value!.left ||
+				e.changedTouches[0].clientX > parentRect.value!.right ||
+				e.changedTouches[0].clientY < parentRect.value!.top ||
+				e.changedTouches[0].clientY > parentRect.value!.bottom
+			) {
+				if (e.changedTouches[0].clientX < parentRect.value!.left) {
+					endX = parentRect.value!.left + 1;
+					endY = e.changedTouches[0].clientY;
+				} else if (e.changedTouches[0].clientX > parentRect.value!.right) {
+					endX = parentRect.value!.right - 1;
+					endY = e.changedTouches[0].clientY;
+				}
+
+				if (e.changedTouches[0].clientY < parentRect.value!.top) {
+					endY = parentRect.value!.top + 1;
+					endX = e.changedTouches[0].clientX;
+				} else if (e.changedTouches[0].clientY > parentRect.value!.bottom) {
+					endY = parentRect.value!.bottom - 1;
+					endX = e.changedTouches[0].clientX;
+				}
+			} else {
+				endX = e.changedTouches[0].clientX;
+				endY = e.changedTouches[0].clientY;
+			}
+
+			// получение индекса места для карты, куда нужно вписать перемещаемую карту
+			cardsPlacesList.forEach((item) => {
+				const itemRect = item.getBoundingClientRect();
+				if (
+					itemRect.top <= endY &&
+					itemRect.right >= endX &&
+					itemRect.bottom >= endY &&
+					itemRect.left <= endX
+				) {
+					newPlaceIndex = +item.dataset.place!;
+				}
+			});
+		}
+
+		// проверка того, что выбранное место свободно
+
+		const card = walletStore.getCard_ByName(draggedCardName.value);
+
+		newPlaceIndex = walletStore.checkAndGetEmptyPlaceForMoveCard(newPlaceIndex!);
+		if (newPlaceIndex > -1) {
+			card!.screenLocation = newPlaceIndex!;
+			walletStore.moveCardOnView(card!);
+		}
+
 		if (longPressTimeout.value) {
 			clearTimeout(longPressTimeout.value);
 			longPressTimeout.value = null;
 			isLongPress.value = false;
 			targetElement.value!.classList.remove('cards__obj-dropped');
 			targetElement.value = null;
+			draggedCardName.value = '';
+			elemTouchX.value = null;
+			elemTouchY.value = null;
+			refreshKey.value = nanoid();
 		}
 	}
 
