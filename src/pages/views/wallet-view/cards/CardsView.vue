@@ -16,10 +16,11 @@
 					:card-name="getCardObjName(obj)"
 					:card-icon="getCardIcon(obj)"
 					:data-cardname="obj"
-					@mousedown="startLongPress($event, i, obj)"
-					@touchstart="startLongPress($event, i, obj)"
-					@mousemove="handleMove($event, i)"
-					@touchmove="handleMove($event, i)"
+					@click="($event) => openCard($event, i, obj)"
+					@mousedown="($event) => startLongPress($event, i, obj)"
+					@touchstart="($event) => startLongPress($event, i, obj)"
+					@mousemove="($event) => handleMove($event, i)"
+					@touchmove="($event) => handleMove($event, i)"
 					@touchend="endLongPress"
 					@mouseup="endLongPress"
 				/>
@@ -53,7 +54,8 @@
 	const refreshKey = ref<string>(nanoid());
 	const parentRect = ref<DOMRect>();
 
-	const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+	// const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
+	let longPressTimeout: any;
 	const draggedCardName = ref<string>('');
 	const targetElement = ref<HTMLElement | null>(null); // Состояние для хранения целевого элемента
 	const isLongPress = ref<boolean>(false);
@@ -99,11 +101,16 @@
 		return iconPath;
 	}
 
+	function openCard(e: MouseEvent | TouchEvent, index?: number, cardName?: string) {
+		e.preventDefault();
+		console.log('just click');
+	}
+
 	function startLongPress(e: MouseEvent | TouchEvent, index: number, cardName: string) {
 		e.preventDefault();
 		draggedCardName.value = cardName;
 		targetElement.value = e.currentTarget as HTMLElement; // Сохраняем текущий элемент
-		longPressTimeout.value = setTimeout(() => {
+		longPressTimeout = setTimeout(() => {
 			if (e instanceof TouchEvent) {
 				if (targetElement.value) {
 					isLongPress.value = true;
@@ -160,7 +167,7 @@
 					targetElement.value.style.left = `${absPosElemX}px`;
 				}
 			}
-		}, 500); // Время задержки для долгого тапа (в миллисекундах)
+		}, 700); // Время задержки для долгого тапа (в миллисекундах)
 	}
 
 	function handleMove(e: MouseEvent | TouchEvent, index: number) {
@@ -215,6 +222,15 @@
 
 	function endLongPress(e: MouseEvent | TouchEvent) {
 		e.preventDefault();
+
+		// случай когда нажатие переходит в клик а не в удержание
+		if (isLongPress.value === false) {
+			clearTimeout(longPressTimeout!);
+			longPressTimeout = null;
+			isLongPress.value = false;
+			return;
+		}
+
 		let newPlaceIndex: number;
 		let endX: number;
 		let endY: number;
@@ -261,29 +277,68 @@
 					newPlaceIndex = +item.dataset.place!;
 				}
 			});
+		} else {
+			if (
+				e.clientX < parentRect.value!.left ||
+				e.clientX > parentRect.value!.right ||
+				e.clientY < parentRect.value!.top ||
+				e.clientY > parentRect.value!.bottom
+			) {
+				if (e.clientX < parentRect.value!.left) {
+					endX = parentRect.value!.left + 1;
+					endY = e.clientY;
+				} else if (e.clientX > parentRect.value!.right) {
+					endX = parentRect.value!.right - 1;
+					endY = e.clientY;
+				}
+
+				if (e.clientY < parentRect.value!.top) {
+					endY = parentRect.value!.top + 1;
+					endX = e.clientX;
+				} else if (e.clientY > parentRect.value!.bottom) {
+					endY = parentRect.value!.bottom - 1;
+					endX = e.clientX;
+				}
+			} else {
+				endX = e.clientX;
+				endY = e.clientY;
+			}
+
+			cardsPlacesList.forEach((item) => {
+				const itemRect = item.getBoundingClientRect();
+				if (
+					itemRect.top <= endY &&
+					itemRect.right >= endX &&
+					itemRect.bottom >= endY &&
+					itemRect.left <= endX
+				) {
+					newPlaceIndex = +item.dataset.place!;
+				}
+			});
 		}
 
 		// проверка того, что выбранное место свободно
 
 		const card = walletStore.getCard_ByName(draggedCardName.value);
 
-		newPlaceIndex = walletStore.checkAndGetEmptyPlaceForMoveCard(newPlaceIndex!);
+		newPlaceIndex = walletStore.checkAndGetEmptyPlaceForMoveCard(
+			newPlaceIndex!,
+			draggedCardName.value
+		);
 		if (newPlaceIndex > -1) {
 			card!.screenLocation = newPlaceIndex!;
 			walletStore.moveCardOnView(card!);
 		}
 
-		if (longPressTimeout.value) {
-			clearTimeout(longPressTimeout.value);
-			longPressTimeout.value = null;
-			isLongPress.value = false;
-			targetElement.value!.classList.remove('cards__obj-dropped');
-			targetElement.value = null;
-			draggedCardName.value = '';
-			elemTouchX.value = null;
-			elemTouchY.value = null;
-			refreshKey.value = nanoid();
-		}
+		clearTimeout(longPressTimeout.value);
+		longPressTimeout = null;
+		isLongPress.value = false;
+		targetElement.value!.classList.remove('cards__obj-dropped');
+		targetElement.value = null;
+		draggedCardName.value = '';
+		elemTouchX.value = null;
+		elemTouchY.value = null;
+		refreshKey.value = nanoid();
 	}
 
 	function handleGoHome() {

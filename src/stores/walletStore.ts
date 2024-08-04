@@ -75,8 +75,9 @@ export const useWalletStore = defineStore(
 			сardsPlacesList.value.splice(index, 1, card.cardName);
 		};
 
-		const checkAndGetEmptyPlaceForMoveCard = (index: number): number => {
-			if (сardsPlacesList.value[index] === 'empty') return index;
+		const checkAndGetEmptyPlaceForMoveCard = (index: number, name: string): number => {
+			if (сardsPlacesList.value[index] === 'empty' || сardsPlacesList.value[index] === name)
+				return index;
 			else {
 				for (let i = index + 1; i < сardsPlacesList.value.length; i++) {
 					if (сardsPlacesList.value[i] === 'empty') return i;
@@ -90,7 +91,8 @@ export const useWalletStore = defineStore(
 
 		const moveCardOnView = (card: Card) => {
 			сardsPlacesList.value = сardsPlacesList.value.map((c, i) => {
-				if (c === card.cardName) return 'empty';
+				if (c === card.cardName && i === card.screenLocation) return card.cardName;
+				if (c === card.cardName && i !== card.screenLocation) return 'empty';
 				if (i === card.screenLocation) return card.cardName;
 				return c;
 			});
