@@ -122,6 +122,7 @@ export const useTouchedDragNDrop = (parentElem: HTMLElement, refreshKey: Ref<str
 		}
 
 		// получение индекса места для карты, куда нужно вписать перемещаемую карту
+		// TODO: вот здесь itemRect во втором разе все значения 0, пока не разобрался почему
 		cardsPlacesList.forEach((item) => {
 			const itemRect = item.getBoundingClientRect();
 			if (
