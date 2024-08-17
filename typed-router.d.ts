@@ -22,6 +22,7 @@ declare module 'vue-router/auto-routes' {
     'home_view': RouteRecordInfo<'home_view', '/', Record<never, never>, Record<never, never>>,
     'operationsLog_view': RouteRecordInfo<'operationsLog_view', '/operations-log-view', Record<never, never>, Record<never, never>>,
     'wallet_view': RouteRecordInfo<'wallet_view', '/wallet-view', Record<never, never>, Record<never, never>>,
+    'card-one_view': RouteRecordInfo<'card-one_view', '/card-one-view/:id', Record<never, never>, Record<never, never>>,
     'cards_view': RouteRecordInfo<'cards_view', '/cards-view', Record<never, never>, Record<never, never>>,
     'newCard_view': RouteRecordInfo<'newCard_view', '/new-card-view', Record<never, never>, Record<never, never>>,
   }

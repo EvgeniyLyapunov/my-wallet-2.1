@@ -16,13 +16,12 @@
 					:card-name="getCardObjName(obj)"
 					:card-icon="getCardIcon(obj)"
 					:data-cardname="obj"
-					@click="($event) => openCard($event, i, obj)"
 					@mousedown="($event) => startLongPress($event, i, obj)"
 					@touchstart="($event) => startLongPress($event, i, obj)"
 					@mousemove="($event) => handleMove($event, i)"
 					@touchmove="($event) => handleMove($event, i)"
-					@touchend="endLongPress"
-					@mouseup="endLongPress"
+					@touchend="($event) => endLongPress($event, obj)"
+					@mouseup="($event) => endLongPress($event, obj)"
 				/>
 			</div>
 		</div>
@@ -101,9 +100,10 @@
 		return iconPath;
 	}
 
-	function openCard(e: MouseEvent | TouchEvent, index?: number, cardName?: string) {
+	function openCard(e: MouseEvent | TouchEvent, cardName: string) {
 		e.preventDefault();
-		console.log('just click');
+		const cardId = walletStore.getCardId_ByName(cardName);
+		router.push(`/card-one-view/${cardId}`);
 	}
 
 	function startLongPress(e: MouseEvent | TouchEvent, index: number, cardName: string) {
@@ -172,10 +172,14 @@
 
 	function handleMove(e: MouseEvent | TouchEvent, index: number) {
 		e.preventDefault();
+
+		let shadowPlaceIndex: number;
+		const cardsPlacesList: HTMLElement[] = cardsArea.value.querySelectorAll('.cards__area-place');
+
 		if (isLongPress.value && draggedElementIndex.value === index) {
 			if (e instanceof TouchEvent) {
 				if (targetElement.value) {
-					// координаты тапа в текущей итерации события move относительно родительского элемента для всех карт
+					// координаты тапа в текущей итерации события move относительно "родительского элемента для всех карт"
 					const startAbsX = e.touches[0].clientX - parentRect.value!.left;
 					const startAbsY = e.touches[0].clientY - parentRect.value!.top;
 
@@ -195,7 +199,28 @@
 
 					targetElement.value.style.top = `${absPosElemY}px`;
 					targetElement.value.style.left = `${absPosElemX}px`;
+
+					// отображение тени карты - то место куда она может встать если прямо сейчас закончить перемещение
+					// расчитывается по координатам текущего тапа
+					shadowPlaceIndex = getPositionShadow(e, startAbsX, startAbsY, cardsPlacesList);
+
+					const card = walletStore.getCard_ByName(draggedCardName.value);
+
+					const checkedShadowPlaceIndex = walletStore.checkPlaceForCardShadow(
+						shadowPlaceIndex,
+						draggedCardName.value
+					);
+					if (checkedShadowPlaceIndex > -1) {
+						cardsPlacesList.forEach((item) => {
+							if (+item.dataset.place! === checkedShadowPlaceIndex) {
+								item.classList.add('cards__shadow-style');
+							} else {
+								item.classList.remove('cards__shadow-style');
+							}
+						});
+					}
 				}
+				// if e instanceof MouseEvent
 			} else {
 				if (targetElement.value) {
 					const startAbsX = e.clientX - parentRect.value!.left;
@@ -220,7 +245,7 @@
 		}
 	}
 
-	function endLongPress(e: MouseEvent | TouchEvent) {
+	function endLongPress(e: MouseEvent | TouchEvent, cardName: string) {
 		e.preventDefault();
 
 		// случай когда нажатие переходит в клик а не в удержание
@@ -228,6 +253,7 @@
 			clearTimeout(longPressTimeout!);
 			longPressTimeout = null;
 			isLongPress.value = false;
+			openCard(e, cardName);
 			return;
 		}
 
@@ -318,7 +344,6 @@
 		}
 
 		// проверка того, что выбранное место свободно
-
 		const card = walletStore.getCard_ByName(draggedCardName.value);
 
 		newPlaceIndex = walletStore.checkAndGetEmptyPlaceForMoveCard(
@@ -339,6 +364,57 @@
 		elemTouchX.value = null;
 		elemTouchY.value = null;
 		refreshKey.value = nanoid();
+	}
+
+	function getPositionShadow(
+		e: TouchEvent,
+		X: number,
+		Y: number,
+		cardsPlacesList: HTMLElement[]
+	): number {
+		let endX = X;
+		let endY = Y;
+		let shadowPlaceIndex = 0;
+
+		if (
+			e.changedTouches[0].clientX < parentRect.value!.left ||
+			e.changedTouches[0].clientX > parentRect.value!.right ||
+			e.changedTouches[0].clientY < parentRect.value!.top ||
+			e.changedTouches[0].clientY > parentRect.value!.bottom
+		) {
+			if (e.changedTouches[0].clientX < parentRect.value!.left) {
+				endX = parentRect.value!.left + 1;
+				endY = e.changedTouches[0].clientY;
+			} else if (e.changedTouches[0].clientX > parentRect.value!.right) {
+				endX = parentRect.value!.right - 1;
+				endY = e.changedTouches[0].clientY;
+			}
+
+			if (e.changedTouches[0].clientY < parentRect.value!.top) {
+				endY = parentRect.value!.top + 1;
+				endX = e.changedTouches[0].clientX;
+			} else if (e.changedTouches[0].clientY > parentRect.value!.bottom) {
+				endY = parentRect.value!.bottom - 1;
+				endX = e.changedTouches[0].clientX;
+			}
+		} else {
+			endX = e.changedTouches[0].clientX;
+			endY = e.changedTouches[0].clientY;
+		}
+
+		cardsPlacesList.forEach((item) => {
+			const itemRect = item.getBoundingClientRect();
+			if (
+				itemRect.top <= endY &&
+				itemRect.right >= endX &&
+				itemRect.bottom >= endY &&
+				itemRect.left <= endX
+			) {
+				shadowPlaceIndex = +item.dataset.place!;
+			}
+		});
+
+		return shadowPlaceIndex;
 	}
 
 	function handleGoHome() {

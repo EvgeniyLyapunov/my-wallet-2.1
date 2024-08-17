@@ -73,7 +73,6 @@
 	import Card from '@/models/Card';
 	import { useWalletStore } from '@/stores/walletStore';
 	import type { TCardMoney } from '@/models/types/cardTypes';
-	import moment from 'moment';
 	import bankIcon from '@/assets/images/icons/bank-card.png';
 	import cashIcon from '@/assets/images/icons/cash.png';
 

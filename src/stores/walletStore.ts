@@ -80,10 +80,24 @@ export const useWalletStore = defineStore(
 				return index;
 			else {
 				for (let i = index + 1; i < сardsPlacesList.value.length; i++) {
-					if (сardsPlacesList.value[i] === 'empty') return i;
+					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
 				}
 				for (let i = index - 1; i >= 0; i--) {
-					if (сardsPlacesList.value[i] === 'empty') return i;
+					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
+				}
+				return -1;
+			}
+		};
+
+		const checkPlaceForCardShadow = (index: number, name: string): number => {
+			if (сardsPlacesList.value[index] === 'empty' || сardsPlacesList.value[index] === name)
+				return index;
+			else {
+				for (let i = index + 1; i < сardsPlacesList.value.length; i++) {
+					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
+				}
+				for (let i = index - 1; i >= 0; i--) {
+					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
 				}
 				return -1;
 			}
@@ -115,6 +129,7 @@ export const useWalletStore = defineStore(
 			checkNewCardName,
 			addCard_ToList,
 			checkAndGetEmptyPlaceForMoveCard,
+			checkPlaceForCardShadow,
 			moveCardOnView,
 			removeCard_FromList,
 			cardListCount,
