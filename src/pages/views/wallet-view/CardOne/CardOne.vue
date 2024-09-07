@@ -2,7 +2,15 @@
 	<div class="card">
 		<div class="card__title-block">
 			<h1 class="card__title">{{ card?.cardName }}</h1>
-			<VBreadcrumbs class="card__under-title" :items="items"></VBreadcrumbs>
+			<div class="cards__breadcrumbs breadcrumbs">
+				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__link" @click="onRouteCards">Cards</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__end">{{ card ? card.cardName : 'card' }}</span>
+			</div>
 		</div>
 
 		<div class="card__main" :style="{ height: `${cardHeight}px` }">
@@ -39,7 +47,7 @@
 			</div>
 
 			<div class="card__main-info-btns">
-				<v-btn density="compact" class="delete">Delete card</v-btn>
+				<v-btn density="compact" class="delete" @click="onConfirmDelete">Delete card</v-btn>
 				<v-btn density="compact">Edit card</v-btn>
 			</div>
 
@@ -59,10 +67,27 @@
 		</div>
 
 		<div class="card__footer">
-			<v-btn density="comfortable">Home</v-btn>
-			<v-btn density="comfortable">Cancel</v-btn>
+			<v-btn density="comfortable" prepend-icon="mdi-home" @click="goHome">
+				<template v-slot:prepend>
+					<v-icon color="green"></v-icon>
+				</template>
+				Home
+			</v-btn>
+			<v-btn density="comfortable" prepend-icon="mdi-cancel" @click="doCancel">
+				<template v-slot:prepend>
+					<v-icon color="yellow"></v-icon>
+				</template>
+				Cancel
+			</v-btn>
 		</div>
 	</div>
+
+	<Confirm
+		v-model="isVisible_ConfirmModal"
+		:confirm-action="confirmAction"
+		:confirm-info="confirmInfo"
+		@confirm="deleteCard"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -72,6 +97,8 @@
 	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
 	import { elementHeight_Relative_PreviousSiblingAndWindowHeight } from '@/utils/elementHeight';
+
+	import Confirm from '@/pages/components/confirms/Confirm.vue';
 
 	type RequestCardIdParam = {
 		id: string;
@@ -85,43 +112,59 @@
 	const walletStore = useWalletStore();
 	const cardHeight = ref<number>(0);
 
+	const isVisible_ConfirmModal = ref<boolean>(false);
+	const confirmAction = ref<string>('');
+	const confirmInfo = ref<string | undefined>();
+
 	const router = useRouter();
 	const route = useRoute();
 	const id = ref<string>('');
 	const card = ref<Card | undefined>();
 
-	const items = [
-		{
-			title: 'Home',
-			disabled: false,
-			href: '/',
-		},
-		{
-			title: 'Wallet',
-			disabled: false,
-			href: '/wallet-view',
-		},
-		{
-			title: 'Cards',
-			disabled: false,
-			href: '/cards-view',
-		},
-		{
-			title: 'Card',
-			disabled: true,
-			href: '/cards-view',
-		},
-	];
+	const breadcrumbsDivider: string = '/';
+
+	const onRouteHome = () => {
+		router.push('/');
+	};
+
+	const onRouteWallet = () => {
+		router.push('/wallet-view');
+	};
+
+	const onRouteCards = () => {
+		router.push('/cards-view');
+	};
 
 	onBeforeMount(() => {
 		id.value = (route.params as RequestCardIdParam).id;
 		card.value = walletStore.getCard_ById(id.value);
-		items[items.length - 1].title = card.value!.cardName;
 	});
 
 	onMounted(() => {
 		cardHeight.value = elementHeight_Relative_PreviousSiblingAndWindowHeight('.card__title-block');
 	});
+
+	const onConfirmDelete = () => {
+		confirmAction.value = 'Confirm deletion';
+		if (!card.value!.isVirtual && card.value!.virtualList.length > 0) {
+			confirmInfo.value =
+				'This is the base card. Deleting it will also delete all its virtual cards. Are you sure? This action is irreversible!';
+		}
+		isVisible_ConfirmModal.value = true;
+	};
+
+	const deleteCard = () => {
+		walletStore.deleteCard(id.value);
+		router.push('/cards-view');
+	};
+
+	function doCancel() {
+		router.push('/cards-view');
+	}
+
+	function goHome() {
+		router.push('/');
+	}
 </script>
 
 <style scoped lang="scss">

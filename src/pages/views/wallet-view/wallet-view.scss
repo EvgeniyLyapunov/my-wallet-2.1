@@ -17,13 +17,6 @@
 		font-weight: 700;
 		color: #fff;
 	}
-	&__under-title {
-		position: relative;
-		z-index: 1;
-		padding: 0;
-		font-size: 12px;
-		color: #fff;
-	}
 	&__menu {
 		position: absolute;
 		z-index: 10;
@@ -45,5 +38,24 @@
 				color: #fff;
 			}
 		}
+	}
+}
+
+.breadcrumbs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+	&__link {
+		font-size: 14px;
+		color: #fff;
+	}
+	&__divider {
+		color: #c6c6c6;
+	}
+	&__end {
+		color: #7ca1d4;
 	}
 }

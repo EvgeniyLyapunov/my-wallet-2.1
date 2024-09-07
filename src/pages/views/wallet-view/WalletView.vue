@@ -2,7 +2,11 @@
 	<div class="wallet">
 		<div class="wallet__title-block">
 			<h1 class="wallet__title">Wallet</h1>
-			<v-breadcrumbs class="wallet__under-title" :items="items"></v-breadcrumbs>
+			<div class="wallet__breadcrumbs breadcrumbs">
+				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__end">Wallet</span>
+			</div>
 		</div>
 		<div class="wallet__menu">
 			<router-link :to="{ name: 'cards_view' }" class="wallet__menu-link">
@@ -26,18 +30,13 @@
 		path: '/wallet-view',
 	});
 
-	const items = [
-		{
-			title: 'Home',
-			disabled: false,
-			href: '/',
-		},
-		{
-			title: 'Wallet',
-			disabled: true,
-			href: '/wallet-view',
-		},
-	];
+	const router = useRouter();
+
+	const breadcrumbsDivider: string = '/';
+
+	const onRouteHome = () => {
+		router.push('/');
+	};
 </script>
 
 <style scoped lang="scss">

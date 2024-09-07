@@ -36,6 +36,24 @@
 			height: 12vh;
 			// outline: 2px solid rgb(255, 213, 0);
 		}
+		&-card-name {
+			display: none;
+			position: absolute;
+			z-index: 2;
+			top: -40px;
+			left: 0;
+			width: 100%;
+			height: 30px;
+			font-size: 16px;
+			font-weight: 700;
+			text-align: center;
+			align-content: center;
+			background: #fff;
+			border-radius: 5px;
+			&_show {
+				display: block;
+			}
+		}
 	}
 	&__btns {
 		position: absolute;
@@ -54,6 +72,25 @@
 	&__shadow-style {
 		outline-offset: -6px;
 		outline: 2px solid rgb(0, 255, 13);
+	}
+}
+
+.breadcrumbs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+	&__link {
+		font-size: 14px;
+		color: #fff;
+	}
+	&__divider {
+		color: #c6c6c6;
+	}
+	&__end {
+		color: #7ca1d4;
 	}
 }
 

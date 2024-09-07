@@ -1,0 +1,48 @@
+:deep(.v-dialog) {
+	width: 80%;
+}
+
+:deep(.v-card) {
+	border: 5px solid teal;
+}
+
+:deep(.v-card-title) {
+	padding: 5px 10px;
+	background-color: teal;
+	color: #fff;
+}
+
+:deep(.v-card-text) {
+	display: flex;
+	width: 100%;
+	padding: 5px 10px !important;
+}
+
+:deep(.v-btn.v-btn--density-default) {
+	text-transform: none !important;
+}
+
+.confirm {
+	&__img-wrap {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 130px;
+		height: 90px;
+		overflow: hidden;
+	}
+	&__img {
+		width: 80%;
+		object-fit: contain;
+	}
+	&__text-wrap {
+		flex-shrink: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	&__text {
+		display: block;
+		padding-left: 20px;
+	}
+}

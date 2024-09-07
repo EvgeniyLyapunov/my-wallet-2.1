@@ -2,7 +2,13 @@
 	<div class="cards">
 		<div class="cards__title-block">
 			<h1 class="cards__title">Cards</h1>
-			<v-breadcrumbs class="cards__under-title" :items="items"></v-breadcrumbs>
+			<div class="cards__breadcrumbs breadcrumbs">
+				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__end">Cards</span>
+			</div>
 		</div>
 		<div :key="refreshKey" ref="cardsArea" class="cards__area">
 			<div
@@ -24,6 +30,7 @@
 					@mouseup="($event) => endLongPress($event, obj)"
 				/>
 			</div>
+			<div :class="cardNameСlassObject">{{ showCardName }}</div>
 		</div>
 		<v-spacer></v-spacer>
 		<div class="cards__btns">
@@ -53,6 +60,12 @@
 	const refreshKey = ref<string>(nanoid());
 	const parentRect = ref<DOMRect>();
 
+	const showCardName = ref<string | undefined>();
+	const cardNameСlassObject = computed(() => ({
+		'cards__area-card-name': true, // Этот класс всегда применяется
+		'cards__area-card-name_show': showCardName.value, // Этот класс применяется в зависимости от isActive
+	}));
+
 	// const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
 	let longPressTimeout: any;
 	const draggedCardName = ref<string>('');
@@ -67,23 +80,15 @@
 		parentRect.value = cardsArea.value.getBoundingClientRect();
 	});
 
-	const items = [
-		{
-			title: 'Home',
-			disabled: false,
-			href: '/',
-		},
-		{
-			title: 'Wallet',
-			disabled: false,
-			href: '/wallet-view',
-		},
-		{
-			title: 'Cards',
-			disabled: true,
-			href: '/cards-view',
-		},
-	];
+	const breadcrumbsDivider: string = '/';
+
+	const onRouteHome = () => {
+		router.push('/');
+	};
+
+	const onRouteWallet = () => {
+		router.push('/wallet-view');
+	};
 
 	function getCardObjName(cardName: string) {
 		if (cardName.length <= 10) return cardName;
@@ -100,19 +105,22 @@
 		return iconPath;
 	}
 
-	function openCard(e: MouseEvent | TouchEvent, cardName: string) {
+	const openCard = (e: MouseEvent | TouchEvent, cardName: string) => {
 		e.preventDefault();
 		const cardId = walletStore.getCardId_ByName(cardName);
 		router.push(`/card-one-view/${cardId}`);
-	}
+	};
 
-	function startLongPress(e: MouseEvent | TouchEvent, index: number, cardName: string) {
+	const startLongPress = (e: MouseEvent | TouchEvent, index: number, cardName: string) => {
 		e.preventDefault();
+
 		draggedCardName.value = cardName;
 		targetElement.value = e.currentTarget as HTMLElement; // Сохраняем текущий элемент
 		longPressTimeout = setTimeout(() => {
 			if (e instanceof TouchEvent) {
 				if (targetElement.value) {
+					showCardName.value = cardName;
+
 					isLongPress.value = true;
 					draggedElementIndex.value = index;
 					targetElement.value.classList.add('cards__obj-dropped');
@@ -168,9 +176,9 @@
 				}
 			}
 		}, 700); // Время задержки для долгого тапа (в миллисекундах)
-	}
+	};
 
-	function handleMove(e: MouseEvent | TouchEvent, index: number) {
+	const handleMove = (e: MouseEvent | TouchEvent, index: number) => {
 		e.preventDefault();
 
 		let shadowPlaceIndex: number;
@@ -243,10 +251,12 @@
 				}
 			}
 		}
-	}
+	};
 
-	function endLongPress(e: MouseEvent | TouchEvent, cardName: string) {
+	const endLongPress = (e: MouseEvent | TouchEvent, cardName: string) => {
 		e.preventDefault();
+
+		showCardName.value = undefined;
 
 		// случай когда нажатие переходит в клик а не в удержание
 		if (isLongPress.value === false) {
@@ -364,7 +374,7 @@
 		elemTouchX.value = null;
 		elemTouchY.value = null;
 		refreshKey.value = nanoid();
-	}
+	};
 
 	function getPositionShadow(
 		e: TouchEvent,

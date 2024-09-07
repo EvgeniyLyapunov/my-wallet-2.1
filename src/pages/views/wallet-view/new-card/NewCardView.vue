@@ -2,7 +2,15 @@
 	<div class="new-card">
 		<div class="new-card__title-block">
 			<h1 class="new-card__title">New Card</h1>
-			<v-breadcrumbs class="new-card__under-title" :items="items"></v-breadcrumbs>
+			<div class="cards__breadcrumbs breadcrumbs">
+				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__link" @click="onRouteCards">Cards</span>
+				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
+				<span class="breadcrumbs__end">NewCard</span>
+			</div>
 		</div>
 		<v-form class="new-card__form form" ref="form">
 			<v-text-field
@@ -146,23 +154,19 @@
 		selectBaseItems.value = ['base'];
 	});
 
-	const items = [
-		{
-			title: 'Home',
-			disabled: false,
-			href: '/',
-		},
-		{
-			title: 'Wallet',
-			disabled: false,
-			href: '/wallet-view',
-		},
-		{
-			title: 'New card',
-			disabled: true,
-			href: '/new-card-view',
-		},
-	];
+	const breadcrumbsDivider: string = '/';
+
+	const onRouteHome = () => {
+		router.push('/');
+	};
+
+	const onRouteWallet = () => {
+		router.push('/wallet-view');
+	};
+
+	const onRouteCards = () => {
+		router.push('/cards-view');
+	};
 
 	const handleCancel = () => {
 		window.history.length > 1 ? router.go(-1) : router.push('/');

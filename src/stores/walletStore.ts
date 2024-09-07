@@ -120,6 +120,35 @@ export const useWalletStore = defineStore(
 			return cardList.value.length;
 		};
 
+		const deleteCard = (idCard: string) => {
+			const card = getCard_ById(idCard);
+
+			if (!card!.isVirtual && card!.virtualList.length > 0) {
+				card!.virtualList.forEach((vc) => {
+					const vcard = getCard_ById(vc);
+
+					сardsPlacesList.value = сardsPlacesList.value.map((c) => {
+						if (c === vcard!.cardName) {
+							return 'empty';
+						} else {
+							return c;
+						}
+					});
+
+					cardList.value = cardList.value.filter((c) => c.cardName !== vcard?.cardName);
+				});
+			}
+
+			сardsPlacesList.value = сardsPlacesList.value.map((c) => {
+				if (c === card!.cardName) {
+					return 'empty';
+				} else {
+					return c;
+				}
+			});
+			cardList.value = cardList.value.filter((c) => c.cardId !== idCard);
+		};
+
 		return {
 			cardList,
 			сardsPlacesList,
@@ -137,6 +166,7 @@ export const useWalletStore = defineStore(
 			getCardId_ByName,
 			setId_ToVirtualListBaseCard,
 			getCard_ById,
+			deleteCard,
 		};
 	},
 	{
