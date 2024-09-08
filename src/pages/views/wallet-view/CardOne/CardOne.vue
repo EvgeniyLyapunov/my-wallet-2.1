@@ -47,8 +47,8 @@
 			</div>
 
 			<div class="card__main-info-btns">
-				<v-btn density="compact" class="delete" @click="onConfirmDelete">Delete card</v-btn>
-				<v-btn density="compact">Edit card</v-btn>
+				<v-btn density="comfortable" class="delete" @click="onConfirmDelete">Delete card</v-btn>
+				<v-btn density="comfortable" @click="onEditCardModalOpen">Edit card</v-btn>
 			</div>
 
 			<div class="card__main-balance-btn">
@@ -82,6 +82,8 @@
 		</div>
 	</div>
 
+	<CardInfo_EditModal v-model="isVisible_EditInfoModal" :card="card" @onEdit="onEditCardInfo" />>
+	<MessageBox v-model="isVisibleMessageBox" :title="messageBoxTitle" :message="messageBoxMessage" />
 	<Confirm
 		v-model="isVisible_ConfirmModal"
 		:confirm-action="confirmAction"
@@ -99,6 +101,8 @@
 	import { elementHeight_Relative_PreviousSiblingAndWindowHeight } from '@/utils/elementHeight';
 
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
+	import CardInfo_EditModal from '@/pages/components/cards-one-edit-cardinfo/CardInfo_EditModal.vue';
+	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
 
 	type RequestCardIdParam = {
 		id: string;
@@ -111,6 +115,12 @@
 
 	const walletStore = useWalletStore();
 	const cardHeight = ref<number>(0);
+
+	const isVisibleMessageBox = ref<boolean>(false);
+	const messageBoxTitle = ref<string>('');
+	const messageBoxMessage = ref<string>('');
+
+	const isVisible_EditInfoModal = ref<boolean>(false);
 
 	const isVisible_ConfirmModal = ref<boolean>(false);
 	const confirmAction = ref<string>('');
@@ -143,6 +153,20 @@
 	onMounted(() => {
 		cardHeight.value = elementHeight_Relative_PreviousSiblingAndWindowHeight('.card__title-block');
 	});
+
+	const onEditCardModalOpen = () => {
+		if (card.value!.virtualList.length > 0) {
+			isVisibleMessageBox.value = true;
+			messageBoxTitle.value = 'Warning!';
+			messageBoxMessage.value = 'This card has virtuals. Editing is not possible!';
+		} else {
+			isVisible_EditInfoModal.value = true;
+		}
+	};
+
+	const onEditCardInfo = (editedCard: Card) => {
+		card.value = editedCard;
+	};
 
 	const onConfirmDelete = () => {
 		confirmAction.value = 'Confirm deletion';

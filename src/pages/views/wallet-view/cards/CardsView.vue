@@ -34,8 +34,8 @@
 		</div>
 		<v-spacer></v-spacer>
 		<div class="cards__btns">
-			<v-btn density="compact" width="120" variant="elevated" @click="handleGoHome">Home</v-btn>
-			<v-btn density="compact" width="120" variant="elevated" @click="handleToNewCardPage"
+			<v-btn density="default" width="120" variant="elevated" @click="handleGoHome"> Home</v-btn>
+			<v-btn density="default" width="120" variant="elevated" @click="handleToNewCardPage"
 				>New Card</v-btn
 			>
 		</div>

@@ -120,9 +120,22 @@ export const useWalletStore = defineStore(
 			return cardList.value.length;
 		};
 
+		const editCardInfo = (card: Card) => {
+			deleteCard(card.cardId);
+
+			if (card.baseCardName !== 'base') {
+				card.baseCardId = getCardId_ByName(card.baseCardName!);
+				card.isVirtual = true;
+				setId_ToVirtualListBaseCard(card.cardId, card.baseCardId);
+			}
+			cardList.value.push(card);
+			сardsPlacesList.value.splice(card.screenLocation, 1, card.cardName);
+		};
+
 		const deleteCard = (idCard: string) => {
 			const card = getCard_ById(idCard);
 
+			// Удаление всех карт из листа виртуальных карт удаляемой карты
 			if (!card!.isVirtual && card!.virtualList.length > 0) {
 				card!.virtualList.forEach((vc) => {
 					const vcard = getCard_ById(vc);
@@ -135,10 +148,17 @@ export const useWalletStore = defineStore(
 						}
 					});
 
-					cardList.value = cardList.value.filter((c) => c.cardName !== vcard?.cardName);
+					removeCard_FromList(vc);
 				});
 			}
 
+			// Удаление удаляемой карты из листа виртуальных карт, если удаляемая карта - виртуальная
+			if (card!.isVirtual) {
+				const baseCard = getCard_ById(card!.baseCardId!);
+				baseCard!.virtualList = baseCard!.virtualList.filter((item) => item !== card!.cardId);
+			}
+
+			// Удаление самой карты
 			сardsPlacesList.value = сardsPlacesList.value.map((c) => {
 				if (c === card!.cardName) {
 					return 'empty';
@@ -146,7 +166,7 @@ export const useWalletStore = defineStore(
 					return c;
 				}
 			});
-			cardList.value = cardList.value.filter((c) => c.cardId !== idCard);
+			removeCard_FromList(idCard);
 		};
 
 		return {
@@ -166,6 +186,7 @@ export const useWalletStore = defineStore(
 			getCardId_ByName,
 			setId_ToVirtualListBaseCard,
 			getCard_ById,
+			editCardInfo,
 			deleteCard,
 		};
 	},

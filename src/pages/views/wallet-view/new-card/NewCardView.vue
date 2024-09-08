@@ -52,23 +52,23 @@
 		<div class="new-card__btn-block">
 			<v-btn
 				class="new-card__base-btn new-card__next-btn"
-				width="90"
-				density="compact"
+				width="110"
+				density="default"
 				color="green-accent-3"
 				@click="submit"
 				>Create</v-btn
 			>
 			<v-btn
 				class="new-card__base-btn new-card__clear-btn"
-				width="90"
-				density="compact"
+				width="110"
+				density="default"
 				@click="handleReset"
 				>Clear</v-btn
 			>
 			<v-btn
 				class="new-card__base-btn new-card__cancel-btn"
-				width="90"
-				density="compact"
+				width="110"
+				density="default"
 				color="blue-lighten-3"
 				@click="handleCancel"
 				>Cancel</v-btn
@@ -208,8 +208,6 @@
 		newCard.currentSum = startAmount.value;
 
 		walletStore.addCard_ToList(JSON.parse(JSON.stringify(newCard)));
-
-		// console.log(moment(newCard.changesLastDate).format('DD_MMMM_YYYY - HH.mm'));
 
 		newCard = new Card();
 
