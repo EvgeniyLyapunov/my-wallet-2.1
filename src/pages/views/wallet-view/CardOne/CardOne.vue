@@ -57,6 +57,7 @@
 					rounded="lg"
 					elevation="16"
 					prepend-icon="mdi-swap-horizontal-bold"
+					@click="onShow_ChangeBalanceModal"
 				>
 					<template v-slot:prepend>
 						<v-icon color="primary"></v-icon>
@@ -90,6 +91,7 @@
 		:confirm-info="confirmInfo"
 		@confirm="deleteCard"
 	/>
+	<ChangeBalanceModal v-model="isVisible_ChangeBalanceModal" :card="card" />
 </template>
 
 <script setup lang="ts">
@@ -103,6 +105,7 @@
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
 	import CardInfo_EditModal from '@/pages/components/cards-one-edit-cardinfo/CardInfo_EditModal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
+	import ChangeBalanceModal from '@/pages/components/card-one-change-balance/ChangeBalance_Modal.vue';
 
 	type RequestCardIdParam = {
 		id: string;
@@ -125,6 +128,8 @@
 	const isVisible_ConfirmModal = ref<boolean>(false);
 	const confirmAction = ref<string>('');
 	const confirmInfo = ref<string | undefined>();
+
+	const isVisible_ChangeBalanceModal = ref<boolean>(false);
 
 	const router = useRouter();
 	const route = useRoute();
@@ -180,6 +185,10 @@
 	const deleteCard = () => {
 		walletStore.deleteCard(id.value);
 		router.push('/cards-view');
+	};
+
+	const onShow_ChangeBalanceModal = () => {
+		isVisible_ChangeBalanceModal.value = true;
 	};
 
 	function doCancel() {

@@ -1,0 +1,105 @@
+:deep(.v-dialog) {
+	width: 80%;
+}
+
+:deep(.v-card) {
+	border: 5px solid teal;
+}
+
+:deep(.v-card-title) {
+	padding: 5px 10px;
+	font-size: 14px;
+	font-weight: 400;
+	background-color: teal;
+	color: #fff;
+}
+
+:deep(.v-card-text) {
+	padding: 10px !important;
+}
+
+:deep(.v-btn.v-btn--density-default) {
+	text-transform: none;
+}
+
+.modal {
+	&__title {
+		font-size: 20px;
+		font-weight: 400;
+	}
+	&__form {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		&-balance-info {
+			margin-bottom: 10px;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-image: linear-gradient(
+				to right,
+				#d5f3ff 0%,
+				#b2e9ff 25%,
+				#42c9ff 50%,
+				#b2e9ff 75%,
+				#d5f3ff 100%
+			);
+			border-radius: 5px;
+			span {
+				font-size: 18px;
+				font-weight: 700;
+			}
+		}
+		&-input {
+			width: 50%;
+			padding: 4px 10px;
+			margin: 0 auto;
+			font-size: 20px;
+			box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+			border-radius: 5px;
+			&:focus {
+				outline: none;
+				box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px inset,
+					rgba(0, 0, 0, 0.3) 0px 1px 3px -1px inset;
+			}
+		}
+		&-actions {
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		&-keyboard {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+			align-items: center;
+			&-line {
+				width: 70%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				&_last {
+					&-btn {
+						width: 48%;
+					}
+				}
+			}
+		}
+	}
+	&__footer {
+		width: 100%;
+		&-btns {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+		}
+		&-btn {
+			margin: 10px 0;
+			width: 90%;
+		}
+	}
+}
