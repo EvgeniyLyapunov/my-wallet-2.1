@@ -53,16 +53,38 @@
 			}
 		}
 		&-input {
-			width: 50%;
+			width: 95%;
+			height: 35px;
 			padding: 4px 10px;
-			margin: 0 auto;
-			font-size: 20px;
+			margin: 10px auto 10px auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 			border-radius: 5px;
-			&:focus {
-				outline: none;
+			span {
+				font-size: 20px;
+				font-weight: 700;
+				line-height: 35px;
+				color: #a3a3a3;
+			}
+			&_focus {
+				width: 95%;
+				height: 35px;
+				padding: 4px 10px;
+				margin: 10px auto 10px auto;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px inset,
 					rgba(0, 0, 0, 0.3) 0px 1px 3px -1px inset;
+				border-radius: 5px;
+				span {
+					font-size: 20px;
+					font-weight: 700;
+					line-height: 35px;
+					color: #000;
+				}
 			}
 		}
 		&-actions {
@@ -87,6 +109,10 @@
 						width: 48%;
 					}
 				}
+			}
+			&-btn {
+				font-size: 16px;
+				font-weight: 700;
 			}
 		}
 	}
