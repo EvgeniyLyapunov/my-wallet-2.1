@@ -64,6 +64,8 @@ declare global {
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
+  const useCardBalanceStore: typeof import('./stores/cardBalanceStore')['useCardBalanceStore']
+  const useCardsViewStore: typeof import('./stores/cardsViewStore')['useCardsViewStore']
   const useCounterStore: typeof import('./stores/counter')['useCounterStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']

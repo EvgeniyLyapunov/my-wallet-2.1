@@ -12,7 +12,7 @@
 		</div>
 		<div :key="refreshKey" ref="cardsArea" class="cards__area">
 			<div
-				v-for="(obj, i) in walletStore.сardsPlacesList"
+				v-for="(obj, i) in cardsViewStore.сardsPlacesList"
 				:key="i"
 				class="cards__area-place"
 				:data-place="i"
@@ -46,6 +46,7 @@
 	import Card from '@/models/Card';
 	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useCardsViewStore } from '@/stores/cardsViewStore';
 	import CardObjectComponent from '@/pages/components/cards-view/CardObjectComponent.vue';
 
 	definePage({
@@ -55,6 +56,7 @@
 
 	const router = useRouter();
 	const walletStore = useWalletStore();
+	const cardsViewStore = useCardsViewStore();
 
 	const cardsArea = ref();
 	const refreshKey = ref<string>(nanoid());
@@ -214,7 +216,7 @@
 
 					const card = walletStore.getCard_ByName(draggedCardName.value);
 
-					const checkedShadowPlaceIndex = walletStore.checkPlaceForCardShadow(
+					const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
 						shadowPlaceIndex,
 						draggedCardName.value
 					);
@@ -356,13 +358,13 @@
 		// проверка того, что выбранное место свободно
 		const card = walletStore.getCard_ByName(draggedCardName.value);
 
-		newPlaceIndex = walletStore.checkAndGetEmptyPlaceForMoveCard(
+		newPlaceIndex = cardsViewStore.checkAndGetEmptyPlaceForMoveCard(
 			newPlaceIndex!,
 			draggedCardName.value
 		);
 		if (newPlaceIndex > -1) {
 			card!.screenLocation = newPlaceIndex!;
-			walletStore.moveCardOnView(card!);
+			cardsViewStore.moveCardOnView(card!);
 		}
 
 		clearTimeout(longPressTimeout.value);

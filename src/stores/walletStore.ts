@@ -1,20 +1,13 @@
 import type Card from '@/models/Card';
 import { defineStore } from 'pinia';
+import { useCardsViewStore } from './cardsViewStore';
 
 export const useWalletStore = defineStore(
 	'walletStore',
 	() => {
+		const cardViewStore = useCardsViewStore();
 		// список карт
 		const cardList = ref<Card[]>([]);
-
-		// количество элементов карт на экране
-		const startLengthCardsView = 18;
-
-		// список имён карт с учётом их расположения на экране
-		const сardsPlacesList = ref<string[]>(Array(startLengthCardsView).fill('empty'));
-
-		// текущая длинна списка имён карт
-		const currentCardsPlacesListSize = computed<number>(() => сardsPlacesList.value.length);
 
 		const baseCards_CashMoney_NamesList = computed<string[]>(() => {
 			const baseCards = ['base'];
@@ -66,50 +59,7 @@ export const useWalletStore = defineStore(
 
 		const addCard_ToList = (card: Card) => {
 			cardList.value.push(card);
-			addNewCardOnView(card);
-		};
-
-		const addNewCardOnView = (card: Card) => {
-			const index = сardsPlacesList.value.indexOf('empty');
-			card.screenLocation = index;
-			сardsPlacesList.value.splice(index, 1, card.cardName);
-		};
-
-		const checkAndGetEmptyPlaceForMoveCard = (index: number, name: string): number => {
-			if (сardsPlacesList.value[index] === 'empty' || сardsPlacesList.value[index] === name)
-				return index;
-			else {
-				for (let i = index + 1; i < сardsPlacesList.value.length; i++) {
-					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
-				}
-				for (let i = index - 1; i >= 0; i--) {
-					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
-				}
-				return -1;
-			}
-		};
-
-		const checkPlaceForCardShadow = (index: number, name: string): number => {
-			if (сardsPlacesList.value[index] === 'empty' || сardsPlacesList.value[index] === name)
-				return index;
-			else {
-				for (let i = index + 1; i < сardsPlacesList.value.length; i++) {
-					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
-				}
-				for (let i = index - 1; i >= 0; i--) {
-					if (сardsPlacesList.value[i] === 'empty' || сardsPlacesList.value[i] === name) return i;
-				}
-				return -1;
-			}
-		};
-
-		const moveCardOnView = (card: Card) => {
-			сardsPlacesList.value = сardsPlacesList.value.map((c, i) => {
-				if (c === card.cardName && i === card.screenLocation) return card.cardName;
-				if (c === card.cardName && i !== card.screenLocation) return 'empty';
-				if (i === card.screenLocation) return card.cardName;
-				return c;
-			});
+			cardViewStore.addNewCardOnView(card);
 		};
 
 		const removeCard_FromList = (removingCardId: string) => {
@@ -129,7 +79,7 @@ export const useWalletStore = defineStore(
 				setId_ToVirtualListBaseCard(card.cardId, card.baseCardId);
 			}
 			cardList.value.push(card);
-			сardsPlacesList.value.splice(card.screenLocation, 1, card.cardName);
+			cardViewStore.сardsPlacesList.splice(card.screenLocation, 1, card.cardName);
 		};
 
 		const deleteCard = (idCard: string) => {
@@ -140,7 +90,7 @@ export const useWalletStore = defineStore(
 				card!.virtualList.forEach((vc) => {
 					const vcard = getCard_ById(vc);
 
-					сardsPlacesList.value = сardsPlacesList.value.map((c) => {
+					cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map((c) => {
 						if (c === vcard!.cardName) {
 							return 'empty';
 						} else {
@@ -159,7 +109,7 @@ export const useWalletStore = defineStore(
 			}
 
 			// Удаление самой карты
-			сardsPlacesList.value = сardsPlacesList.value.map((c) => {
+			cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map((c) => {
 				if (c === card!.cardName) {
 					return 'empty';
 				} else {
@@ -171,15 +121,10 @@ export const useWalletStore = defineStore(
 
 		return {
 			cardList,
-			сardsPlacesList,
-			currentCardsPlacesListSize,
 			baseCards_CashMoney_NamesList,
 			baseCards_BankMoney_NamesList,
 			checkNewCardName,
 			addCard_ToList,
-			checkAndGetEmptyPlaceForMoveCard,
-			checkPlaceForCardShadow,
-			moveCardOnView,
 			removeCard_FromList,
 			cardListCount,
 			getCard_ByName,

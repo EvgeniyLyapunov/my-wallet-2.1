@@ -1,17 +1,15 @@
-class Operation {
-  date: string
-  amount: number
-  type: string
-  goal: string
-  description: string
+import moment from 'moment';
 
-  constructor() {
-    this.date = ''
-    this.amount = 0
-    this.type = ''
-    this.goal = ''
-    this.description = ''
-  }
+class Operation {
+	date: string;
+	amount: number;
+	type: string;
+	tags?: string[]; // id тегов
+	constructor(amount: number, type: 'increase' | 'decrease') {
+		this.date = moment().format('DD.MM.YYYY HH:mm');
+		this.amount = amount;
+		this.type = type;
+	}
 }
 
-export default Operation
+export default Operation;
