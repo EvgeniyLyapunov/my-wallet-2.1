@@ -104,7 +104,12 @@
 
 					<div class="modal__form-tags-wrapper">
 						<div :class="{ 'modal__form-tags': true, 'modal__form-tags_active': isVisible_Tags }">
-							<v-btn class="modal__form-tags_edit" icon="mdi-pencil" variant="text"></v-btn>
+							<v-btn
+								class="modal__form-tags_edit"
+								icon="mdi-pencil"
+								variant="text"
+								@click="onTagEditModalShow"
+							></v-btn>
 							<TagItem v-for="tag in tagsList" :key="tag.Id" :tag="tag" :mode="'Operation'" />
 						</div>
 						<v-btn
@@ -131,6 +136,8 @@
 			</v-card>
 		</v-dialog>
 	</div>
+
+	<TagEditModal v-model="isVisidle_TagEditModal" />
 </template>
 
 <script setup lang="ts">
@@ -138,7 +145,7 @@
 	import Tag from '@/models/Tag';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 	import { useWalletStore } from '@/stores/walletStore';
-
+	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
 	}>();
@@ -187,6 +194,12 @@
 		} else {
 			isVisible_Tags.value = !isVisible_Tags.value;
 		}
+	};
+
+	const isVisidle_TagEditModal = ref<boolean>(false);
+
+	const onTagEditModalShow = () => {
+		isVisidle_TagEditModal.value = true;
 	};
 
 	const onNumberKeyPress = (keyNumber: string) => {

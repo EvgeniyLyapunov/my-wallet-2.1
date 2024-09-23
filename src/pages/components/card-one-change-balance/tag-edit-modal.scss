@@ -1,0 +1,26 @@
+:deep(.v-dialog) {
+	width: 80%;
+}
+
+:deep(.v-card) {
+	border: 5px solid #d4af2a;
+}
+
+:deep(.v-card-title) {
+	padding: 5px 10px;
+	font-size: 14px;
+	font-weight: 400;
+	background-color: #d4af2a;
+	color: #333;
+}
+
+:deep(.v-card-text) {
+	padding: 10px !important;
+}
+
+.modal {
+	&__title {
+		font-size: 20px;
+		font-weight: 400;
+	}
+}
