@@ -145,6 +145,7 @@
 	import Tag from '@/models/Tag';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useTagsStore } from '@/stores/tagsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
@@ -164,12 +165,17 @@
 		},
 	});
 
-	const tagsList = ref<Tag[]>([
-		new Tag('Продукты'),
-		new Tag('Транспорт'),
-		new Tag('Энерджи'),
-		new Tag('Аптека'),
-	]);
+	const tagsStore = useTagsStore();
+	const tagsList = ref<Tag[]>([]);
+
+	watch(
+		() => props.modelValue,
+		(newValue) => {
+			if (newValue) {
+				tagsList.value = tagsStore.get_ChangeBalanceTagList();
+			}
+		}
+	);
 
 	const inputAmount = ref<string>('0');
 	const isFocus_InputAmountField = computed<boolean>(() => {

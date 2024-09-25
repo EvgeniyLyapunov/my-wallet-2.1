@@ -1,8 +1,9 @@
-:deep(.v-dialog) {
-	width: 80%;
+:deep(.v-overlay__content) {
+	max-width: 475px !important;
 }
 
 :deep(.v-card) {
+	max-width: 475px !important;
 	border: 5px solid teal;
 }
 

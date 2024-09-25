@@ -1,8 +1,9 @@
-:deep(.v-dialog) {
-	width: 80%;
+:deep(.v-overlay__content) {
+	max-width: 475px !important;
 }
 
 :deep(.v-card) {
+	max-width: 475px !important;
 	border: 5px solid #d4af2a;
 }
 
@@ -22,5 +23,37 @@
 	&__title {
 		font-size: 20px;
 		font-weight: 400;
+	}
+	&__form {
+		margin-top: 15px;
+		margin-bottom: 15px;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		&-label-input {
+			width: 75%;
+		}
+		&-input {
+			width: 100%;
+		}
+	}
+	&__tags {
+		padding: 10px 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+	}
+	&__footer {
+		width: 100%;
+		&-btns {
+			width: 100%;
+			display: flex;
+			justify-content: center;
+		}
+		&-btn {
+			margin: 10px 0;
+			width: 90%;
+		}
 	}
 }

@@ -19,6 +19,10 @@ const vuetify = createVuetify({
 	},
 });
 
+// primevue
+import PrimeVue from 'primevue/config';
+import Nora from '@primevue/themes/nora';
+
 import App from './App.vue';
 import router from './router';
 
@@ -30,5 +34,11 @@ pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
 app.use(vuetify);
+
+app.use(PrimeVue, {
+	theme: {
+		preset: Nora,
+	},
+});
 
 app.mount('#app');
