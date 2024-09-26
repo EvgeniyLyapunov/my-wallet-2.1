@@ -15,12 +15,20 @@ export const useTagsStore = defineStore(
 			return changeBalanceTagsList.value;
 		};
 
+		const delete_FromChangeBalanceTagList = (tag: Tag) => {
+			changeBalanceTagsList.value = changeBalanceTagsList.value.filter((item) => item.Id != tag.Id);
+		};
+
 		const addNewTag_StatisticTagsList = (tag: Tag) => {
 			statisticTagsList.value.push(tag);
 		};
 
 		const get_StatisticTagsList = () => {
 			return statisticTagsList.value;
+		};
+
+		const delete_FromStatisticTagsList = (tag: Tag) => {
+			statisticTagsList.value = statisticTagsList.value.filter((item) => item.Id != tag.Id);
 		};
 
 		return {
@@ -30,6 +38,8 @@ export const useTagsStore = defineStore(
 			addNewTag_StatisticTagsList,
 			get_ChangeBalanceTagList,
 			get_StatisticTagsList,
+			delete_FromChangeBalanceTagList,
+			delete_FromStatisticTagsList,
 		};
 	},
 	{

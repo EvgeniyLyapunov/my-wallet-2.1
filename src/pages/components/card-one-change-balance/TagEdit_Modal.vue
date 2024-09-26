@@ -19,7 +19,13 @@
 						<v-btn class="modal__form-btn" @click="onCreateNewTag">Ok</v-btn>
 					</div>
 					<div class="modal__tags">
-						<TagItem v-for="(tag, i) in tagsList" :key="i" :tag="tag" :mode="'Delete'" />
+						<TagItem
+							v-for="(tag, i) in tagsList"
+							:key="i"
+							:tag="tag"
+							:mode="'Delete'"
+							@on-delete-tag="onDeleteTag"
+						/>
 					</div>
 				</v-card-text>
 				<div class="modal__footer">
@@ -75,6 +81,11 @@
 		tagsStore.addNewTag_ToChangeBalanceTagList(newTag);
 
 		newTagName.value = '';
+	};
+
+	const onDeleteTag = (tag: Tag) => {
+		tagsStore.delete_FromChangeBalanceTagList(tag);
+		tagsList.value = tagsStore.get_ChangeBalanceTagList();
 	};
 
 	const onCloseModal = () => {

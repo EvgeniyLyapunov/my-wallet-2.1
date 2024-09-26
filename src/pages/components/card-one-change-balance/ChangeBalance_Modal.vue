@@ -208,6 +208,12 @@
 		isVisidle_TagEditModal.value = true;
 	};
 
+	watch(isVisidle_TagEditModal, (newValue) => {
+		if (!newValue) {
+			tagsList.value = tagsStore.get_ChangeBalanceTagList();
+		}
+	});
+
 	const onNumberKeyPress = (keyNumber: string) => {
 		if (inputAmount.value === '0' && keyNumber === '0') {
 			return;

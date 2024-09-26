@@ -19,6 +19,10 @@
 	padding: 10px !important;
 }
 
+:deep(.v-btn.modal__footer-btn) {
+	text-transform: none;
+}
+
 .modal {
 	&__title {
 		font-size: 20px;

@@ -28,7 +28,6 @@
 
 	const onTagTap = () => {
 		if (props.mode === 'Delete') {
-			onTagDelete();
 			return;
 		}
 
