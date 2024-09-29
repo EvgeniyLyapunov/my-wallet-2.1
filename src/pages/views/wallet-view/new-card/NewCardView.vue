@@ -78,7 +78,9 @@
 </template>
 
 <script setup lang="ts">
-	import Card from '@/models/Card';
+	import moment from 'moment-timezone';
+	import { nanoid } from 'nanoid';
+	import type { ICard } from '@/models/types/cardTypes';
 	import { useWalletStore } from '@/stores/walletStore';
 	import type { TCardMoney } from '@/models/types/cardTypes';
 	import bankIcon from '@/assets/images/icons/bank-card.png';
@@ -92,7 +94,19 @@
 	const router = useRouter();
 	const walletStore = useWalletStore();
 
-	let newCard: Card;
+	const newCard = ref<ICard | null>({
+		baseCardId: '',
+		cardId: '',
+		cardName: '',
+		cardMoneyType: '',
+		isVirtual: false,
+		baseCardName: null,
+		virtualList: [],
+		currentSum: 0,
+		operationHistory: [],
+		screenLocation: 0,
+		changesLastDate: moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm'),
+	});
 
 	const form = ref();
 	const name = ref<string>('');
@@ -150,7 +164,6 @@
 	];
 
 	onMounted(() => {
-		newCard = reactive<Card>(new Card());
 		selectBaseItems.value = ['base'];
 	});
 
@@ -188,28 +201,31 @@
 			return;
 		}
 
-		newCard.cardName = name.value;
-		newCard.cardMoneyType = selectType.value!;
+		newCard.value!.cardId = nanoid();
+		newCard.value!.cardName = name.value;
+		newCard.value!.cardMoneyType = selectType.value!;
 
-		if (newCard.cardMoneyType === 'bank') {
-			newCard.cardIcon = bankIcon;
+		if (newCard.value!.cardMoneyType === 'bank') {
+			newCard.value!.cardIcon = bankIcon;
 		} else {
-			newCard.cardIcon = cashIcon;
+			newCard.value!.cardIcon = cashIcon;
 		}
 
-		newCard.baseCardName = selectBase.value;
+		newCard.value!.baseCardName = selectBase.value;
 
-		if (newCard.baseCardName !== 'base') {
-			newCard.baseCardId = walletStore.getCardId_ByName(newCard.baseCardName);
-			newCard.isVirtual = true;
-			walletStore.setId_ToVirtualListBaseCard(newCard.cardId, newCard.baseCardId);
+		if (newCard.value!.baseCardName !== 'base') {
+			newCard.value!.baseCardId = walletStore.getCardId_ByName(newCard.value!.baseCardName);
+			newCard.value!.isVirtual = true;
+			walletStore.setId_ToVirtualListBaseCard(newCard.value!.cardId, newCard.value!.baseCardId);
+		} else {
+			newCard.value!.isVirtual = false;
 		}
 
-		newCard.currentSum = startAmount.value;
+		newCard.value!.currentSum = Number(startAmount.value);
 
-		walletStore.addCard_ToList(JSON.parse(JSON.stringify(newCard)));
+		walletStore.addCard_ToList(JSON.parse(JSON.stringify(newCard.value)));
 
-		newCard = new Card();
+		newCard.value = null;
 
 		router.push('/cards-view');
 	};

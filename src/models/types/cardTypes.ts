@@ -1,8 +1,34 @@
-import cachIcon from '@/assets/images/icons/cash.png'
-import bankIcon from '@/assets/images/icons/bank-card.png'
-import type Card from '@/models/Card'
+import cachIcon from '@/assets/images/icons/cash.png';
+import bankIcon from '@/assets/images/icons/bank-card.png';
 
-export type TCardMoney = 'cash' | 'bank'
-export type TCardIcon = typeof cachIcon | typeof bankIcon
+export interface ITag {
+	Id: string;
+	Name: string;
+}
 
-export type TWallet = Record<string, Card>
+export interface IOperation {
+	date: string;
+	amount: number;
+	type: string;
+	tags?: string[]; // id тегов
+}
+
+export interface ICard {
+	cardId: string;
+	cardName: string;
+	cardMoneyType: TCardMoney | '';
+	isVirtual: boolean;
+	baseCardName: string | null;
+	baseCardId: string | null;
+	virtualList: string[];
+	currentSum: number;
+	operationHistory: IOperation[];
+	screenLocation: number;
+	cardIcon?: TCardIcon;
+	changesLastDate: string;
+}
+
+export type TCardMoney = 'cash' | 'bank';
+export type TCardIcon = typeof cachIcon | typeof bankIcon;
+
+export type TWallet = Record<string, ICard>;

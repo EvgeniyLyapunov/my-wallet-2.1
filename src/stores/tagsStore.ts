@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
-import Tag from '@/models/Tag';
+import type { ITag } from '@/models/types/cardTypes';
 
 export const useTagsStore = defineStore(
 	'tagsStore',
 	() => {
-		const changeBalanceTagsList = ref<Tag[]>([]);
-		const statisticTagsList = ref<Tag[]>([]);
+		const changeBalanceTagsList = ref<ITag[]>([]);
+		const statisticTagsList = ref<ITag[]>([]);
 
-		const addNewTag_ToChangeBalanceTagList = (tag: Tag) => {
+		const addNewTag_ToChangeBalanceTagList = (tag: ITag) => {
 			changeBalanceTagsList.value.push(tag);
 		};
 
@@ -15,11 +15,11 @@ export const useTagsStore = defineStore(
 			return changeBalanceTagsList.value;
 		};
 
-		const delete_FromChangeBalanceTagList = (tag: Tag) => {
+		const delete_FromChangeBalanceTagList = (tag: ITag) => {
 			changeBalanceTagsList.value = changeBalanceTagsList.value.filter((item) => item.Id != tag.Id);
 		};
 
-		const addNewTag_StatisticTagsList = (tag: Tag) => {
+		const addNewTag_StatisticTagsList = (tag: ITag) => {
 			statisticTagsList.value.push(tag);
 		};
 
@@ -27,7 +27,7 @@ export const useTagsStore = defineStore(
 			return statisticTagsList.value;
 		};
 
-		const delete_FromStatisticTagsList = (tag: Tag) => {
+		const delete_FromStatisticTagsList = (tag: ITag) => {
 			statisticTagsList.value = statisticTagsList.value.filter((item) => item.Id != tag.Id);
 		};
 

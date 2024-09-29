@@ -40,8 +40,9 @@
 
 <script setup lang="ts">
 	import { useTagsStore } from '@/stores/tagsStore';
+	import { nanoid } from 'nanoid';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
-	import Tag from '@/models/Tag';
+	import type { ITag } from '@/models/types/cardTypes';
 
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
@@ -71,19 +72,22 @@
 
 	const tagsStore = useTagsStore();
 	const newTagName = ref<string>('');
-	const tagsList = ref<Tag[]>([]);
+	const tagsList = ref<ITag[]>([]);
 
 	const onCreateNewTag = () => {
 		if (!newTagName.value.trim()) {
 			return;
 		}
-		const newTag = new Tag(newTagName.value.trim());
+		const newTag: ITag = {
+			Id: nanoid(),
+			Name: newTagName.value.trim(),
+		};
 		tagsStore.addNewTag_ToChangeBalanceTagList(newTag);
 
 		newTagName.value = '';
 	};
 
-	const onDeleteTag = (tag: Tag) => {
+	const onDeleteTag = (tag: ITag) => {
 		tagsStore.delete_FromChangeBalanceTagList(tag);
 		tagsList.value = tagsStore.get_ChangeBalanceTagList();
 	};

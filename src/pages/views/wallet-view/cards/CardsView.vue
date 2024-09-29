@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-	import Card from '@/models/Card';
+	import type { ICard } from '@/models/types/cardTypes';
 	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
 	import { useCardsViewStore } from '@/stores/cardsViewStore';
@@ -92,12 +92,12 @@
 		router.push('/wallet-view');
 	};
 
-	function getCardObjName(cardName: string) {
+	const getCardObjName = (cardName: string) => {
 		if (cardName.length <= 10) return cardName;
 
 		const cardObjName = cardName.substring(0, 10) + '...';
 		return cardObjName;
-	}
+	};
 
 	function getCardIcon(cardName: string) {
 		if (cardName === 'empty') return 'empty';

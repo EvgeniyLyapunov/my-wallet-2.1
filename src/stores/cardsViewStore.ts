@@ -1,4 +1,4 @@
-import type Card from '@/models/Card';
+import type { ICard } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
 
 export const useCardsViewStore = defineStore(
@@ -13,7 +13,7 @@ export const useCardsViewStore = defineStore(
 		// текущая длинна списка имён карт
 		const currentCardsPlacesListSize = computed<number>(() => сardsPlacesList.value.length);
 
-		const addNewCardOnView = (card: Card) => {
+		const addNewCardOnView = (card: ICard) => {
 			const index = сardsPlacesList.value.indexOf('empty');
 			card.screenLocation = index;
 			сardsPlacesList.value.splice(index, 1, card.cardName);
@@ -47,7 +47,7 @@ export const useCardsViewStore = defineStore(
 			}
 		};
 
-		const moveCardOnView = (card: Card) => {
+		const moveCardOnView = (card: ICard) => {
 			сardsPlacesList.value = сardsPlacesList.value.map((c, i) => {
 				if (c === card.cardName && i === card.screenLocation) return card.cardName;
 				if (c === card.cardName && i !== card.screenLocation) return 'empty';

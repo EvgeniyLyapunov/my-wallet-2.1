@@ -138,22 +138,31 @@
 	</div>
 
 	<TagEditModal v-model="isVisidle_TagEditModal" />
+	<MessageBox
+		v-model="isVisible_MessageBox"
+		:title="messageBox_Title"
+		:message="messageBox_Message"
+	/>
 </template>
 
 <script setup lang="ts">
-	import Card from '@/models/Card';
-	import Tag from '@/models/Tag';
+	import type { ICard, ITag } from '@/models/types/cardTypes';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 	import { useWalletStore } from '@/stores/walletStore';
 	import { useTagsStore } from '@/stores/tagsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
+	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
+
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
+		cardPlus: [type: number];
+		cardMinus: [type: number];
+		cardCangeBalance: [type: number];
 	}>();
 
 	const props = defineProps<{
 		modelValue: boolean;
-		card: Card | undefined;
+		card: ICard | undefined;
 	}>();
 
 	const isShow = computed({
@@ -165,8 +174,9 @@
 		},
 	});
 
+	const walletStore = useWalletStore();
 	const tagsStore = useTagsStore();
-	const tagsList = ref<Tag[]>([]);
+	const tagsList = ref<ITag[]>([]);
 
 	watch(
 		() => props.modelValue,
@@ -182,7 +192,7 @@
 		return inputAmount.value === '0' ? false : true;
 	});
 
-	const isVisible_Keyboard = ref<boolean>(true);
+	const isVisible_Keyboard = ref<boolean>(false);
 	const onKeyboardShow = () => {
 		if (!isVisible_Keyboard.value) {
 			isVisible_Keyboard.value = !isVisible_Keyboard.value;
@@ -192,7 +202,7 @@
 		}
 	};
 
-	const isVisible_Tags = ref<boolean>(false);
+	const isVisible_Tags = ref<boolean>(true);
 	const onTagsShow = () => {
 		if (!isVisible_Tags.value) {
 			isVisible_Tags.value = !isVisible_Tags.value;
@@ -244,9 +254,33 @@
 		inputAmount.value = '0';
 	};
 
+	const isVisible_MessageBox = ref<boolean>(false);
+	const messageBox_Title = ref<string>('');
+	const messageBox_Message = ref<string>('');
+
 	// change balance
 
-	const onBalancePlus = () => {};
+	const onBalancePlus = () => {
+		if (inputAmount.value === '0') {
+			return;
+		}
+
+		if (props.card!.isVirtual) {
+			const baseCard = walletStore.getCard_ById(props.card!.baseCardId!);
+			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!);
+			const gap = baseCard!.currentSum - sumOfAllVirtual!;
+
+			if (+inputAmount.value > gap) {
+				isVisible_MessageBox.value = true;
+				messageBox_Title.value = 'Info';
+				messageBox_Message.value = `The resource of the base card allows you to increase the amount of this card by ${gap} max.`;
+				return;
+			}
+		}
+
+		emit('cardPlus', +inputAmount.value);
+		onCloseModal();
+	};
 
 	const onBalanceMinus = () => {};
 
@@ -254,6 +288,8 @@
 
 	const onCloseModal = () => {
 		inputAmount.value = '0';
+		isVisible_Keyboard.value = false;
+		isVisible_Tags.value = true;
 		emit('update:modelValue', false);
 	};
 </script>

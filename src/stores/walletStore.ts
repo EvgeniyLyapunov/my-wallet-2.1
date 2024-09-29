@@ -1,4 +1,4 @@
-import type Card from '@/models/Card';
+import type { ICard } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
 import { useCardsViewStore } from './cardsViewStore';
 
@@ -7,7 +7,7 @@ export const useWalletStore = defineStore(
 	() => {
 		const cardViewStore = useCardsViewStore();
 		// список карт
-		const cardList = ref<Card[]>([]);
+		const cardList = ref<ICard[]>([]);
 
 		const baseCards_CashMoney_NamesList = computed<string[]>(() => {
 			const baseCards = ['base'];
@@ -40,13 +40,13 @@ export const useWalletStore = defineStore(
 			return cardList.value.find((item) => item.cardName === name) ? false : true;
 		};
 
-		const getCard_ByName = (name: string): Card | null => {
+		const getCard_ByName = (name: string): ICard | null => {
 			if (cardList.value.length === 0) return null;
 			if (!cardList.value.find((item) => item.cardName === name)) return null;
 			return cardList.value.find((item) => item.cardName === name)!;
 		};
 
-		const getCard_ById = (id: string): Card | undefined => {
+		const getCard_ById = (id: string): ICard | undefined => {
 			if (cardList.value.length === 0) return;
 			if (!cardList.value.find((item) => item.cardId === id)) return;
 			return cardList.value.find((item) => item.cardId === id)!;
@@ -57,7 +57,27 @@ export const useWalletStore = defineStore(
 			getCard_ById(baseCardId)?.virtualList.push(id);
 		};
 
-		const addCard_ToList = (card: Card) => {
+		const getSum_AllVirtualCardsOfBaseCard = (card: ICard): number | null => {
+			if (card.isVirtual) {
+				return null;
+			}
+
+			if (card.virtualList.length === 0) {
+				return 0;
+			}
+
+			const vCards: ICard[] = card.virtualList.map((idcard) => {
+				const vc = getCard_ById(idcard)!;
+				return vc;
+			});
+
+			return vCards.reduce((acc, item) => {
+				return acc + item.currentSum;
+			}, 0);
+		};
+
+		const addCard_ToList = (card: ICard) => {
+			console.log(card);
 			cardList.value.push(card);
 			cardViewStore.addNewCardOnView(card);
 		};
@@ -70,7 +90,7 @@ export const useWalletStore = defineStore(
 			return cardList.value.length;
 		};
 
-		const editCardInfo = (card: Card) => {
+		const editCardInfo = (card: ICard) => {
 			deleteCard(card.cardId);
 
 			if (card.baseCardName !== 'base') {
@@ -119,6 +139,14 @@ export const useWalletStore = defineStore(
 			removeCard_FromList(idCard);
 		};
 
+		const cardOperationBalance_Plus = (card: ICard, sum: number) => {
+			card.currentSum += sum;
+		};
+
+		const cardOperationBalance_Minus = (card: ICard) => {};
+
+		const cardOperationBalance_ChangeBalance = (card: ICard) => {};
+
 		return {
 			cardList,
 			baseCards_CashMoney_NamesList,
@@ -130,9 +158,11 @@ export const useWalletStore = defineStore(
 			getCard_ByName,
 			getCardId_ByName,
 			setId_ToVirtualListBaseCard,
+			getSum_AllVirtualCardsOfBaseCard,
 			getCard_ById,
 			editCardInfo,
 			deleteCard,
+			cardOperationBalance_Plus,
 		};
 	},
 	{

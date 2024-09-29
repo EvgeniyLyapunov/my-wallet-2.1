@@ -27,9 +27,7 @@
 			<div class="card__main-info">
 				<div class="card__main-info-block">
 					<span class="card__main-info-label">Date of last modification:</span>
-					<span class="card__main-info-value">{{
-						moment(card!.changesLastDate).format('DD.MM.YYYY HH:mm')
-					}}</span>
+					<span class="card__main-info-value">{{ card!.changesLastDate }}</span>
 				</div>
 				<div class="card__main-info-block">
 					<span class="card__main-info-label">Type of money on the card:</span>
@@ -91,17 +89,20 @@
 		:confirm-info="confirmInfo"
 		@confirm="deleteCard"
 	/>
-	<ChangeBalanceModal v-model="isVisible_ChangeBalanceModal" :card="card" />
+	<ChangeBalanceModal
+		v-model="isVisible_ChangeBalanceModal"
+		:card="card"
+		@card-plus="onCardOperation_Plus"
+	/>
 </template>
 
 <script setup lang="ts">
 	import moment from 'moment';
 	import { useRoute } from 'vue-router';
-	import Card from '@/models/Card';
+	import type { ICard } from '@/models/types/cardTypes';
 	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
 	import { elementHeight_Relative_PreviousSiblingAndWindowHeight } from '@/utils/elementHeight';
-
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
 	import CardInfo_EditModal from '@/pages/components/cards-one-edit-cardinfo/CardInfo_EditModal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
@@ -134,7 +135,8 @@
 	const router = useRouter();
 	const route = useRoute();
 	const id = ref<string>('');
-	const card = ref<Card | undefined>();
+
+	const card = ref<ICard | undefined>();
 
 	const breadcrumbsDivider: string = '/';
 
@@ -169,7 +171,7 @@
 		}
 	};
 
-	const onEditCardInfo = (editedCard: Card) => {
+	const onEditCardInfo = (editedCard: ICard) => {
 		card.value = editedCard;
 	};
 
@@ -189,6 +191,10 @@
 
 	const onShow_ChangeBalanceModal = () => {
 		isVisible_ChangeBalanceModal.value = true;
+	};
+
+	const onCardOperation_Plus = (sum: number) => {
+		walletStore.cardOperationBalance_Plus(card.value!, sum);
 	};
 
 	function doCancel() {
