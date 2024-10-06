@@ -216,8 +216,6 @@
 					// расчитывается по координатам текущего тапа
 					shadowPlaceIndex = getPositionShadow(e, startAbsX, startAbsY, cardsPlacesList);
 
-					const card = walletStore.getCard_ByName(draggedCardName.value);
-
 					const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
 						shadowPlaceIndex,
 						draggedCardName.value
@@ -252,6 +250,22 @@
 
 					targetElement.value.style.top = `${absPosElemY}px`;
 					targetElement.value.style.left = `${absPosElemX}px`;
+
+					shadowPlaceIndex = getPositionShadow(e, startAbsX, startAbsY, cardsPlacesList);
+
+					const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
+						shadowPlaceIndex,
+						draggedCardName.value
+					);
+					if (checkedShadowPlaceIndex > -1) {
+						cardsPlacesList.forEach((item) => {
+							if (+item.dataset.place! === checkedShadowPlaceIndex) {
+								item.classList.add('cards__shadow-style');
+							} else {
+								item.classList.remove('cards__shadow-style');
+							}
+						});
+					}
 				}
 			}
 		}
@@ -381,7 +395,7 @@
 	};
 
 	function getPositionShadow(
-		e: TouchEvent,
+		e: TouchEvent | MouseEvent,
 		X: number,
 		Y: number,
 		cardsPlacesList: HTMLElement[]
@@ -390,30 +404,58 @@
 		let endY = Y;
 		let shadowPlaceIndex = 0;
 
-		if (
-			e.changedTouches[0].clientX < parentRect.value!.left ||
-			e.changedTouches[0].clientX > parentRect.value!.right ||
-			e.changedTouches[0].clientY < parentRect.value!.top ||
-			e.changedTouches[0].clientY > parentRect.value!.bottom
-		) {
-			if (e.changedTouches[0].clientX < parentRect.value!.left) {
-				endX = parentRect.value!.left + 1;
-				endY = e.changedTouches[0].clientY;
-			} else if (e.changedTouches[0].clientX > parentRect.value!.right) {
-				endX = parentRect.value!.right - 1;
-				endY = e.changedTouches[0].clientY;
-			}
+		if (e instanceof TouchEvent) {
+			if (
+				e.changedTouches[0].clientX < parentRect.value!.left ||
+				e.changedTouches[0].clientX > parentRect.value!.right ||
+				e.changedTouches[0].clientY < parentRect.value!.top ||
+				e.changedTouches[0].clientY > parentRect.value!.bottom
+			) {
+				if (e.changedTouches[0].clientX < parentRect.value!.left) {
+					endX = parentRect.value!.left + 1;
+					endY = e.changedTouches[0].clientY;
+				} else if (e.changedTouches[0].clientX > parentRect.value!.right) {
+					endX = parentRect.value!.right - 1;
+					endY = e.changedTouches[0].clientY;
+				}
 
-			if (e.changedTouches[0].clientY < parentRect.value!.top) {
-				endY = parentRect.value!.top + 1;
+				if (e.changedTouches[0].clientY < parentRect.value!.top) {
+					endY = parentRect.value!.top + 1;
+					endX = e.changedTouches[0].clientX;
+				} else if (e.changedTouches[0].clientY > parentRect.value!.bottom) {
+					endY = parentRect.value!.bottom - 1;
+					endX = e.changedTouches[0].clientX;
+				}
+			} else {
 				endX = e.changedTouches[0].clientX;
-			} else if (e.changedTouches[0].clientY > parentRect.value!.bottom) {
-				endY = parentRect.value!.bottom - 1;
-				endX = e.changedTouches[0].clientX;
+				endY = e.changedTouches[0].clientY;
 			}
 		} else {
-			endX = e.changedTouches[0].clientX;
-			endY = e.changedTouches[0].clientY;
+			if (
+				e.clientX < parentRect.value!.left ||
+				e.clientX > parentRect.value!.right ||
+				e.clientY < parentRect.value!.top ||
+				e.clientY > parentRect.value!.bottom
+			) {
+				if (e.clientX < parentRect.value!.left) {
+					endX = parentRect.value!.left + 1;
+					endY = e.clientY;
+				} else if (e.clientX > parentRect.value!.right) {
+					endX = parentRect.value!.right - 1;
+					endY = e.clientY;
+				}
+
+				if (e.clientY < parentRect.value!.top) {
+					endY = parentRect.value!.top + 1;
+					endX = e.clientX;
+				} else if (e.clientY > parentRect.value!.bottom) {
+					endY = parentRect.value!.bottom - 1;
+					endX = e.clientX;
+				}
+			} else {
+				endX = e.clientX;
+				endY = e.clientY;
+			}
 		}
 
 		cardsPlacesList.forEach((item) => {
