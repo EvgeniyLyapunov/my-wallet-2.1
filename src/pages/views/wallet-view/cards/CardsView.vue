@@ -152,6 +152,8 @@
 				}
 			} else {
 				if (targetElement.value) {
+					showCardName.value = cardName;
+
 					isLongPress.value = true;
 					draggedElementIndex.value = index;
 					targetElement.value.classList.add('cards__obj-dropped');
