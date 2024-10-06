@@ -54,20 +54,21 @@
 </template>
 
 <script setup lang="ts">
-	import Card from '@/models/Card';
+	import type { ICard } from '@/models/types/cardTypes';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useCardService } from '@/services/cardService';
 	import type { TCardMoney } from '@/models/types/cardTypes';
 	import bankIcon from '@/assets/images/icons/bank-card.png';
 	import cashIcon from '@/assets/images/icons/cash.png';
 
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
-		onEdit: [type: Card];
+		onEdit: [type: ICard];
 	}>();
 
 	const props = defineProps<{
 		modelValue: boolean;
-		card: Card | undefined;
+		card: ICard | undefined;
 	}>();
 
 	const isShow = computed({
@@ -101,6 +102,7 @@
 	);
 
 	const walletStore = useWalletStore();
+	const cardService = useCardService();
 
 	const form = ref();
 	const name = ref<string>('');
@@ -165,7 +167,7 @@
 			return;
 		}
 
-		const editedCard: Card = JSON.parse(JSON.stringify(props.card!));
+		const editedCard: ICard = JSON.parse(JSON.stringify(props.card!));
 		editedCard.cardName = name.value.trim();
 
 		if (!isSelectTypeDisabled.value) {
@@ -184,11 +186,11 @@
 			if (editedCard.baseCardName !== 'base') {
 				editedCard.baseCardId = walletStore.getCardId_ByName(editedCard.baseCardName);
 				editedCard.isVirtual = true;
-				walletStore.setId_ToVirtualListBaseCard(editedCard.cardId, editedCard.baseCardId);
+				cardService.setId_ToVirtualListBaseCard(editedCard.cardId, editedCard.baseCardId);
 			}
 		}
 
-		walletStore.editCardInfo(editedCard);
+		cardService.editCardInfo(editedCard);
 		emit('onEdit', editedCard);
 		closeModal();
 	};

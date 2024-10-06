@@ -265,12 +265,14 @@
 			return;
 		}
 
+		const amount = Number(inputAmount.value);
+
 		if (props.card!.isVirtual) {
 			const baseCard = walletStore.getCard_ById(props.card!.baseCardId!);
 			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!);
 			const gap = baseCard!.currentSum - sumOfAllVirtual!;
 
-			if (+inputAmount.value > gap) {
+			if (amount > gap) {
 				isVisible_MessageBox.value = true;
 				messageBox_Title.value = 'Info';
 				messageBox_Message.value = `The resource of the base card allows you to increase the amount of this card by ${gap} max.`;
@@ -278,7 +280,7 @@
 			}
 		}
 
-		emit('cardPlus', +inputAmount.value);
+		emit('cardPlus', amount);
 		onCloseModal();
 	};
 

@@ -1,6 +1,7 @@
 import type { ICard } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
 import { useCardsViewStore } from './cardsViewStore';
+import moment from 'moment-timezone';
 
 export const useWalletStore = defineStore(
 	'walletStore',
@@ -52,11 +53,6 @@ export const useWalletStore = defineStore(
 			return cardList.value.find((item) => item.cardId === id)!;
 		};
 
-		const setId_ToVirtualListBaseCard = (id: string, baseCardId: string) => {
-			if (!getCard_ById(baseCardId)) throw new Error('Нет такой карты!');
-			getCard_ById(baseCardId)?.virtualList.push(id);
-		};
-
 		const getSum_AllVirtualCardsOfBaseCard = (card: ICard): number | null => {
 			if (card.isVirtual) {
 				return null;
@@ -88,18 +84,6 @@ export const useWalletStore = defineStore(
 
 		const cardListCount = (): number => {
 			return cardList.value.length;
-		};
-
-		const editCardInfo = (card: ICard) => {
-			deleteCard(card.cardId);
-
-			if (card.baseCardName !== 'base') {
-				card.baseCardId = getCardId_ByName(card.baseCardName!);
-				card.isVirtual = true;
-				setId_ToVirtualListBaseCard(card.cardId, card.baseCardId);
-			}
-			cardList.value.push(card);
-			cardViewStore.сardsPlacesList.splice(card.screenLocation, 1, card.cardName);
 		};
 
 		const deleteCard = (idCard: string) => {
@@ -139,9 +123,10 @@ export const useWalletStore = defineStore(
 			removeCard_FromList(idCard);
 		};
 
-		const cardOperationBalance_Plus = (card: ICard, sum: number) => {
-			card.currentSum += sum;
-		};
+		// const cardOperationBalance_Plus = (card: ICard, sum: number) => {
+		// 	card.currentSum += sum;
+		// 	card.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+		// };
 
 		const cardOperationBalance_Minus = (card: ICard) => {};
 
@@ -157,12 +142,10 @@ export const useWalletStore = defineStore(
 			cardListCount,
 			getCard_ByName,
 			getCardId_ByName,
-			setId_ToVirtualListBaseCard,
 			getSum_AllVirtualCardsOfBaseCard,
 			getCard_ById,
-			editCardInfo,
 			deleteCard,
-			cardOperationBalance_Plus,
+			// cardOperationBalance_Plus,
 		};
 	},
 	{

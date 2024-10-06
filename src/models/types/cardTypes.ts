@@ -10,19 +10,19 @@ export interface IOperation {
 	date: string;
 	amount: number;
 	type: string;
+	cardId: string;
 	tags?: string[]; // id тегов
 }
 
 export interface ICard {
 	cardId: string;
 	cardName: string;
-	cardMoneyType: TCardMoney | '';
+	cardMoneyType?: TCardMoney;
 	isVirtual: boolean;
 	baseCardName: string | null;
 	baseCardId: string | null;
 	virtualList: string[];
 	currentSum: number;
-	operationHistory: IOperation[];
 	screenLocation: number;
 	cardIcon?: TCardIcon;
 	changesLastDate: string;

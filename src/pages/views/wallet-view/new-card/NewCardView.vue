@@ -82,6 +82,7 @@
 	import { nanoid } from 'nanoid';
 	import type { ICard } from '@/models/types/cardTypes';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useCardService } from '@/services/cardService';
 	import type { TCardMoney } from '@/models/types/cardTypes';
 	import bankIcon from '@/assets/images/icons/bank-card.png';
 	import cashIcon from '@/assets/images/icons/cash.png';
@@ -93,17 +94,16 @@
 
 	const router = useRouter();
 	const walletStore = useWalletStore();
+	const cardService = useCardService();
 
 	const newCard = ref<ICard | null>({
 		baseCardId: '',
 		cardId: '',
 		cardName: '',
-		cardMoneyType: '',
 		isVirtual: false,
 		baseCardName: null,
 		virtualList: [],
 		currentSum: 0,
-		operationHistory: [],
 		screenLocation: 0,
 		changesLastDate: moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm'),
 	});
@@ -216,7 +216,7 @@
 		if (newCard.value!.baseCardName !== 'base') {
 			newCard.value!.baseCardId = walletStore.getCardId_ByName(newCard.value!.baseCardName);
 			newCard.value!.isVirtual = true;
-			walletStore.setId_ToVirtualListBaseCard(newCard.value!.cardId, newCard.value!.baseCardId);
+			cardService.setId_ToVirtualListBaseCard(newCard.value!.cardId, newCard.value!.baseCardId);
 		} else {
 			newCard.value!.isVirtual = false;
 		}

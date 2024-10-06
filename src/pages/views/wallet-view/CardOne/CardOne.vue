@@ -72,11 +72,11 @@
 				</template>
 				Home
 			</v-btn>
-			<v-btn density="comfortable" prepend-icon="mdi-cancel" @click="doCancel">
+			<v-btn density="comfortable" prepend-icon="mdi-cancel" @click="doClose">
 				<template v-slot:prepend>
 					<v-icon color="yellow"></v-icon>
 				</template>
-				Cancel
+				Close
 			</v-btn>
 		</div>
 	</div>
@@ -102,6 +102,7 @@
 	import type { ICard } from '@/models/types/cardTypes';
 	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useCardService } from '@/services/cardService';
 	import { elementHeight_Relative_PreviousSiblingAndWindowHeight } from '@/utils/elementHeight';
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
 	import CardInfo_EditModal from '@/pages/components/cards-one-edit-cardinfo/CardInfo_EditModal.vue';
@@ -118,6 +119,7 @@
 	});
 
 	const walletStore = useWalletStore();
+	const cardService = useCardService();
 	const cardHeight = ref<number>(0);
 
 	const isVisibleMessageBox = ref<boolean>(false);
@@ -194,10 +196,10 @@
 	};
 
 	const onCardOperation_Plus = (sum: number) => {
-		walletStore.cardOperationBalance_Plus(card.value!, sum);
+		cardService.cardOperationBalance_Plus(card.value!, sum);
 	};
 
-	function doCancel() {
+	function doClose() {
 		router.push('/cards-view');
 	}
 
