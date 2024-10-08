@@ -10,7 +10,10 @@ export const useCardService = defineStore('cardService', () => {
 
 	const setId_ToVirtualListBaseCard = (id: string, baseCardId: string) => {
 		if (!walletStore.getCard_ById(baseCardId)) throw new Error('Нет такой карты!');
-		walletStore.getCard_ById(baseCardId)?.virtualList.push(id);
+		const card = walletStore.getCard_ById(baseCardId);
+		if (card) {
+			card.virtualList = [...card.virtualList, id];
+		}
 	};
 
 	const editCardInfo = (card: ICard) => {
@@ -31,6 +34,10 @@ export const useCardService = defineStore('cardService', () => {
 		currentCard!.currentSum += sum;
 		currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
 	};
+
+	const cardOperationBalance_Minus = (card: ICard) => {};
+
+	const cardOperationBalance_ChangeBalance = (card: ICard) => {};
 
 	return {
 		setId_ToVirtualListBaseCard,

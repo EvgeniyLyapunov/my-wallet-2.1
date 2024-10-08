@@ -73,7 +73,6 @@ export const useWalletStore = defineStore(
 		};
 
 		const addCard_ToList = (card: ICard) => {
-			console.log(card);
 			cardList.value.push(card);
 			cardViewStore.addNewCardOnView(card);
 		};
@@ -123,15 +122,6 @@ export const useWalletStore = defineStore(
 			removeCard_FromList(idCard);
 		};
 
-		// const cardOperationBalance_Plus = (card: ICard, sum: number) => {
-		// 	card.currentSum += sum;
-		// 	card.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
-		// };
-
-		const cardOperationBalance_Minus = (card: ICard) => {};
-
-		const cardOperationBalance_ChangeBalance = (card: ICard) => {};
-
 		return {
 			cardList,
 			baseCards_CashMoney_NamesList,
@@ -145,7 +135,6 @@ export const useWalletStore = defineStore(
 			getSum_AllVirtualCardsOfBaseCard,
 			getCard_ById,
 			deleteCard,
-			// cardOperationBalance_Plus,
 		};
 	},
 	{

@@ -7,6 +7,10 @@ export const useTagsStore = defineStore(
 		const changeBalanceTagsList = ref<ITag[]>([]);
 		const statisticTagsList = ref<ITag[]>([]);
 
+		const checkForUniqueTagIn_ChangeBalanceList = (tag: ITag): boolean => {
+			return changeBalanceTagsList.value.some((item) => item.Name === tag.Name);
+		};
+
 		const addNewTag_ToChangeBalanceTagList = (tag: ITag) => {
 			changeBalanceTagsList.value.push(tag);
 		};
@@ -34,6 +38,7 @@ export const useTagsStore = defineStore(
 		return {
 			changeBalanceTagsList,
 			statisticTagsList,
+			checkForUniqueTagIn_ChangeBalanceList,
 			addNewTag_ToChangeBalanceTagList,
 			addNewTag_StatisticTagsList,
 			get_ChangeBalanceTagList,

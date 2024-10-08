@@ -110,7 +110,14 @@
 								variant="text"
 								@click="onTagEditModalShow"
 							></v-btn>
-							<TagItem v-for="tag in tagsList" :key="tag.Id" :tag="tag" :mode="'Operation'" />
+							<TagItem
+								v-for="tag in tagsList"
+								:key="tag.Id"
+								:tag="tag"
+								:mode="'Operation'"
+								@onAddTag="onAddTagForCurrentOperation"
+								@onCancelTag="onDeleteTagFromCurrentOperation"
+							/>
 						</div>
 						<v-btn
 							v-if="!isVisible_Tags"
@@ -177,6 +184,7 @@
 	const walletStore = useWalletStore();
 	const tagsStore = useTagsStore();
 	const tagsList = ref<ITag[]>([]);
+	const tagsForCurrentOperation = ref<ITag[]>([]);
 
 	watch(
 		() => props.modelValue,
@@ -257,6 +265,18 @@
 	const isVisible_MessageBox = ref<boolean>(false);
 	const messageBox_Title = ref<string>('');
 	const messageBox_Message = ref<string>('');
+
+	// Tags for current operation
+
+	const onAddTagForCurrentOperation = (tag: ITag) => {
+		tagsForCurrentOperation.value = [...tagsForCurrentOperation.value, tag];
+	};
+
+	const onDeleteTagFromCurrentOperation = (tag: ITag) => {
+		tagsForCurrentOperation.value = tagsForCurrentOperation.value.filter(
+			(item) => item.Id !== tag.Id
+		);
+	};
 
 	// change balance
 

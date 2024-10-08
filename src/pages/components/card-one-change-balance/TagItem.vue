@@ -12,16 +12,16 @@
 </template>
 
 <script setup lang="ts">
-	import type Tag from '@/models/Tag';
+	import type { ITag } from '@/models/types/cardTypes';
 	const props = defineProps<{
-		tag: Tag;
+		tag: ITag;
 		mode: 'Operation' | 'Delete';
 	}>();
 
 	const emit = defineEmits<{
-		onAddTag: [type: Tag];
-		onCancelTag: [type: Tag];
-		onDeleteTag: [type: Tag];
+		onAddTag: [type: ITag];
+		onCancelTag: [type: ITag];
+		onDeleteTag: [type: ITag];
 	}>();
 
 	const isSelected = ref<boolean>(false);

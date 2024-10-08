@@ -82,6 +82,11 @@
 			Id: nanoid(),
 			Name: newTagName.value.trim(),
 		};
+
+		if (tagsStore.checkForUniqueTagIn_ChangeBalanceList(newTag)) {
+			return;
+		}
+
 		tagsStore.addNewTag_ToChangeBalanceTagList(newTag);
 
 		newTagName.value = '';

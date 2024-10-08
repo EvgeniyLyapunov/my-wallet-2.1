@@ -6,8 +6,13 @@ export const useOperationsStore = defineStore(
 	() => {
 		const operationsList = ref<IOperation[]>([]);
 
+		const addOperationToList = (operation: IOperation) => {
+			operationsList.value = [...operationsList.value, operation];
+		};
+
 		return {
 			operationsList,
+			addOperationToList,
 		};
 	},
 	{
