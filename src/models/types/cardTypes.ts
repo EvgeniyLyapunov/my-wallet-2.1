@@ -9,7 +9,7 @@ export interface ITag {
 export interface IOperation {
 	date: string;
 	amount: number;
-	type: string;
+	type: 'plus' | 'minus' | 'changeBalance';
 	cardId: string;
 	tags?: string[]; // id тегов
 }

@@ -93,6 +93,7 @@
 		v-model="isVisible_ChangeBalanceModal"
 		:card="card"
 		@card-plus="onCardOperation_Plus"
+		@card-minus="onCardOperation_Minus"
 	/>
 </template>
 
@@ -198,6 +199,12 @@
 	const onCardOperation_Plus = (sum: number) => {
 		cardService.cardOperationBalance_Plus(card.value!, sum);
 	};
+
+	const onCardOperation_Minus = (sum: number) => {
+		cardService.cardOperationBalance_Minus(card.value!, sum);
+	};
+
+	const onCardOperation_ChangeBalance = (sum: number) => {};
 
 	function doClose() {
 		router.push('/cards-view');

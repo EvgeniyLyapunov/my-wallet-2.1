@@ -153,12 +153,14 @@
 </template>
 
 <script setup lang="ts">
-	import type { ICard, ITag } from '@/models/types/cardTypes';
+	import type { ICard, IOperation, ITag } from '@/models/types/cardTypes';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 	import { useWalletStore } from '@/stores/walletStore';
 	import { useTagsStore } from '@/stores/tagsStore';
+	import { useOperationsStore } from '@/stores/operationsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
+	import moment from 'moment';
 
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
@@ -183,6 +185,7 @@
 
 	const walletStore = useWalletStore();
 	const tagsStore = useTagsStore();
+	const operationsStore = useOperationsStore();
 	const tagsList = ref<ITag[]>([]);
 	const tagsForCurrentOperation = ref<ITag[]>([]);
 
@@ -300,11 +303,83 @@
 			}
 		}
 
+		const operation: IOperation = {
+			date: moment().format('DD.MM.YYYY HH:mm'),
+			amount,
+			cardId: props.card!.cardId,
+			type: 'plus',
+			tags: tagsForCurrentOperation.value.map((item) => item.Id),
+		};
+
+		if (operation.tags) {
+			operation.tags.forEach((item) => {
+				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
+				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
+					tagsStore.addNewTag_StatisticTagsList(tag);
+				}
+			});
+		}
+
+		operationsStore.addOperationToList(operation);
+
 		emit('cardPlus', amount);
 		onCloseModal();
 	};
 
-	const onBalanceMinus = () => {};
+	const onBalanceMinus = () => {
+		if (inputAmount.value === '0') {
+			return;
+		}
+
+		const amount = Number(inputAmount.value);
+
+		// если карта базовая и имеет виртуальные карты
+		if (!props.card!.isVirtual && props.card!.virtualList.length > 0) {
+			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(props.card!);
+			const gap: number = props.card!.currentSum - sumOfAllVirtual!;
+			if (amount > gap) {
+				isVisible_MessageBox.value = true;
+				messageBox_Title.value = 'Info';
+				messageBox_Message.value = `The resource of this card allows you to reduce the amount by a maximum of ${gap} rubles`;
+				return;
+			}
+			// если карта виртуальная
+		} else {
+			const baseCard = walletStore.getCard_ById(props.card!.baseCardId!);
+			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!);
+			const gap = baseCard!.currentSum - sumOfAllVirtual!;
+			if (amount > gap + props.card!.currentSum) {
+				isVisible_MessageBox.value = true;
+				messageBox_Title.value = 'Info';
+				messageBox_Message.value = `The resource of the base card allows you to reduce the amount of this card by a maximum of ${
+					props.card!.currentSum
+				} rubles to zero or ${props.card!.currentSum + gap} rubles to minus.`;
+				return;
+			}
+		}
+
+		const operation: IOperation = {
+			date: moment().format('DD.MM.YYYY HH:mm'),
+			amount,
+			cardId: props.card!.cardId,
+			type: 'minus',
+			tags: tagsForCurrentOperation.value.map((item) => item.Id),
+		};
+
+		if (operation.tags) {
+			operation.tags.forEach((item) => {
+				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
+				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
+					tagsStore.addNewTag_StatisticTagsList(tag);
+				}
+			});
+		}
+
+		operationsStore.addOperationToList(operation);
+
+		emit('cardMinus', amount);
+		onCloseModal();
+	};
 
 	const onChangeBalance = () => {};
 
@@ -312,6 +387,7 @@
 		inputAmount.value = '0';
 		isVisible_Keyboard.value = false;
 		isVisible_Tags.value = true;
+		tagsForCurrentOperation.value = [];
 		emit('update:modelValue', false);
 	};
 </script>

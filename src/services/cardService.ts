@@ -35,13 +35,37 @@ export const useCardService = defineStore('cardService', () => {
 		currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
 	};
 
-	const cardOperationBalance_Minus = (card: ICard) => {};
+	const cardOperationBalance_Minus = (card: ICard, sum: number) => {
+		const currentCard = walletStore.getCard_ById(card.cardId);
 
-	const cardOperationBalance_ChangeBalance = (card: ICard) => {};
+		if (currentCard!.isVirtual) {
+			const baseCard = walletStore.getCard_ById(currentCard!.baseCardId!);
+
+			if (currentCard!.currentSum < sum) {
+				currentCard!.currentSum = 0;
+				currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+
+				baseCard!.currentSum -= sum;
+				baseCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+			} else {
+				currentCard!.currentSum -= sum;
+				currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+
+				baseCard!.currentSum -= sum;
+				baseCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+			}
+		} else {
+			currentCard!.currentSum -= sum;
+			currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+		}
+	};
+
+	const cardOperationBalance_ChangeBalance = (card: ICard, sum: number) => {};
 
 	return {
 		setId_ToVirtualListBaseCard,
 		editCardInfo,
 		cardOperationBalance_Plus,
+		cardOperationBalance_Minus,
 	};
 });

@@ -15,6 +15,14 @@ export const useTagsStore = defineStore(
 			changeBalanceTagsList.value.push(tag);
 		};
 
+		const get_TagFromChangeBalanceTagsList = (tagId: string): ITag | undefined => {
+			if (changeBalanceTagsList.value.some((item) => item.Id === tagId)) {
+				return changeBalanceTagsList.value.filter((item) => item.Id === tagId)[0];
+			} else {
+				return undefined;
+			}
+		};
+
 		const get_ChangeBalanceTagList = () => {
 			return changeBalanceTagsList.value;
 		};
@@ -23,12 +31,24 @@ export const useTagsStore = defineStore(
 			changeBalanceTagsList.value = changeBalanceTagsList.value.filter((item) => item.Id != tag.Id);
 		};
 
+		const checkForUniqueTagIn_StatisticTagsList = (tag: ITag): boolean => {
+			return statisticTagsList.value.some((item) => item.Name === tag.Name);
+		};
+
 		const addNewTag_StatisticTagsList = (tag: ITag) => {
 			statisticTagsList.value.push(tag);
 		};
 
 		const get_StatisticTagsList = () => {
 			return statisticTagsList.value;
+		};
+
+		const get_TagFromStatisticTagsList = (tagId: string): ITag | undefined => {
+			if (statisticTagsList.value.some((item) => item.Id === tagId)) {
+				return statisticTagsList.value.filter((item) => item.Id === tagId)[0];
+			} else {
+				return undefined;
+			}
 		};
 
 		const delete_FromStatisticTagsList = (tag: ITag) => {
@@ -40,9 +60,12 @@ export const useTagsStore = defineStore(
 			statisticTagsList,
 			checkForUniqueTagIn_ChangeBalanceList,
 			addNewTag_ToChangeBalanceTagList,
+			checkForUniqueTagIn_StatisticTagsList,
 			addNewTag_StatisticTagsList,
 			get_ChangeBalanceTagList,
+			get_TagFromChangeBalanceTagsList,
 			get_StatisticTagsList,
+			get_TagFromStatisticTagsList,
 			delete_FromChangeBalanceTagList,
 			delete_FromStatisticTagsList,
 		};
