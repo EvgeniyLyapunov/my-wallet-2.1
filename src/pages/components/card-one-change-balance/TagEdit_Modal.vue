@@ -7,15 +7,23 @@
 				</v-card-title>
 				<v-card-text>
 					<div class="modal__form">
-						<FloatLabel class="modal__form-label-input">
-							<InputText
-								id="newTagInput"
+						<label class="modal__form-label">
+							<span
+								:class="{
+									'modal__form-label-span': true,
+									'modal__form-label-span_active': isPlaceholderSpan,
+								}"
+							>
+								New Tag Name
+							</span>
+							<input
 								v-model="newTagName"
 								class="modal__form-input"
-								inputtext.border.radius="10"
+								type="text"
+								@focusin="onInputFocus"
+								@focusout="onInputBlur"
 							/>
-							<label for="newTagInput">New Tag Name</label>
-						</FloatLabel>
+						</label>
 						<v-btn class="modal__form-btn" @click="onCreateNewTag">Ok</v-btn>
 					</div>
 					<div class="modal__tags">
@@ -74,6 +82,17 @@
 	const newTagName = ref<string>('');
 	const tagsList = ref<ITag[]>([]);
 
+	const isPlaceholderSpan = ref<boolean>(false);
+	const onInputFocus = () => {
+		isPlaceholderSpan.value = true;
+	};
+
+	const onInputBlur = () => {
+		if (!newTagName.value) {
+			isPlaceholderSpan.value = false;
+		}
+	};
+
 	const onCreateNewTag = () => {
 		if (!newTagName.value.trim()) {
 			return;
@@ -90,6 +109,7 @@
 		tagsStore.addNewTag_ToChangeBalanceTagList(newTag);
 
 		newTagName.value = '';
+		isPlaceholderSpan.value = false;
 	};
 
 	const onDeleteTag = (tag: ITag) => {
@@ -99,6 +119,7 @@
 
 	const onCloseModal = () => {
 		newTagName.value = '';
+		isPlaceholderSpan.value = false;
 		emit('update:modelValue', false);
 	};
 </script>
