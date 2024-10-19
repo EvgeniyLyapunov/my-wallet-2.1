@@ -94,6 +94,7 @@
 		:card="card"
 		@card-plus="onCardOperation_Plus"
 		@card-minus="onCardOperation_Minus"
+		@card-change-balance="onCardOperation_ChangeBalance"
 	/>
 </template>
 
@@ -204,7 +205,9 @@
 		cardService.cardOperationBalance_Minus(card.value!, sum);
 	};
 
-	const onCardOperation_ChangeBalance = (sum: number) => {};
+	const onCardOperation_ChangeBalance = (sum: number) => {
+		cardService.cardOperationBalance_ChangeBalance(card.value!, sum);
+	};
 
 	function doClose() {
 		router.push('/cards-view');

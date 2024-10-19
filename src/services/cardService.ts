@@ -60,12 +60,17 @@ export const useCardService = defineStore('cardService', () => {
 		}
 	};
 
-	const cardOperationBalance_ChangeBalance = (card: ICard, sum: number) => {};
+	const cardOperationBalance_ChangeBalance = (card: ICard, sum: number) => {
+		const currentCard = walletStore.getCard_ById(card.cardId);
+		currentCard!.currentSum = sum;
+		currentCard!.changesLastDate = moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm');
+	};
 
 	return {
 		setId_ToVirtualListBaseCard,
 		editCardInfo,
 		cardOperationBalance_Plus,
 		cardOperationBalance_Minus,
+		cardOperationBalance_ChangeBalance,
 	};
 });

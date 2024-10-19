@@ -166,7 +166,7 @@
 		'update:modelValue': [type: boolean];
 		cardPlus: [type: number];
 		cardMinus: [type: number];
-		cardCangeBalance: [type: number];
+		cardChangeBalance: [type: number];
 	}>();
 
 	const props = defineProps<{
@@ -381,7 +381,66 @@
 		onCloseModal();
 	};
 
-	const onChangeBalance = () => {};
+	const onChangeBalance = () => {
+		if (inputAmount.value === '0') {
+			return;
+		}
+
+		const amount = Number(inputAmount.value);
+
+		// если сумма уменьшеается
+		if (amount < props.card!.currentSum) {
+			// если карта базовая и имеет виртуальные карты
+			if (!props.card!.isVirtual && props.card!.virtualList.length > 0) {
+				const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(props.card!);
+
+				if (amount < sumOfAllVirtual!) {
+					isVisible_MessageBox.value = true;
+					messageBox_Title.value = 'Info';
+					messageBox_Message.value = `Virtual cards of this card allow to reduce the card amount to ${sumOfAllVirtual} value`;
+					return;
+				}
+			}
+			// если сумма увеличивается
+		} else {
+			// если карта виртуальная
+			if (props.card!.isVirtual) {
+				const baseCard = walletStore.getCard_ById(props.card!.baseCardId!);
+				const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!);
+				const gap: number = baseCard!.currentSum - sumOfAllVirtual!;
+				if (amount > props.card!.currentSum + gap) {
+					isVisible_MessageBox.value = true;
+					messageBox_Title.value = 'Info';
+					messageBox_Message.value = `Resource of the base card allows you to increase the amount of this card up maximum to ${
+						props.card!.currentSum + gap
+					} value`;
+					return;
+				}
+			}
+		}
+
+		const operation: IOperation = {
+			date: moment().format('DD.MM.YYYY HH:mm'),
+			amount,
+			cardId: props.card!.cardId,
+			type: 'changeBalance',
+			tags: tagsForCurrentOperation.value.map((item) => item.Id),
+		};
+
+		if (operation.tags) {
+			operation.tags.forEach((item) => {
+				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
+				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
+					tagsStore.addNewTag_StatisticTagsList(tag);
+				}
+			});
+		}
+
+		operationsStore.addOperationToList(operation);
+
+		emit('cardChangeBalance', amount);
+		onCloseModal();
+	};
 
 	const onCloseModal = () => {
 		inputAmount.value = '0';
