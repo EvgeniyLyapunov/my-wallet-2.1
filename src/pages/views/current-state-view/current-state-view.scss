@@ -1,20 +1,105 @@
 @import '@/style/mixins.scss';
 
-.current-state {
+.cs {
 	@include basePageWithBorder;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	// justify-content: space-between;
 	&::after {
 		background: url('@/assets/images/bg/bg_current_state.jpg') center / cover no-repeat;
 		filter: blur(3px);
 	}
 	&__title-block {
 		padding: 20px 0 0 30px;
+		margin-bottom: 10vh;
 	}
 	&__title {
 		font-size: 24px;
 		font-weight: 700;
 		color: #fff;
 	}
+	&__main {
+		position: relative;
+		z-index: 10;
+		width: 90%;
+		align-self: center;
+		display: flex;
+		flex-direction: column;
+		&-general {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			&-label {
+				padding-right: 30px;
+				font-size: 34px;
+				font-weight: 700;
+				color: #fafafa;
+			}
+			&-amount {
+				font-size: 40px;
+				font-weight: 700;
+				color: #ffa000;
+				text-shadow: 2px 1px 3px #fff;
+			}
+		}
+		&-divider {
+			width: 70%;
+			height: 30px;
+			align-self: center;
+			background: url(@/assets/images/divider/divider2.png) center/ contain no-repeat;
+		}
+		&-cards {
+			position: relative;
+			z-index: 10;
+			width: 90%;
+			height: 50vh;
+			overflow-y: auto;
+			align-self: center;
+			&-bank {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				&-label {
+					color: #fff;
+					font-size: 24px;
+					font-weight: 700;
+				}
+				&-value {
+					color: #fff;
+					font-size: 26px;
+					font-weight: 700;
+				}
+			}
+		}
+	}
+}
+
+.breadcrumbs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+	&__link {
+		font-size: 14px;
+		color: #fff;
+	}
+	&__divider {
+		color: #c6c6c6;
+	}
+	&__end {
+		color: #ffb74d;
+	}
+}
+
+:deep(.v-expansion-panel) {
+	background-color: transparent;
+}
+
+:deep(.v-expansion-panel-title .cs__main-cards-bank .v-expansion-panel-title-label) {
+	color: #fff;
+	font-size: 24px;
+	font-weight: 700;
 }

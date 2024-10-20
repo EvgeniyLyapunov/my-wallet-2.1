@@ -30,6 +30,21 @@ export const useWalletStore = defineStore(
 			return baseCards;
 		});
 
+		const getGeneralAmount = (): number => {
+			if (cardList.value.length === 0) {
+				return 0;
+			}
+			return cardList.value
+				.map((item) => {
+					if (!item.isVirtual) {
+						return item.currentSum;
+					} else {
+						return 0;
+					}
+				})
+				.reduce((acc, i) => acc! + i!, 0)!;
+		};
+
 		const getCardId_ByName = (name: string): string => {
 			if (cardList.value.length === 0) return '';
 			if (!cardList.value.find((item) => item.cardName === name)) return '';
@@ -70,6 +85,11 @@ export const useWalletStore = defineStore(
 			return vCards.reduce((acc, item) => {
 				return acc + item.currentSum;
 			}, 0);
+		};
+
+		const getVirtualCards_ByBaseCardId = (id: string): ICard[] => {
+			const baseCard = getCard_ById(id);
+			return baseCard!.virtualList.map((item) => getCard_ById(item)!);
 		};
 
 		const addCard_ToList = (card: ICard) => {
@@ -126,6 +146,7 @@ export const useWalletStore = defineStore(
 			cardList,
 			baseCards_CashMoney_NamesList,
 			baseCards_BankMoney_NamesList,
+			getGeneralAmount,
 			checkNewCardName,
 			addCard_ToList,
 			removeCard_FromList,
@@ -134,6 +155,7 @@ export const useWalletStore = defineStore(
 			getCardId_ByName,
 			getSum_AllVirtualCardsOfBaseCard,
 			getCard_ById,
+			getVirtualCards_ByBaseCardId,
 			deleteCard,
 		};
 	},
