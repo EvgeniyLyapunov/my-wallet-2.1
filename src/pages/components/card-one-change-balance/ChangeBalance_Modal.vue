@@ -332,7 +332,6 @@
 		}
 
 		const amount = Number(inputAmount.value);
-
 		// если карта базовая и имеет виртуальные карты
 		if (!props.card!.isVirtual && props.card!.virtualList.length > 0) {
 			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(props.card!);
@@ -344,7 +343,7 @@
 				return;
 			}
 			// если карта виртуальная
-		} else {
+		} else if (props.card!.isVirtual) {
 			const baseCard = walletStore.getCard_ById(props.card!.baseCardId!);
 			const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!);
 			const gap = baseCard!.currentSum - sumOfAllVirtual!;
@@ -388,6 +387,9 @@
 
 		const amount = Number(inputAmount.value);
 
+		const operationType =
+			amount < props.card!.currentSum ? 'changeBalance_Minus' : 'changeBalance_Plus';
+
 		// если сумма уменьшеается
 		if (amount < props.card!.currentSum) {
 			// если карта базовая и имеет виртуальные карты
@@ -423,7 +425,7 @@
 			date: moment().format('DD.MM.YYYY HH:mm'),
 			amount,
 			cardId: props.card!.cardId,
-			type: 'changeBalance',
+			type: operationType,
 			tags: tagsForCurrentOperation.value.map((item) => item.Id),
 		};
 

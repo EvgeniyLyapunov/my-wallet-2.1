@@ -6,13 +6,18 @@ export interface ITag {
 	Name: string;
 }
 
+export type TOperationType = 'plus' | 'minus' | 'changeBalance_Plus' | 'changeBalance_Minus';
+
 export interface IOperation {
-	date: string;
+	date: Date;
 	amount: number;
-	type: 'plus' | 'minus' | 'changeBalance';
+	type: TOperationType;
 	cardId: string;
 	tags?: string[]; // id тегов
 }
+
+export type TCardMoney = 'cash' | 'bank';
+export type TCardIcon = typeof cachIcon | typeof bankIcon;
 
 export interface ICard {
 	cardId: string;
@@ -28,7 +33,18 @@ export interface ICard {
 	changesLastDate: string;
 }
 
-export type TCardMoney = 'cash' | 'bank';
-export type TCardIcon = typeof cachIcon | typeof bankIcon;
-
 export type TWallet = Record<string, ICard>;
+
+export interface IStatisticsConfigutation {
+	from: string;
+	to: string;
+	tags: ITag[];
+	moneyType?: TCardMoney;
+	operationType?: TOperationType;
+	card?: ICard;
+}
+
+export interface IAppSettings {
+	MoneyMonthStartDate: number;
+	isSaveLastStatisticsSet: boolean;
+}

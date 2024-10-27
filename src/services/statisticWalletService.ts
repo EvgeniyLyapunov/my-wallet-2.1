@@ -35,8 +35,25 @@ export const useStatisticWalletService = defineStore('statisticWalletService', (
 			.reduce((acc, i) => acc! + i!, 0)!;
 	};
 
+	const getCashCardsAmount = (): number => {
+		if (walletStore.cardList.length === 0) {
+			return 0;
+		}
+
+		return walletStore.cardList
+			.map((item) => {
+				if (!item.isVirtual && item.cardMoneyType === 'cash') {
+					return item.currentSum;
+				} else {
+					return 0;
+				}
+			})
+			.reduce((acc, i) => acc! + i!, 0)!;
+	};
+
 	return {
 		getGeneralAmount,
 		getBankCardsAmount,
+		getCashCardsAmount,
 	};
 });

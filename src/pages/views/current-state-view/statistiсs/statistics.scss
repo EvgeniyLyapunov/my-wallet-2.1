@@ -1,0 +1,56 @@
+@import '@/style/mixins.scss';
+
+.s {
+	@include basePageWithBorder;
+	display: flex;
+	flex-direction: column;
+	&::after {
+		background: url('@/assets/images/bg/bg_current_state.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+	&__title-block {
+		padding: 20px 0 0 30px;
+		height: 15vh;
+		background: rgb(120, 184, 120);
+		&__title {
+			font-size: 24px;
+			font-weight: 700;
+			color: #fff;
+		}
+	}
+	&__main {
+		width: 90%;
+		height: 70vh;
+		display: flex;
+		flex-direction: column;
+		align-self: center;
+		background: rgb(227, 238, 227);
+	}
+	&__footer {
+		width: 90%;
+		height: 15vh;
+		display: flex;
+		align-self: center;
+		background: rgb(161, 161, 161);
+	}
+}
+
+.breadcrumbs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+	&__link {
+		font-size: 14px;
+		color: #fff;
+		cursor: pointer;
+	}
+	&__divider {
+		color: #c6c6c6;
+	}
+	&__end {
+		color: #ffb74d;
+	}
+}
