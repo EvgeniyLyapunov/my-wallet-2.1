@@ -5,6 +5,7 @@ import type {
 	ICard,
 	TCardMoney,
 	TOperationType,
+	IStatisticsSubtitle,
 } from '@/models/types/cardTypes';
 import moment from 'moment-timezone';
 
@@ -12,12 +13,38 @@ export const useStatisticsStore = defineStore(
 	'statisticsStore',
 	() => {
 		const statisticsConfiguration = reactive<IStatisticsConfigutation>({
-			from: moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm'),
+			from: moment.tz('Europe/Moscow').startOf('month').format('DD-MM-YYYY HH:mm'),
 			to: moment.tz('Europe/Moscow').format('DD-MM-YYYY HH:mm'),
+			periodType: 'Current Month',
 			card: undefined,
 			moneyType: undefined,
 			operationType: undefined,
 			tags: [],
+		});
+
+		const get_StatisticsSubtitle = computed<IStatisticsSubtitle>(() => {
+			const subtitle: IStatisticsSubtitle = {
+				period: statisticsConfiguration.periodType,
+				filters: [],
+			};
+
+			if (statisticsConfiguration.card) {
+				subtitle.filters.push('Card');
+			}
+
+			if (statisticsConfiguration.moneyType) {
+				subtitle.filters.push('MoneyType');
+			}
+
+			if (statisticsConfiguration.operationType) {
+				subtitle.filters.push('OperationType');
+			}
+
+			if (statisticsConfiguration.tags.length > 0) {
+				subtitle.filters.push('Tags');
+			}
+
+			return subtitle;
 		});
 
 		const get_StatisticsConfiguration = (): IStatisticsConfigutation => {
@@ -50,6 +77,7 @@ export const useStatisticsStore = defineStore(
 
 		return {
 			statisticsConfiguration,
+			get_StatisticsSubtitle,
 			get_StatisticsConfiguration,
 			set_FromDate,
 			set_ToDate,

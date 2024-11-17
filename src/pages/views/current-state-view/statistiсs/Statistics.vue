@@ -12,7 +12,21 @@
 		</header>
 
 		<main class="s__main">
-			<section class="s__main-subtitle"></section>
+			<section class="s__main-subtitle sub">
+				<div class="sub__period">
+					<span class="sub__period-label">Period:</span>
+					<span class="sub__period-date">{{ subtitle ? subtitle.period : '' }}</span>
+				</div>
+				<div class="sub__filters">
+					<span>Filters:</span>
+					<ul v-if="subtitle && subtitle.filters.length > 0">
+						<li v-for="(item, i) in subtitle.filters" :key="i">
+							{{ item }}{{ subtitle.filters.length - 1 === i ? '.' : ',' }}
+						</li>
+					</ul>
+					<span v-else>no filters</span>
+				</div>
+			</section>
 			<section class="s__main-chart"></section>
 			<section class="s__main-info"></section>
 			<section class="s__main-btns"></section>
@@ -23,9 +37,20 @@
 </template>
 
 <script setup lang="ts">
+	import { useStatisticsStore } from '@/stores/statisticsStore';
+	import type { IStatisticsSubtitle } from '@/models/types/cardTypes';
+
 	definePage({
 		name: 'statistics',
 		path: '/statistics',
+	});
+
+	const statisticsStore = useStatisticsStore();
+
+	const subtitle = ref<IStatisticsSubtitle>();
+
+	onMounted(() => {
+		subtitle.value = statisticsStore.get_StatisticsSubtitle;
 	});
 
 	const router = useRouter();

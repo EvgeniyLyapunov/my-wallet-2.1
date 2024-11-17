@@ -35,9 +35,31 @@ export interface ICard {
 
 export type TWallet = Record<string, ICard>;
 
+/**
+ * тип временного периода для отображаемой статистики
+ */
+export type StatisticsPeriodType = 'Current Month' | 'Salary Month' | 'Custom Period';
+
+/**
+ * типы фильтров для статистики
+ */
+export type StatisticsFiltersType = 'Card' | 'MoneyType' | 'OperationType' | 'Period' | 'Tags';
+
+/**
+ * Объект предисловия, (subtitle)
+ */
+export interface IStatisticsSubtitle {
+	period: StatisticsPeriodType;
+	filters: StatisticsFiltersType[];
+}
+
+/**
+ * объект статистики
+ */
 export interface IStatisticsConfigutation {
 	from: string;
 	to: string;
+	periodType: StatisticsPeriodType;
 	tags: ITag[];
 	moneyType?: TCardMoney;
 	operationType?: TOperationType;
