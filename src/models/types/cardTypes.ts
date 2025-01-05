@@ -6,11 +6,12 @@ export interface ITag {
 	Name: string;
 }
 
-export type TOperationType = 'plus' | 'minus' | 'changeBalance_Plus' | 'changeBalance_Minus';
+export type TOperationType = 'plus' | 'minus';
 
 export interface IOperation {
 	date: Date;
 	amount: number;
+	moneyType: TCardMoney;
 	type: TOperationType;
 	cardId: string;
 	tags?: string[]; // id тегов
@@ -38,7 +39,7 @@ export type TWallet = Record<string, ICard>;
 /**
  * тип временного периода для отображаемой статистики
  */
-export type StatisticsPeriodType = 'Current Month' | 'Salary Month' | 'Custom Period';
+export type StatisticsPeriodType = 'Current Week' | 'Current Month' | 'Salary Month';
 
 /**
  * типы фильтров для статистики
@@ -67,6 +68,6 @@ export interface IStatisticsConfigutation {
 }
 
 export interface IAppSettings {
-	MoneyMonthStartDate: number;
-	isSaveLastStatisticsSet: boolean;
+	salaryMonthStart: number;
+	isSaveLastStatisticOptions: boolean;
 }

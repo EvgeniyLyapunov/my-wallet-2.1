@@ -15,10 +15,10 @@
 			<section class="s__main-subtitle sub">
 				<div class="sub__period">
 					<span class="sub__period-label">Period:</span>
-					<span class="sub__period-date">{{ subtitle ? subtitle.period : '' }}</span>
+					<span class="sub__period-value">{{ subtitle ? subtitle.period : '' }}</span>
 				</div>
 				<div class="sub__filters">
-					<span>Filters:</span>
+					<span class="sub__filters-label">Filters:</span>
 					<ul v-if="subtitle && subtitle.filters.length > 0">
 						<li v-for="(item, i) in subtitle.filters" :key="i">
 							{{ item }}{{ subtitle.filters.length - 1 === i ? '.' : ',' }}
@@ -27,18 +27,50 @@
 					<span v-else>no filters</span>
 				</div>
 			</section>
-			<section class="s__main-chart"></section>
-			<section class="s__main-info"></section>
-			<section class="s__main-btns"></section>
+			<section class="s__main-chart">
+				<VueApexCharts
+					type="line"
+					:height="chartHeight"
+					:options="chartOptions"
+					:series="series"
+				></VueApexCharts>
+			</section>
+			<section class="s__main-resum resum">
+				<div class="resum__begin">
+					<span class="resum__begin-label">Date begin:</span>
+					<span class="resum__begin-value"></span>
+				</div>
+				<div class="resum__end">
+					<span class="resum__end-label">Date end:</span>
+					<span class="resum__end-value"></span>
+				</div>
+				<div class="resum__amount">
+					<span class="resum__amount-label">Amount changes:</span>
+					<span class="resum__amount-value"></span>
+				</div>
+			</section>
+			<section class="s__main-btns btns">
+				<v-btn class="btns__options-btn" @click="onStatisticOptionsModalOpen"
+					>Statistics Options</v-btn
+				>
+			</section>
 		</main>
 
-		<footer class="s__footer"></footer>
+		<footer class="s__footer">
+			<v-btn class="s__footer-btn s__footer-btn-home" @click="onRouteHome">Home</v-btn>
+			<v-btn class="s__footer-btn s__footer-btn-close" @click="onRouteCurrentState">Close</v-btn>
+		</footer>
 	</div>
+
+	<StatisticOptionsModal v-model="isVisible_StatisticOptionsModal" />
 </template>
 
 <script setup lang="ts">
+	import VueApexCharts from 'vue3-apexcharts';
 	import { useStatisticsStore } from '@/stores/statisticsStore';
 	import type { IStatisticsSubtitle } from '@/models/types/cardTypes';
+
+	import StatisticOptionsModal from '@/pages/components/statistic-options-modal/StatisticOptionsModal.vue';
 
 	definePage({
 		name: 'statistics',
@@ -47,7 +79,56 @@
 
 	const statisticsStore = useStatisticsStore();
 
+	const chartHeight = ref<number>(0);
+
 	const subtitle = ref<IStatisticsSubtitle>();
+
+	const series = ref([
+		{
+			name: 'Desktops',
+			data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+		},
+	]);
+
+	const chartOptions = ref({
+		chart: {
+			type: 'line',
+			height: `${chartHeight.value}`,
+			zoom: {
+				enabled: false,
+			},
+			toolbar: {
+				show: false, // Отключаем бургер-меню (toolbar)
+			},
+		},
+		dataLabels: {
+			enabled: false,
+		},
+		stroke: {
+			curve: 'smooth',
+		},
+		markers: {
+			size: 0,
+		},
+		xaxis: {
+			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+		},
+	});
+
+	const isVisible_StatisticOptionsModal = ref<boolean>(false);
+
+	const onStatisticOptionsModalOpen = () => {
+		isVisible_StatisticOptionsModal.value = true;
+	};
+
+	onBeforeMount(() => {
+		const clientHeight = Math.floor(document.documentElement.getBoundingClientRect().height);
+		if (clientHeight > 770) {
+			chartHeight.value = 430;
+		} else {
+			chartHeight.value = 280;
+		}
+	});
 
 	onMounted(() => {
 		subtitle.value = statisticsStore.get_StatisticsSubtitle;

@@ -1,0 +1,60 @@
+.modal {
+	&__title {
+		font-size: 20px;
+		font-weight: 400;
+	}
+	&__form {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		&-section {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+	}
+}
+
+.period {
+}
+
+.card {
+}
+
+.money-type {
+}
+
+.operation-type {
+}
+
+.tags {
+}
+
+:deep(.v-overlay__content) {
+	max-width: 475px !important;
+}
+
+:deep(.v-card) {
+	max-width: 475px !important;
+	border: 5px solid teal;
+}
+
+:deep(.v-card-title) {
+	padding: 5px 10px;
+	font-size: 14px;
+	font-weight: 400;
+	background-color: teal;
+	color: #fff;
+}
+
+:deep(.v-card-text) {
+	padding: 10px !important;
+}
+
+:deep(.v-btn.v-btn--density-default) {
+	text-transform: none;
+}
+
+:deep(.v-input__details) {
+	display: none !important;
+}

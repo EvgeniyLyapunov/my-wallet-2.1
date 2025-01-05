@@ -5,14 +5,12 @@ import VueRouter from 'unplugin-vue-router/vite';
 import { VueRouterAutoImports } from 'unplugin-vue-router';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
-import { PrimeVueResolver } from '@primevue/auto-import-resolver';
 
 export default defineConfig({
 	plugins: [
 		Components({
 			dts: './src/components.d.ts',
 			types: [],
-			resolvers: [PrimeVueResolver()],
 		}),
 		AutoImport({
 			imports: [
@@ -37,5 +35,9 @@ export default defineConfig({
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
 		},
+	},
+	server: {
+		port: 5108,
+		open: true,
 	},
 });

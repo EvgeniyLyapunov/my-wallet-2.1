@@ -1,19 +1,19 @@
 import { defineStore } from 'pinia';
 import type { IAppSettings } from '@/models/types/cardTypes';
 
-export const useSettingsStore = defineStore(
-	'settingsStore',
-	() => {
-		const settingsObject = reactive<IAppSettings>({
-			isSaveLastStatisticsSet: true,
-			MoneyMonthStartDate: 10,
-		});
+export const useSettingsStore = defineStore('settingsStore', () => {
+	const settingsObject = reactive<IAppSettings>({
+		isSaveLastStatisticOptions: true,
+		salaryMonthStart: 10,
+	});
 
-		return {
-			settingsObject,
-		};
-	},
-	{
-		persist: true,
-	}
-);
+	const setSettingsParameters = (obj: IAppSettings) => {
+		settingsObject.salaryMonthStart = Number(obj.salaryMonthStart);
+		settingsObject.isSaveLastStatisticOptions = obj.isSaveLastStatisticOptions;
+	};
+
+	return {
+		settingsObject,
+		setSettingsParameters,
+	};
+});

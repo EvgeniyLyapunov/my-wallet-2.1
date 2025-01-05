@@ -159,6 +159,13 @@
 			}
 		}
 		&-tags {
+			width: 100%;
+			padding: 10px 0;
+			max-height: 240px;
+			overflow-y: auto;
+			display: none;
+			flex-wrap: wrap;
+			align-items: center;
 			&-wrapper {
 				position: relative;
 				padding-bottom: 15px;
@@ -179,13 +186,6 @@
 				margin-right: 15px;
 				margin-bottom: 10px;
 			}
-			width: 100%;
-			padding: 10px 0;
-			max-height: 240px;
-			overflow-y: auto;
-			display: none;
-			flex-wrap: wrap;
-			align-items: center;
 			&_active {
 				display: flex;
 			}

@@ -304,8 +304,9 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().format('DD.MM.YYYY HH:mm'),
+			date: moment().toDate(),
 			amount,
+			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
 			type: 'plus',
 			tags: tagsForCurrentOperation.value.map((item) => item.Id),
@@ -358,8 +359,9 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().format('DD.MM.YYYY HH:mm'),
+			date: moment().toDate(),
 			amount,
+			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
 			type: 'minus',
 			tags: tagsForCurrentOperation.value.map((item) => item.Id),
@@ -381,14 +383,9 @@
 	};
 
 	const onChangeBalance = () => {
-		if (inputAmount.value === '0') {
-			return;
-		}
-
 		const amount = Number(inputAmount.value);
 
-		const operationType =
-			amount < props.card!.currentSum ? 'changeBalance_Minus' : 'changeBalance_Plus';
+		const operationType = amount < props.card!.currentSum ? 'minus' : 'plus';
 
 		// если сумма уменьшеается
 		if (amount < props.card!.currentSum) {
@@ -422,8 +419,9 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().format('DD.MM.YYYY HH:mm'),
+			date: moment().toDate(),
 			amount,
+			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
 			type: operationType,
 			tags: tagsForCurrentOperation.value.map((item) => item.Id),
