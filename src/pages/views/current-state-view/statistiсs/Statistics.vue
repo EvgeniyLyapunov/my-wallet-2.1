@@ -30,6 +30,7 @@
 			<section class="s__main-chart">
 				<VueApexCharts
 					type="line"
+					:key="chartUpdateKey"
 					:height="chartHeight"
 					:options="chartOptions"
 					:series="series"
@@ -66,31 +67,48 @@
 </template>
 
 <script setup lang="ts">
+	import { nanoid } from 'nanoid';
 	import VueApexCharts from 'vue3-apexcharts';
 	import { useStatisticsStore } from '@/stores/statisticsStore';
-	import type { IStatisticsSubtitle } from '@/models/types/cardTypes';
+	import { useOperationsStore } from '@/stores/operationsStore';
+	import type {
+		IOperation,
+		IStatisticOptions,
+		IStatisticsSubtitle,
+	} from '@/models/types/cardTypes';
 
 	import StatisticOptionsModal from '@/pages/components/statistic-options-modal/StatisticOptionsModal.vue';
+	import moment from 'moment-timezone';
 
 	definePage({
 		name: 'statistics',
 		path: '/statistics',
 	});
 
-	const statisticsStore = useStatisticsStore();
+	moment.updateLocale('en', {
+		week: {
+			dow: 1, // Устанавливаем понедельник как первый день недели
+		},
+	});
+
+	const { get_StatisticsSubtitle, get_StatisticOptions } = useStatisticsStore();
+	const { get_OperationsByStatisticOptions } = useOperationsStore();
 
 	const chartHeight = ref<number>(0);
+	const chartUpdateKey = ref<string>('1');
 
 	const subtitle = ref<IStatisticsSubtitle>();
+	const xAxis = ref<string[]>([]);
+	const yAxis = ref<number[]>([]);
 
-	const series = ref([
+	const series = reactive([
 		{
-			name: 'Desktops',
-			data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+			name: 'Amount',
+			data: yAxis.value,
 		},
 	]);
 
-	const chartOptions = ref({
+	const chartOptions = reactive({
 		chart: {
 			type: 'line',
 			height: `${chartHeight.value}`,
@@ -111,7 +129,7 @@
 			size: 0,
 		},
 		xaxis: {
-			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+			categories: xAxis.value,
 		},
 	});
 
@@ -128,11 +146,38 @@
 		} else {
 			chartHeight.value = 280;
 		}
+		initStatisticChart();
 	});
 
-	onMounted(() => {
-		subtitle.value = statisticsStore.get_StatisticsSubtitle;
+	onMounted(async () => {
+		subtitle.value = get_StatisticsSubtitle;
+
+		await nextTick();
+		chartUpdateKey.value = nanoid();
 	});
+
+	onBeforeUnmount(() => {
+		xAxis.value = [];
+		yAxis.value = [];
+	});
+
+	const initStatisticChart = () => {
+		const optionsObj: IStatisticOptions = get_StatisticOptions();
+		const operationsList = get_OperationsByStatisticOptions(optionsObj);
+		operationsList.sort((a, b) => {
+			return (
+				moment.tz(a.date, 'Europe/Moscow').startOf('minute').toDate().getTime() -
+				moment.tz(b.date, 'Europe/Moscow').startOf('minute').toDate().getTime()
+			);
+		});
+
+		operationsList.forEach((operation) => {
+			const day = moment(operation.date).date().toString();
+			xAxis.value.push(day);
+			const amount = operation.type === 'minus' ? -Math.abs(operation.amount) : operation.amount;
+			yAxis.value.push(amount);
+		});
+	};
 
 	const router = useRouter();
 	const breadcrumbsDivider: string = '/';

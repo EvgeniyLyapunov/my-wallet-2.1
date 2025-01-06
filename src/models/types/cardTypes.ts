@@ -14,7 +14,7 @@ export interface IOperation {
 	moneyType: TCardMoney;
 	type: TOperationType;
 	cardId: string;
-	tags?: string[]; // id тегов
+	tags: string[]; // id тегов
 }
 
 export type TCardMoney = 'cash' | 'bank';
@@ -57,14 +57,14 @@ export interface IStatisticsSubtitle {
 /**
  * объект статистики
  */
-export interface IStatisticsConfigutation {
-	from: string;
-	to: string;
+export interface IStatisticOptions {
+	from: Date;
+	to: Date;
 	periodType: StatisticsPeriodType;
 	tags: ITag[];
 	moneyType?: TCardMoney;
 	operationType?: TOperationType;
-	card?: ICard;
+	card?: string;
 }
 
 export interface IAppSettings {

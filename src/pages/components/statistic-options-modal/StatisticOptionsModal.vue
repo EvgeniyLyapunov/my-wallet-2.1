@@ -54,14 +54,21 @@
 </template>
 
 <script setup lang="ts">
-	import moment from 'moment';
+	import moment from 'moment-timezone';
 	import {
+		type ICard,
+		type IStatisticOptions,
 		type ITag,
 		type StatisticsPeriodType,
 		type TCardMoney,
 		type TOperationType,
 	} from '@/models/types/cardTypes';
 	import { useSettingsStore } from '@/stores/settingsStore';
+	import { useStatisticsStore } from '@/stores/statisticsStore';
+	import { useOperationsStore } from '@/stores/operationsStore';
+	import { useWalletStore } from '@/stores/walletStore';
+	import { useTagsStore } from '@/stores/tagsStore';
+
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 
 	moment.updateLocale('en', {
@@ -88,9 +95,13 @@
 	});
 
 	const { settingsObject } = useSettingsStore();
+	const { get_StatisticOptions, set_FromDate, set_ToDate } = useStatisticsStore();
+	const { get_OperationsByStatisticOptions } = useOperationsStore();
+	const { getCard_ById } = useWalletStore();
+	const { get_TagFromStatisticTagsList } = useTagsStore();
 
 	const radioPeriod = ref<StatisticsPeriodType>('Current Week');
-	const periodBegin = ref<Date | undefined>();
+	const periodBegin = ref<Date>(moment.tz('Europe/Moscow').startOf('week').toDate());
 	const periodEnd = ref<Date | undefined>();
 	const selectedCard = ref<string>('All');
 	const cardsList = ref<string[]>(['All']);
@@ -99,12 +110,45 @@
 	const tagsList = ref<ITag[]>([]);
 	const tagsForCurrentOptions = ref<ITag[]>([]);
 
+	// открытие модального окна
 	watch(
 		() => props.modelValue,
 		(newValue) => {
 			if (newValue) {
-				periodBegin.value = moment().startOf('week').toDate();
-				periodEnd.value = moment().startOf('days').toDate();
+				periodEnd.value = moment.tz('Europe/Moscow').startOf('minute').toDate();
+
+				set_FromDate(periodBegin.value);
+				set_ToDate(periodEnd.value);
+
+				const optionsObj: IStatisticOptions = get_StatisticOptions();
+				const operationsList = get_OperationsByStatisticOptions(optionsObj);
+
+				if (operationsList && operationsList.length > 0) {
+					let cardNames: string[] = [];
+					let tags: string[] = [];
+
+					operationsList.forEach((item) => {
+						const card = getCard_ById(item.cardId);
+						if (card) {
+							cardNames.push(card.cardName);
+						}
+
+						if (item.tags.length > 0) {
+							tags = [...tags, ...item.tags];
+						}
+					});
+
+					cardsList.value = ['All', ...Array.from(new Set(cardNames))];
+
+					const unicTags = Array.from(new Set(tags));
+
+					unicTags.forEach((tagId) => {
+						const tag = get_TagFromStatisticTagsList(tagId);
+						if (tag) {
+							tagsList.value.push(tag);
+						}
+					});
+				}
 			}
 		}
 	);

@@ -160,7 +160,7 @@
 	import { useOperationsStore } from '@/stores/operationsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
-	import moment from 'moment';
+	import moment from 'moment-timezone';
 
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
@@ -304,7 +304,7 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().toDate(),
+			date: moment.tz('Europe/Moscow').toDate(),
 			amount,
 			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
@@ -359,7 +359,7 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().toDate(),
+			date: moment.tz('Europe/Moscow').toDate(),
 			amount,
 			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
@@ -419,7 +419,7 @@
 		}
 
 		const operation: IOperation = {
-			date: moment().toDate(),
+			date: moment.tz('Europe/Moscow').toDate(),
 			amount,
 			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
