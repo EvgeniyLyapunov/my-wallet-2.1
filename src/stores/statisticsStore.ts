@@ -6,6 +6,7 @@ import type {
 	TCardMoney,
 	TOperationType,
 	IStatisticsSubtitle,
+	StatisticsPeriodType,
 } from '@/models/types/cardTypes';
 import moment from 'moment-timezone';
 
@@ -49,6 +50,10 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		return statisticOptions;
 	};
 
+	const set_StatisticPeriod = (period: StatisticsPeriodType) => {
+		statisticOptions.periodType = period;
+	};
+
 	const set_FromDate = (from: Date) => {
 		statisticOptions.from = from;
 	};
@@ -57,26 +62,39 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		statisticOptions.to = to;
 	};
 
-	const set_Card = (card: string) => {
-		statisticOptions.card = card;
+	const set_Card = (cardName: string) => {
+		if (cardName === 'All') {
+			statisticOptions.card = undefined;
+		} else {
+			statisticOptions.card = cardName;
+		}
 	};
 
-	const set_MoneyType = (type: TCardMoney) => {
-		statisticOptions.moneyType = type;
+	const set_MoneyType = (type: TCardMoney | 'All') => {
+		if (type === 'All') {
+			statisticOptions.moneyType = undefined;
+		} else {
+			statisticOptions.moneyType = type;
+		}
 	};
 
-	const set_operationType = (type: TOperationType) => {
-		statisticOptions.operationType = type;
+	const set_operationType = (type: TOperationType | 'All') => {
+		if (type === 'All') {
+			statisticOptions.operationType = undefined;
+		} else {
+			statisticOptions.operationType = type;
+		}
 	};
 
 	const set_Tags = (tags: ITag[]) => {
-		statisticOptions.tags = [...statisticOptions.tags, ...tags];
+		statisticOptions.tags = tags;
 	};
 
 	return {
 		statisticOptions,
 		get_StatisticsSubtitle,
 		get_StatisticOptions,
+		set_StatisticPeriod,
 		set_FromDate,
 		set_ToDate,
 		set_Card,

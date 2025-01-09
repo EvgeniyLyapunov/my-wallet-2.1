@@ -63,7 +63,10 @@
 		</footer>
 	</div>
 
-	<StatisticOptionsModal v-model="isVisible_StatisticOptionsModal" />
+	<StatisticOptionsModal
+		v-model="isVisible_StatisticOptionsModal"
+		@apply-options="onApplyOptions"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -75,6 +78,7 @@
 		IOperation,
 		IStatisticOptions,
 		IStatisticsSubtitle,
+		StatisticsPeriodType,
 	} from '@/models/types/cardTypes';
 
 	import StatisticOptionsModal from '@/pages/components/statistic-options-modal/StatisticOptionsModal.vue';
@@ -101,14 +105,14 @@
 	const xAxis = ref<string[]>([]);
 	const yAxis = ref<number[]>([]);
 
-	const series = reactive([
+	let series = reactive([
 		{
 			name: 'Amount',
 			data: yAxis.value,
 		},
 	]);
 
-	const chartOptions = reactive({
+	let chartOptions = reactive({
 		chart: {
 			type: 'line',
 			height: `${chartHeight.value}`,
@@ -134,6 +138,7 @@
 	});
 
 	const isVisible_StatisticOptionsModal = ref<boolean>(false);
+	const periodStatisticOptions = ref<StatisticsPeriodType>('Current Week');
 
 	const onStatisticOptionsModalOpen = () => {
 		isVisible_StatisticOptionsModal.value = true;
@@ -163,6 +168,8 @@
 
 	const initStatisticChart = () => {
 		const optionsObj: IStatisticOptions = get_StatisticOptions();
+
+		periodStatisticOptions.value = optionsObj.periodType;
 		const operationsList = get_OperationsByStatisticOptions(optionsObj);
 		operationsList.sort((a, b) => {
 			return (
@@ -177,6 +184,19 @@
 			const amount = operation.type === 'minus' ? -Math.abs(operation.amount) : operation.amount;
 			yAxis.value.push(amount);
 		});
+
+		series[0].data = yAxis.value;
+		chartOptions.xaxis.categories = xAxis.value;
+	};
+
+	const onApplyOptions = async () => {
+		xAxis.value = [];
+		yAxis.value = [];
+
+		initStatisticChart();
+
+		await nextTick();
+		chartUpdateKey.value = nanoid();
 	};
 
 	const router = useRouter();
