@@ -1,6 +1,9 @@
 <template>
-	<div :class="{ tag: true, 'tag-delete': props.mode === 'Delete', tag_selected: isSelected }">
-		<span class="tag__name" @click="onTagTap">{{ props.tag.Name }}</span>
+	<div
+		:class="{ tag: true, 'tag-delete': props.mode === 'Delete', tag_selected: isSelected }"
+		@click="onTagTap"
+	>
+		<span class="tag__name">{{ props.tag.Name }}</span>
 		<v-btn
 			v-show="props.mode === 'Delete'"
 			class="tag__delbtn"
@@ -22,9 +25,14 @@
 		onAddTag: [type: ITag];
 		onCancelTag: [type: ITag];
 		onDeleteTag: [type: ITag];
+		tagFromOptionStatistics: [type: () => ITag];
 	}>();
 
 	const isSelected = ref<boolean>(false);
+
+	onMounted(() => {
+		emit('tagFromOptionStatistics', selectFromStatisticOptions);
+	});
 
 	const onTagTap = () => {
 		if (props.mode === 'Delete') {
@@ -39,6 +47,11 @@
 			isSelected.value = true;
 		}
 	};
+
+	function selectFromStatisticOptions() {
+		isSelected.value = true;
+		return props.tag;
+	}
 
 	const onTagDelete = () => {
 		emit('onDeleteTag', props.tag);

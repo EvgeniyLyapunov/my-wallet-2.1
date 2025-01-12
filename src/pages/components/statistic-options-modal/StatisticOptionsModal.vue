@@ -1,47 +1,47 @@
 <template>
 	<div>
-		<v-dialog v-model="isShow" :persistent="true">
-			<v-card class="modal">
-				<v-card-title>
+		<VDialog v-model="isShow" :persistent="true">
+			<VCard class="modal">
+				<VCardTitle>
 					<h2 class="modal__title">Set Statistic Options</h2>
-				</v-card-title>
-				<v-card-text class="modal__form">
+				</VCardTitle>
+				<VCardText class="modal__form">
 					<section class="modal__form-section period">
 						<span>Set statistic period</span>
-						<v-radio-group v-model="radioPeriod">
-							<v-radio label="Current week" value="Current Week"></v-radio>
-							<v-radio label="Current month" value="Current Month"></v-radio>
-							<v-radio label="Salary month" value="Salary Month"></v-radio>
-						</v-radio-group>
+						<VRadioGroup v-model="radioPeriod">
+							<VRadio label="Current week" value="Current Week"></VRadio>
+							<VRadio label="Current month" value="Current Month"></VRadio>
+							<VRadio label="Salary month" value="Salary Month"></VRadio>
+						</VRadioGroup>
 					</section>
 					<section class="modal__form-section card">
 						<span>Set card</span>
-						<v-select v-model="selectedCard" label="Card" :items="cardsList"></v-select>
+						<VSelect v-model="selectedCard" label="Card" :items="cardsList"></VSelect>
 					</section>
 					<section class="modal__form-section money-type">
 						<span>Set money type</span>
-						<v-radio-group v-model="radioMoneyType" inline>
-							<v-radio class="mr-4" label="All" value="All"></v-radio>
-							<v-radio class="mr-4" label="Bank" value="bank"></v-radio>
-							<v-radio label="Cash" value="cash"></v-radio>
-						</v-radio-group>
+						<VRadioGroup v-model="radioMoneyType" inline>
+							<VRadio class="mr-4" label="All" value="All"></VRadio>
+							<VRadio class="mr-4" label="Bank" value="bank"></VRadio>
+							<VRadio label="Cash" value="cash"></VRadio>
+						</VRadioGroup>
 					</section>
 					<section class="modal__form-section operation-type">
 						<span>Set operation type</span>
-						<v-radio-group v-model="radioOperationType" inline>
-							<v-radio class="mr-4" label="All" value="All"></v-radio>
-							<v-radio class="mr-4" label="Plus" value="plus"></v-radio>
-							<v-radio label="Minus" value="minus"></v-radio>
-						</v-radio-group>
+						<VRadioGroup v-model="radioOperationType" inline>
+							<VRadio class="mr-4" label="All" value="All"></VRadio>
+							<VRadio class="mr-4" label="Plus" value="plus"></VRadio>
+							<VRadio label="Minus" value="minus"></VRadio>
+						</VRadioGroup>
 					</section>
 					<section class="modal__form-section tags">
 						<span>Set tags</span>
 						<div class="tags__wrapper" :key="refreshKey">
-							<v-btn
+							<VBtn
 								v-if="tagsForCurrentOptions.length > 0"
 								class="tags__btn-cansel"
 								@click="onSelectedTagsClean"
-								>All</v-btn
+								>All</VBtn
 							>
 							<TagItem
 								v-for="tag in tagsList"
@@ -50,17 +50,18 @@
 								:mode="'Operation'"
 								@onAddTag="onAddTagForCurrentOptions"
 								@onCancelTag="onDeleteTagFromCurrentOption"
+								@tagFromOptionStatistics="fnSelectedTagsToList"
 							/>
 						</div>
 					</section>
 					<div class="modal__form-divider"></div>
 					<section class="modal__form-section btns">
-						<v-btn class="btns__button" @click="onOk">Ok</v-btn>
-						<v-btn class="btns__button" @click="onCloseModal">Cansel</v-btn>
+						<VBtn class="btns__button" @click="onOk">Ok</VBtn>
+						<VBtn class="btns__button" @click="onCloseModal">Cansel</VBtn>
 					</section>
-				</v-card-text>
-			</v-card>
-		</v-dialog>
+				</VCardText>
+			</VCard>
+		</VDialog>
 	</div>
 </template>
 
@@ -133,16 +134,19 @@
 	const radioOperationType = ref<TOperationType | 'All'>('All');
 	const tagsList = ref<ITag[]>([]);
 	const tagsForCurrentOptions = ref<ITag[]>([]);
+
 	const refreshKey = ref<string>('1');
+	const isWatch_tagsForCurrentOptions = ref<boolean>(true);
 
 	// открытие модального окна
 	watch(
 		() => props.modelValue,
-		(newValue) => {
+		async (newValue) => {
 			if (newValue) {
 				optionsObj.value = get_StatisticOptions();
 				radioPeriod.value = optionsObj.value.periodType;
 				initPeriodDates(optionsObj.value.periodType);
+				await nextTick();
 				initPreOptionsByPeriod();
 			}
 		}
@@ -184,15 +188,14 @@
 				}
 				break;
 		}
+		periodEnd.value = moment.tz('Europe/Moscow').startOf('minute').toDate();
 	};
 
 	const initPreOptionsByPeriod = () => {
-		periodEnd.value = moment.tz('Europe/Moscow').startOf('minute').toDate();
-
 		set_FromDate(periodBegin.value);
-		set_ToDate(periodEnd.value);
-
+		set_ToDate(periodEnd.value!);
 		optionsObj.value = get_StatisticOptions();
+
 		selectedCard.value = optionsObj.value.card ? optionsObj.value.card : 'All';
 		radioMoneyType.value = optionsObj.value.moneyType ? optionsObj.value.moneyType : 'All';
 		radioOperationType.value = optionsObj.value.operationType
@@ -212,7 +215,6 @@
 					cardNames.push(card.cardName);
 				}
 
-				if (tagsList.value.length > 0) return;
 				if (item.tags.length > 0) {
 					tags = [...tags, ...item.tags];
 				}
@@ -222,6 +224,7 @@
 			cardsList.value = ['All', ...Array.from(new Set(cardNames))];
 
 			if (tagsList.value.length > 0) return;
+
 			const unicTags = Array.from(new Set(tags));
 			tagsList.value = [];
 
@@ -234,6 +237,28 @@
 		}
 	};
 
+	const tagsListFromOptionStatistic = ref<(() => ITag)[]>([]);
+	const fnSelectedTagsToList = (fn: () => ITag) => {
+		tagsListFromOptionStatistic.value.push(fn);
+	};
+
+	watch(
+		() => tagsListFromOptionStatistic.value.length,
+		(newValue) => {
+			if (newValue === 0) return;
+			if (
+				optionsObj.value &&
+				optionsObj.value.tags.length > 0 &&
+				newValue === tagsList.value.length
+			) {
+				tagsListFromOptionStatistic.value.forEach((item) => {
+					const tag = item();
+					tagsForCurrentOptions.value.push(tag);
+				});
+			}
+		}
+	);
+
 	const onAddTagForCurrentOptions = (tag: ITag) => {
 		tagsForCurrentOptions.value = [...tagsForCurrentOptions.value, tag];
 	};
@@ -242,26 +267,55 @@
 		tagsForCurrentOptions.value = tagsForCurrentOptions.value.filter((item) => item.Id !== tag.Id);
 	};
 
-	const onSelectedTagsClean = () => {
+	watch(
+		() => tagsForCurrentOptions.value.length,
+		async (newValue, oldValue) => {
+			if (!isWatch_tagsForCurrentOptions.value) return;
+
+			if (oldValue > 0 && newValue === 0) {
+				set_Tags([]);
+				await nextTick();
+				emit('applyOptions');
+
+				initPreOptionsByPeriod();
+				refreshKey.value = nanoid();
+			}
+		}
+	);
+
+	const onSelectedTagsClean = async () => {
+		isWatch_tagsForCurrentOptions.value = false;
 		set_Tags([]);
 		tagsForCurrentOptions.value = [];
+
+		await nextTick();
+		emit('applyOptions');
+
 		initPreOptionsByPeriod();
 		refreshKey.value = nanoid();
+		isWatch_tagsForCurrentOptions.value = true;
 	};
 
 	const onCloseModal = () => {
+		tagsList.value = [];
+		tagsListFromOptionStatistic.value = [];
 		emit('update:modelValue', false);
 	};
 
 	const onOk = async () => {
+		isWatch_tagsForCurrentOptions.value = false;
+		await nextTick();
 		set_StatisticPeriod(radioPeriod.value);
 		set_Card(selectedCard.value);
 		set_MoneyType(radioMoneyType.value);
 		set_operationType(radioOperationType.value);
 		set_Tags(tagsForCurrentOptions.value);
 		await nextTick();
+		tagsForCurrentOptions.value = [];
 		emit('applyOptions');
 		onCloseModal();
+		await nextTick();
+		isWatch_tagsForCurrentOptions.value = true;
 	};
 </script>
 
