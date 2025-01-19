@@ -19,8 +19,12 @@
 				</div>
 				<div class="sub__filters">
 					<span class="sub__filters-label">Filters:</span>
-					<ul v-if="subtitle && subtitle.filters.length > 0">
-						<li v-for="(item, i) in subtitle.filters" :key="i">
+					<ul
+						v-if="subtitle && subtitle.filters.length > 0"
+						class="sub__filters-list"
+						:key="chartUpdateKey"
+					>
+						<li v-for="(item, i) in subtitle.filters" :key="item + i" class="sub__filters-item">
 							{{ item }}{{ subtitle.filters.length - 1 === i ? '.' : ',' }}
 						</li>
 					</ul>
@@ -39,15 +43,19 @@
 			<section class="s__main-resum resum">
 				<div class="resum__begin">
 					<span class="resum__begin-label">Date begin:</span>
-					<span class="resum__begin-value"></span>
+					<span class="resum__begin-value">{{
+						moment.tz(resume.begin, 'Europe/Moscow').format('DD.MM.YYYY')
+					}}</span>
 				</div>
 				<div class="resum__end">
 					<span class="resum__end-label">Date end:</span>
-					<span class="resum__end-value"></span>
+					<span class="resum__end-value">{{
+						moment.tz(resume.end, 'Europe/Moscow').format('DD.MM.YYYY')
+					}}</span>
 				</div>
 				<div class="resum__amount">
 					<span class="resum__amount-label">Amount changes:</span>
-					<span class="resum__amount-value"></span>
+					<span class="resum__amount-value">{{ resume.amount }}</span>
 				</div>
 			</section>
 			<section class="s__main-btns btns">
@@ -75,10 +83,10 @@
 	import { useStatisticsStore } from '@/stores/statisticsStore';
 	import { useOperationsStore } from '@/stores/operationsStore';
 	import type {
-		IOperation,
 		IStatisticOptions,
 		IStatisticsSubtitle,
 		StatisticsPeriodType,
+		IStatisticsResume,
 	} from '@/models/types/cardTypes';
 
 	import StatisticOptionsModal from '@/pages/components/statistic-options-modal/StatisticOptionsModal.vue';
@@ -98,10 +106,17 @@
 	const { get_StatisticsSubtitle, get_StatisticOptions } = useStatisticsStore();
 	const { get_OperationsByStatisticOptions } = useOperationsStore();
 
+	const subtitle = ref<IStatisticsSubtitle>();
+
+	const resume = ref<IStatisticsResume>({
+		begin: moment.tz('Europe/Moscow').toDate(),
+		end: moment.tz('Europe/Moscow').toDate(),
+		amount: 0,
+	});
+
 	const chartHeight = ref<number>(0);
 	const chartUpdateKey = ref<string>('1');
 
-	const subtitle = ref<IStatisticsSubtitle>();
 	const xAxis = ref<string[]>([]);
 	const yAxis = ref<number[]>([]);
 
@@ -147,7 +162,7 @@
 	onBeforeMount(() => {
 		const clientHeight = Math.floor(document.documentElement.getBoundingClientRect().height);
 		if (clientHeight > 770) {
-			chartHeight.value = 430;
+			chartHeight.value = 400;
 		} else {
 			chartHeight.value = 280;
 		}
@@ -155,9 +170,8 @@
 	});
 
 	onMounted(async () => {
-		subtitle.value = get_StatisticsSubtitle;
-
 		await nextTick();
+		subtitle.value = get_StatisticsSubtitle();
 		chartUpdateKey.value = nanoid();
 	});
 
@@ -187,12 +201,21 @@
 
 		series[0].data = yAxis.value;
 		chartOptions.xaxis.categories = xAxis.value;
+
+		resume.value = {
+			begin: optionsObj.from,
+			end: optionsObj.to,
+			amount: yAxis.value.reduce((acc, item) => acc + item, 0),
+		};
 	};
 
 	const onApplyOptions = async () => {
 		xAxis.value = [];
 		yAxis.value = [];
 
+		subtitle.value = get_StatisticsSubtitle();
+
+		await nextTick();
 		initStatisticChart();
 
 		await nextTick();

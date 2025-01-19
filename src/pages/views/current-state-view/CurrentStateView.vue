@@ -20,7 +20,7 @@
 				}}</span>
 			</div>
 
-			<div class="cs__main-divider"></div>
+			<!-- <div class="cs__main-divider"></div> -->
 
 			<div class="cs__main-cards">
 				<!-- bank -->

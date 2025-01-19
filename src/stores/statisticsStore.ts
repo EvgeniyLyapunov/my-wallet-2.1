@@ -7,6 +7,7 @@ import type {
 	TOperationType,
 	IStatisticsSubtitle,
 	StatisticsPeriodType,
+	IStatisticsResume,
 } from '@/models/types/cardTypes';
 import moment from 'moment-timezone';
 
@@ -21,7 +22,7 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		tags: [],
 	});
 
-	const get_StatisticsSubtitle = computed<IStatisticsSubtitle>(() => {
+	const get_StatisticsSubtitle = () => {
 		const subtitle: IStatisticsSubtitle = {
 			period: statisticOptions.periodType,
 			filters: [],
@@ -44,7 +45,7 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		}
 
 		return subtitle;
-	});
+	};
 
 	const get_StatisticOptions = (): IStatisticOptions => {
 		return statisticOptions;

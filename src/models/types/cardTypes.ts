@@ -67,6 +67,15 @@ export interface IStatisticOptions {
 	card?: string;
 }
 
+/**
+ * объект резюме текущего графика статистики
+ */
+export interface IStatisticsResume {
+	begin: Date;
+	end: Date;
+	amount: number;
+}
+
 export interface IAppSettings {
 	salaryMonthStart: number;
 	isSaveLastStatisticOptions: boolean;

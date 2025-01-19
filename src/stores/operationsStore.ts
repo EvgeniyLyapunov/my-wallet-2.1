@@ -1,13 +1,11 @@
 import type { IOperation, IStatisticOptions } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
-import { useTagsStore } from '@/stores/tagsStore';
 import { useWalletStore } from './walletStore';
 import moment from 'moment-timezone';
 
 export const useOperationsStore = defineStore(
 	'operationsStore',
 	() => {
-		const tagsStore = useTagsStore();
 		const { getCardId_ByName } = useWalletStore();
 		const operationsList = ref<IOperation[]>([]);
 
@@ -55,10 +53,16 @@ export const useOperationsStore = defineStore(
 			return resultList;
 		};
 
+		const cleanOperationsDeletedCard = (id: string) => {
+			const list = operationsList.value.filter((item) => item.cardId !== id);
+			operationsList.value = [...list];
+		};
+
 		return {
 			operationsList,
 			addOperationToList,
 			get_OperationsByStatisticOptions,
+			cleanOperationsDeletedCard,
 		};
 	},
 	{

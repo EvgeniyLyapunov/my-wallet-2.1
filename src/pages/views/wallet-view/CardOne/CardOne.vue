@@ -81,7 +81,7 @@
 		</div>
 	</div>
 
-	<CardInfo_EditModal v-model="isVisible_EditInfoModal" :card="card" @onEdit="onEditCardInfo" />>
+	<CardInfo_EditModal v-model="isVisible_EditInfoModal" :card="card" @onEdit="onEditCardInfo" />
 	<MessageBox v-model="isVisibleMessageBox" :title="messageBoxTitle" :message="messageBoxMessage" />
 	<Confirm
 		v-model="isVisible_ConfirmModal"
@@ -99,11 +99,10 @@
 </template>
 
 <script setup lang="ts">
-	import moment from 'moment';
 	import { useRoute } from 'vue-router';
 	import type { ICard } from '@/models/types/cardTypes';
-	import { nanoid } from 'nanoid';
 	import { useWalletStore } from '@/stores/walletStore';
+	import { useOperationsStore } from '@/stores/operationsStore';
 	import { useCardService } from '@/services/cardService';
 	import { elementHeight_Relative_PreviousSiblingAndWindowHeight } from '@/utils/elementHeight';
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
@@ -121,6 +120,7 @@
 	});
 
 	const walletStore = useWalletStore();
+	const { cleanOperationsDeletedCard } = useOperationsStore();
 	const cardService = useCardService();
 	const cardHeight = ref<number>(0);
 
@@ -189,6 +189,7 @@
 	};
 
 	const deleteCard = () => {
+		cleanOperationsDeletedCard(id.value);
 		walletStore.deleteCard(id.value);
 		router.push('/cards-view');
 	};

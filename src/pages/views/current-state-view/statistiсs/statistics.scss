@@ -30,7 +30,7 @@
 	}
 	&__footer {
 		width: 90%;
-		height: 60px;
+		height: 100px;
 		display: flex;
 		align-items: center;
 		justify-content: space-evenly;
@@ -61,6 +61,14 @@
 			font-size: 16px;
 			font-weight: 700;
 			margin-right: 10px;
+		}
+		&-list {
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+		&-item {
+			margin-right: 5px;
 		}
 	}
 }

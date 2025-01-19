@@ -16,6 +16,10 @@
 			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Operation Log</span>
 			</router-link>
+
+			<!-- <div class="home__menu-link">
+				<v-btn @click="onClearStorage">Clear Storage</v-btn>
+			</div> -->
 		</div>
 		<div class="home__footer">
 			<span class="home__footer-copy">Copyright &copy;</span>
@@ -29,6 +33,10 @@
 		name: 'home_view',
 		path: '/',
 	});
+
+	const onClearStorage = () => {
+		localStorage.clear();
+	};
 </script>
 
 <style scoped lang="scss">
