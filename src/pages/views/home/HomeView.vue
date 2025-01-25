@@ -10,7 +10,7 @@
 			</router-link>
 
 			<router-link :to="{ name: 'currentState_view' }" class="home__menu-link">
-				<span class="home__menu-link-item">Current State</span>
+				<span class="home__menu-link-item">Statistics</span>
 			</router-link>
 
 			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">

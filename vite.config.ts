@@ -6,6 +6,8 @@ import { VueRouterAutoImports } from 'unplugin-vue-router';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 
+const hash = Math.floor(Math.random() * 90000) + 10000;
+
 export default defineConfig({
 	plugins: [
 		Components({
@@ -39,5 +41,13 @@ export default defineConfig({
 	server: {
 		port: 5108,
 		open: true,
+	},
+	build: {
+		rollupOptions: {
+			output: {
+				entryFileNames: `[name]` + hash + `.js`,
+				chunkFileNames: `[name]` + hash + `.js`,
+			},
+		},
 	},
 });

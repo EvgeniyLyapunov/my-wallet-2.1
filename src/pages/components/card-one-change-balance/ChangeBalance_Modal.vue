@@ -385,8 +385,6 @@
 	const onChangeBalance = () => {
 		const amount = Number(inputAmount.value);
 
-		const operationType = amount < props.card!.currentSum ? 'minus' : 'plus';
-
 		// если сумма уменьшеается
 		if (amount < props.card!.currentSum) {
 			// если карта базовая и имеет виртуальные карты
@@ -417,26 +415,6 @@
 				}
 			}
 		}
-
-		const operation: IOperation = {
-			date: moment.tz('Europe/Moscow').toDate(),
-			amount,
-			moneyType: props.card!.cardMoneyType!,
-			cardId: props.card!.cardId,
-			type: operationType,
-			tags: tagsForCurrentOperation.value.map((item) => item.Id),
-		};
-
-		if (operation.tags) {
-			operation.tags.forEach((item) => {
-				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
-				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
-					tagsStore.addNewTag_StatisticTagsList(tag);
-				}
-			});
-		}
-
-		operationsStore.addOperationToList(operation);
 
 		emit('cardChangeBalance', amount);
 		onCloseModal();

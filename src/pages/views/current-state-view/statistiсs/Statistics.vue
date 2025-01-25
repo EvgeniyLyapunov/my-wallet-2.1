@@ -192,10 +192,30 @@
 			);
 		});
 
-		operationsList.forEach((operation) => {
-			const day = moment(operation.date).date().toString();
+		const periodDates: Date[] = [];
+		const from = moment.tz(optionsObj.from, 'Europe/Moscow').startOf('day');
+		const to = moment.tz(optionsObj.to, 'Europe/Moscow').startOf('day');
+
+		for (let m = to.clone(); m.isSameOrAfter(from); m.subtract(1, 'days')) {
+			periodDates.push(m.toDate());
+		}
+
+		periodDates.reverse();
+
+		periodDates.forEach((d) => {
+			const day = moment(d).date().toString();
+			const amount = operationsList
+				.filter((op) => {
+					const opDate = moment(op.date).startOf('day');
+					const currentItemDate = moment(d).startOf('day');
+					return opDate.isSame(currentItemDate);
+				})
+				.reduce((acc, item) => {
+					const sum = item.type === 'minus' ? -Math.abs(item.amount) : item.amount;
+					const res = acc + sum;
+					return res;
+				}, 0);
 			xAxis.value.push(day);
-			const amount = operation.type === 'minus' ? -Math.abs(operation.amount) : operation.amount;
 			yAxis.value.push(amount);
 		});
 
