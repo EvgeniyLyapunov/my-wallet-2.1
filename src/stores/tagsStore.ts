@@ -23,6 +23,14 @@ export const useTagsStore = defineStore(
 			}
 		};
 
+		const get_TagName_FromChangeBalanceTagsList_ById = (id: string): string => {
+			if (changeBalanceTagsList.value.find((item) => item.Id === id)) {
+				return changeBalanceTagsList.value.find((item) => item.Id === id)!.Name;
+			} else {
+				return '';
+			}
+		};
+
 		const get_ChangeBalanceTagList = () => {
 			return changeBalanceTagsList.value;
 		};
@@ -64,6 +72,7 @@ export const useTagsStore = defineStore(
 			addNewTag_StatisticTagsList,
 			get_ChangeBalanceTagList,
 			get_TagFromChangeBalanceTagsList,
+			get_TagName_FromChangeBalanceTagsList_ById,
 			get_StatisticTagsList,
 			get_TagFromStatisticTagsList,
 			delete_FromChangeBalanceTagList,

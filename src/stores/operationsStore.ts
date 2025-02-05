@@ -9,6 +9,11 @@ export const useOperationsStore = defineStore(
 		const { getCardId_ByName } = useWalletStore();
 		const operationsList = ref<IOperation[]>([]);
 
+		const getOperationsList = () => {
+			const list = [...operationsList.value].sort((a, b) => (a.date > b.date ? 1 : -1));
+			return list;
+		};
+
 		const addOperationToList = (operation: IOperation) => {
 			operationsList.value = [...operationsList.value, operation];
 		};
@@ -58,11 +63,24 @@ export const useOperationsStore = defineStore(
 			operationsList.value = [...list];
 		};
 
+		const delete_TodayOperations = () => {
+			operationsList.value = operationsList.value.filter(
+				(item) => moment(item.date).date() !== moment().date()
+			);
+		};
+
+		const delete_AllOperations = () => {
+			operationsList.value = [];
+		};
+
 		return {
+			getOperationsList,
 			operationsList,
 			addOperationToList,
 			get_OperationsByStatisticOptions,
 			cleanOperationsDeletedCard,
+			delete_TodayOperations,
+			delete_AllOperations,
 		};
 	},
 	{

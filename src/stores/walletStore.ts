@@ -1,7 +1,6 @@
 import type { ICard } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
 import { useCardsViewStore } from './cardsViewStore';
-import moment from 'moment-timezone';
 
 export const useWalletStore = defineStore(
 	'walletStore',
@@ -66,6 +65,11 @@ export const useWalletStore = defineStore(
 			if (cardList.value.length === 0) return;
 			if (!cardList.value.find((item) => item.cardId === id)) return;
 			return cardList.value.find((item) => item.cardId === id)!;
+		};
+
+		const getCardName_ById = (id: string): string => {
+			if (cardList.value.length === 0) return '';
+			return cardList.value.filter((item) => item.cardId === id)[0].cardName;
 		};
 
 		const getSum_AllVirtualCardsOfBaseCard = (card: ICard): number | null => {
@@ -153,6 +157,7 @@ export const useWalletStore = defineStore(
 			cardListCount,
 			getCard_ByName,
 			getCardId_ByName,
+			getCardName_ById,
 			getSum_AllVirtualCardsOfBaseCard,
 			getCard_ById,
 			getVirtualCards_ByBaseCardId,
