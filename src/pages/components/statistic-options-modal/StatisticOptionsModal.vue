@@ -8,7 +8,8 @@
 				<VCardText class="modal__form">
 					<section class="modal__form-section period">
 						<span>Set statistic period</span>
-						<VRadioGroup v-model="radioPeriod">
+						<VRadioGroup v-model="radioPeriod" inline>
+							<VRadio label="Today" value="Today"></VRadio>
 							<VRadio label="Current week" value="Current Week"></VRadio>
 							<VRadio label="Current month" value="Current Month"></VRadio>
 							<VRadio label="Salary month" value="Salary Month"></VRadio>
@@ -108,7 +109,7 @@
 		},
 	});
 
-	const { settingsObject } = useSettingsStore();
+	const { get_SettingsObject } = useSettingsStore();
 	const {
 		get_StatisticOptions,
 		set_FromDate,
@@ -125,7 +126,7 @@
 
 	const optionsObj = ref<IStatisticOptions | undefined>();
 
-	const radioPeriod = ref<StatisticsPeriodType>('Current Week');
+	const radioPeriod = ref<StatisticsPeriodType>('Today');
 	const periodBegin = ref<Date>(moment.tz('Europe/Moscow').startOf('week').toDate());
 	const periodEnd = ref<Date | undefined>();
 	const selectedCard = ref<string>('All');
@@ -163,6 +164,9 @@
 	const initPeriodDates = (period: StatisticsPeriodType) => {
 		set_StatisticPeriod(period);
 		switch (period) {
+			case 'Today':
+				periodBegin.value = moment().startOf('day').toDate();
+				break;
 			case 'Current Week':
 				periodBegin.value = moment().startOf('week').toDate();
 				break;
@@ -172,17 +176,17 @@
 			case 'Salary Month':
 				const currentDay = moment().date();
 
-				if (currentDay > settingsObject.salaryMonthStart) {
+				if (currentDay > get_SettingsObject().salaryMonthStart) {
 					// Если текущий день больше числа начала фин месяца, получаем дату этого месяца
 					periodBegin.value = moment()
-						.date(settingsObject.salaryMonthStart)
+						.date(get_SettingsObject().salaryMonthStart)
 						.startOf('day')
 						.toDate();
 				} else {
 					// Если текущий день меньше числа начала фин месяца, получаем дату прошлого месяца
 					periodBegin.value = moment()
 						.subtract(1, 'months')
-						.date(settingsObject.salaryMonthStart)
+						.date(get_SettingsObject().salaryMonthStart)
 						.startOf('day')
 						.toDate();
 				}

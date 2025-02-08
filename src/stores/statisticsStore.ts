@@ -13,9 +13,9 @@ import moment from 'moment-timezone';
 
 export const useStatisticsStore = defineStore('statisticsStore', () => {
 	const statisticOptions = reactive<IStatisticOptions>({
-		from: moment.tz('Europe/Moscow').startOf('week').toDate(),
+		from: moment.tz('Europe/Moscow').startOf('day').toDate(),
 		to: moment.tz('Europe/Moscow').toDate(),
-		periodType: 'Current Week',
+		periodType: 'Today',
 		card: undefined,
 		moneyType: undefined,
 		operationType: undefined,

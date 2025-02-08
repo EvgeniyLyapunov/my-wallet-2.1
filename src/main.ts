@@ -32,27 +32,4 @@ app.use(router);
 app.use(vuetify);
 app.use(VueApexCharts);
 
-import { useSettingsStore } from './stores/settingsStore';
-import type { IAppSettings } from '@/models/types/cardTypes';
-
-async function loadAppSettings() {
-	const response = await fetch('/appsettings.json');
-	if (!response.ok) {
-		throw new Error('Не удалось загрузить настройки приложения');
-	}
-	const settings: IAppSettings = await response.json();
-	return settings;
-}
-
-const { setSettingsParameters } = useSettingsStore();
-
-loadAppSettings()
-	.then((settings) => {
-		setSettingsParameters(settings);
-	})
-	.then(() => {
-		app.mount('#app');
-	})
-	.catch((error) => {
-		console.error('Ошибка при загрузке настроек:', error);
-	});
+app.mount('#app');

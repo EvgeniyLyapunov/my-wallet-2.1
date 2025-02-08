@@ -1,0 +1,122 @@
+.modal {
+	&__title {
+		font-size: 20px;
+		font-weight: 400;
+	}
+}
+
+.form {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&__salary {
+		position: relative;
+		width: 100%;
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		&-label {
+			display: inline-block;
+			width: 60%;
+			font-size: 14px;
+			font-weight: 700;
+		}
+		&-value {
+			width: 35%;
+			padding: 3px 15px;
+			border-radius: 4px;
+			box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+			transition: 0.3s box-shadow ease-in-out;
+			&:focus,
+			&:active {
+				outline: none;
+				transition: 0.3s box-shadow ease-in-out;
+				box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+			}
+		}
+		&-error {
+			position: absolute;
+			left: 0;
+			bottom: -7px;
+			font-size: 12px;
+			font-weight: 700;
+			color: #f93b55;
+		}
+	}
+	&__limit {
+		width: 100%;
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		&-label {
+			display: inline-block;
+			width: 60%;
+			font-size: 14px;
+			font-weight: 700;
+		}
+		&-value {
+			width: 35%;
+			padding: 3px 15px;
+			border-radius: 4px;
+			box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+			transition: 0.3s box-shadow ease-in-out;
+			&:focus,
+			&:active {
+				outline: none;
+				transition: 0.3s box-shadow ease-in-out;
+				box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+			}
+		}
+	}
+	&__period {
+		width: 100%;
+		margin-bottom: 15px;
+	}
+}
+
+.btns {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 0;
+}
+
+.button {
+	text-transform: none !important;
+	width: 120px !important;
+	height: 30px !important;
+}
+
+:deep(.v-overlay__content) {
+	max-width: 475px !important;
+}
+
+:deep(.v-card) {
+	max-width: 475px !important;
+	border: 5px solid #4ca5f3;
+}
+
+:deep(.v-card-title) {
+	padding: 5px 10px;
+	font-size: 14px;
+	font-weight: 400;
+	background-color: #4ca5f3;
+	color: #fff;
+}
+
+:deep(.v-card-text) {
+	padding: 10px !important;
+}
+
+:deep(.v-btn.v-btn--density-default) {
+	text-transform: none;
+}
+
+:deep(.v-input__details) {
+	display: none !important;
+}

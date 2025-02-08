@@ -39,7 +39,7 @@ export type TWallet = Record<string, ICard>;
 /**
  * тип временного периода для отображаемой статистики
  */
-export type StatisticsPeriodType = 'Current Week' | 'Current Month' | 'Salary Month';
+export type StatisticsPeriodType = 'Today' | 'Current Week' | 'Current Month' | 'Salary Month';
 
 /**
  * типы фильтров для статистики
@@ -74,9 +74,17 @@ export interface IStatisticsResume {
 	begin: Date;
 	end: Date;
 	amount: number;
+	dynamicLimit?: string;
 }
 
-export interface IAppSettings {
+/**
+ * тип временного периода для расчёта динамического дневного лимита расходов
+ */
+export type DailyLimitPeriodType = 'Current Week' | 'Current Month' | 'Salary Month' | undefined;
+
+export interface ISettings {
 	salaryMonthStart: number;
 	isSaveLastStatisticOptions: boolean;
+	dailyLimit: number;
+	dailyLimitPeriod: DailyLimitPeriodType;
 }
