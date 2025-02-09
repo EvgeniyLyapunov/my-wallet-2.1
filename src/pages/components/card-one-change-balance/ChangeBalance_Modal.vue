@@ -150,6 +150,13 @@
 		:title="messageBox_Title"
 		:message="messageBox_Message"
 	/>
+
+	<SelectVirtualModal
+		v-model="isVisible_SelectVirtualModal"
+		:card="props.card!"
+		:amountForChange="amountForChange"
+		@makeChangeBalance="changeBalanceWithVirtualCard"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -160,6 +167,7 @@
 	import { useOperationsStore } from '@/stores/operationsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
+	import SelectVirtualModal from './SelectVirtualModal.vue';
 	import moment from 'moment-timezone';
 
 	const emit = defineEmits<{
@@ -268,6 +276,13 @@
 	const isVisible_MessageBox = ref<boolean>(false);
 	const messageBox_Title = ref<string>('');
 	const messageBox_Message = ref<string>('');
+
+	const isVisible_SelectVirtualModal = ref<boolean>(false);
+	const amountForChange = ref<number>(0);
+
+	const changeBalanceWithVirtualCard = () => {
+		onCloseModal();
+	};
 
 	// Tags for current operation
 
@@ -392,9 +407,8 @@
 				const sumOfAllVirtual = walletStore.getSum_AllVirtualCardsOfBaseCard(props.card!);
 
 				if (amount < sumOfAllVirtual!) {
-					isVisible_MessageBox.value = true;
-					messageBox_Title.value = 'Info';
-					messageBox_Message.value = `Virtual cards of this card allow to reduce the card amount to ${sumOfAllVirtual} value`;
+					amountForChange.value = amount;
+					isVisible_SelectVirtualModal.value = true;
 					return;
 				}
 			}
