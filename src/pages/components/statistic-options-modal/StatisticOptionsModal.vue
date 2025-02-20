@@ -264,7 +264,7 @@
 	);
 
 	const onAddTagForCurrentOptions = (tag: ITag) => {
-		tagsForCurrentOptions.value = [...tagsForCurrentOptions.value, tag];
+		tagsForCurrentOptions.value = [tag, ...tagsForCurrentOptions.value];
 	};
 
 	const onDeleteTagFromCurrentOption = (tag: ITag) => {
