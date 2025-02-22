@@ -48,6 +48,7 @@
 
 	const initList = () => {
 		sourceOperationsList.value = getOperationsList();
+		sourceOperationsList.value.reverse();
 		let logDate: string;
 		sourceOperationsList.value.forEach((item, index) => {
 			if (index === 0) {
@@ -65,6 +66,7 @@
 				logList.value.push(item);
 			}
 		});
+		refreshKey.value = nanoid();
 	};
 
 	const onDeleteToday = () => {
