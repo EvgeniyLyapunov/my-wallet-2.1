@@ -46,6 +46,13 @@
 		initList();
 	});
 
+	const elem: HTMLElement | null = document.querySelector('.main__log');
+
+	if (elem) {
+		elem.classList.contains('.class');
+		elem.textContent;
+	}
+
 	const initList = () => {
 		sourceOperationsList.value = getOperationsList();
 		sourceOperationsList.value.reverse();

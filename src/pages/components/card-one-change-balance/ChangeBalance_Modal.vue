@@ -39,7 +39,7 @@
 							class="modal__form-actions-btn modal__form-actions-btn_balance"
 							@click="onChangeBalance"
 						>
-							Change Balance
+							<v-icon>mdi-swap-horizontal-bold</v-icon>
 						</v-btn>
 						<v-btn class="modal__form-actions-btn" @click="onBalancePlus">
 							<v-icon>mdi-plus-thick</v-icon>

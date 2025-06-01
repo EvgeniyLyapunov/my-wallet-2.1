@@ -61,6 +61,7 @@
 		z-index: 1;
 		display: flex;
 		flex-direction: column;
+		align-items: center;
 		&-balance-info {
 			margin-bottom: 10px;
 			width: 100%;
@@ -117,10 +118,18 @@
 			}
 		}
 		&-actions {
-			padding: 10px;
+			width: 100%;
+			padding: 10px 5px;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			&-btn {
+				min-width: unset;
+				width: 40%;
+				&_balance {
+					width: 15%;
+				}
+			}
 		}
 		&-keyboard {
 			&-wrapper {
