@@ -157,6 +157,12 @@
 		:amountForChange="amountForChange"
 		@makeChangeBalance="changeBalanceWithVirtualCard"
 	/>
+
+	<Confirm
+		v-model="isConfirmVisible"
+		:confirm-action="'Confirm your action!'"
+		@confirm="onConfirmChangeBalance"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -167,6 +173,7 @@
 	import { useOperationsStore } from '@/stores/operationsStore';
 	import TagEditModal from '@/pages/components/card-one-change-balance/TagEdit_Modal.vue';
 	import MessageBox from '@/pages/components/confirms/MessageBox.vue';
+	import Confirm from '@/pages/components/confirms/Confirm.vue';
 	import SelectVirtualModal from './SelectVirtualModal.vue';
 	import moment from 'moment-timezone';
 
@@ -430,8 +437,17 @@
 			}
 		}
 
-		emit('cardChangeBalance', amount);
-		onCloseModal();
+		isConfirmVisible.value = true;
+	};
+
+	const isConfirmVisible = ref<boolean>(false);
+
+	const onConfirmChangeBalance = (confirm: boolean) => {
+		if (confirm) {
+			const amount = Number(inputAmount.value);
+			emit('cardChangeBalance', amount);
+			onCloseModal();
+		}
 	};
 
 	const onCloseModal = () => {
