@@ -111,6 +111,10 @@
 			if (value?.length > 1) return true;
 			return 'Длина имени карты от 2 до 30 символов.';
 		},
+		(value: string) => {
+			if (props.card!.cardName === value || walletStore.checkNewCardName(value)) return true;
+			return 'Карта с таким именем уже существует.';
+		},
 	];
 
 	const selectType = ref<TCardMoney>();
