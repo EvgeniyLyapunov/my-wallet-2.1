@@ -20,11 +20,18 @@
 		</main>
 		<footer class="ol__footer footer"></footer>
 	</div>
+
+	<Confirm
+		v-model="isConfirmModalVisible"
+		:confirm-action="'Confirm your action!'"
+		@confirm="onConfirmation"
+	/>
 </template>
 
 <script setup lang="ts">
 	import OperationLogItem from '@/pages/components/operation-log-item/OperationLogItem.vue';
 	import { useOperationsStore } from '@/stores/operationsStore';
+	import Confirm from '@/pages/components/confirms/Confirm.vue';
 	import type { IOperation } from '@/models/types/cardTypes';
 	import moment from 'moment';
 	import { nanoid } from 'nanoid';
@@ -76,18 +83,30 @@
 		refreshKey.value = nanoid();
 	};
 
+	const deletePoint = ref<'today' | 'all' | ''>('');
+
 	const onDeleteToday = () => {
-		delete_TodayOperations();
-		logList.value = [];
-		refreshKey.value = nanoid();
-		nextTick();
-		initList();
+		deletePoint.value = 'today';
+		isConfirmModalVisible.value = true;
 	};
 
 	const onDeleteAll = () => {
-		delete_AllOperations();
+		deletePoint.value = 'all';
+		isConfirmModalVisible.value = true;
+	};
+
+	const isConfirmModalVisible = ref<boolean>(false);
+	const onConfirmation = () => {
+		if (deletePoint.value === '') return;
+		if (deletePoint.value === 'all') {
+			delete_AllOperations();
+		} else if (deletePoint.value === 'today') {
+			delete_TodayOperations();
+		}
+
 		logList.value = [];
 		refreshKey.value = nanoid();
+		deletePoint.value = '';
 		nextTick();
 		initList();
 	};
