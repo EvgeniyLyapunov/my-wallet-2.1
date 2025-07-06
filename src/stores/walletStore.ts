@@ -29,6 +29,14 @@ export const useWalletStore = defineStore(
 			return baseCards;
 		});
 
+		const baseCardList_Bank = (): ICard[] => {
+			return cardList.value.filter((item) => !item.isVirtual && item.cardMoneyType === 'bank');
+		};
+
+		const baseCardList_Cash = (): ICard[] => {
+			return cardList.value.filter((item) => !item.isVirtual && item.cardMoneyType === 'cash');
+		};
+
 		const getGeneralAmount = (): number => {
 			if (cardList.value.length === 0) {
 				return 0;
@@ -150,6 +158,8 @@ export const useWalletStore = defineStore(
 			cardList,
 			baseCards_CashMoney_NamesList,
 			baseCards_BankMoney_NamesList,
+			baseCardList_Bank,
+			baseCardList_Cash,
 			getGeneralAmount,
 			checkNewCardName,
 			addCard_ToList,

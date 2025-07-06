@@ -31,10 +31,10 @@
 		display: flex;
 		align-self: center;
 		flex-direction: column;
-		align-items: center;
+		align-items: flex-start;
 		filter: unset;
 		&-link {
-			margin-bottom: 40%;
+			margin-bottom: 15%;
 			&:last-child {
 				margin-bottom: 0;
 			}

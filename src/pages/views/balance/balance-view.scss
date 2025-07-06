@@ -1,0 +1,154 @@
+@import '@/style/mixins.scss';
+
+.bv {
+	@include basePageWithBorder;
+	display: flex;
+	flex-direction: column;
+	&::after {
+		background: url('@/assets/images/bg/bg_balance2.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+	&__title-block {
+		padding: 20px 0 0 30px;
+		height: 90px;
+	}
+	&__title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #fff;
+	}
+	// main
+	&-main {
+		height: calc(100% - 156px);
+		width: 100%;
+		padding: 0 30px;
+		display: flex;
+		flex-direction: column;
+		&__general {
+			width: 100%;
+			height: 125px;
+			padding: 15px 0 30px;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			&-field {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: flex-start;
+				&__icon {
+					margin-right: 15px;
+					font-size: 26px;
+					font-weight: 700;
+				}
+				&__label {
+					margin-right: 10px;
+					font-size: 26px;
+					font-weight: 700;
+					color: #fff;
+				}
+				&__value {
+					font-size: 26px;
+					font-weight: 500;
+					color: #fff;
+				}
+			}
+		}
+		&__money {
+			width: 100%;
+			max-height: calc((100% - 125px) / 2);
+			display: flex;
+			padding: 15px 0;
+			&__picto {
+				height: 100%;
+				width: 30px;
+				&-icon {
+					font-size: 30px;
+				}
+			}
+			&__list {
+				height: 100%;
+				width: calc(100% - 30px);
+				display: flex;
+				flex-direction: column;
+				padding: 0 0 0 20px;
+			}
+			&__card {
+				width: 100%;
+				margin-bottom: 10px;
+				display: flex;
+				flex-direction: column;
+				&-base {
+					width: 100%;
+					&-name {
+						margin-right: 10px;
+						font-size: 20px;
+						font-weight: 500;
+						color: #fff;
+					}
+					&-amount {
+						font-size: 20px;
+						font-weight: 400;
+						color: #fff;
+					}
+				}
+				&-virtuals {
+					width: 100%;
+					display: flex;
+					align-items: center;
+					padding-left: 23px;
+					&-icon {
+						font-size: 12px;
+						font-weight: 400;
+						margin-right: 7px;
+					}
+					&-name {
+						margin-right: 7px;
+						font-size: 16px;
+						font-weight: 400;
+						color: #ececec;
+					}
+					&-amount {
+						font-size: 16px;
+						font-weight: 400;
+						color: #ececec;
+					}
+				}
+			}
+		}
+	}
+	// actions
+	&-actions {
+		width: 100%;
+		height: 46px;
+		padding: 0 30px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		&__home-btn {
+			height: 32px !important;
+			text-transform: none !important;
+			font-size: 14px;
+		}
+	}
+}
+
+.breadcrumbs {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: flex-start;
+	&__link {
+		font-size: 14px;
+		color: #fff;
+		cursor: pointer;
+	}
+	&__divider {
+		color: #c6c6c6;
+	}
+	&__end {
+		color: #f7a65e;
+	}
+}
