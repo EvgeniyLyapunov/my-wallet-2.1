@@ -3,7 +3,7 @@
 		<v-dialog v-model="isShow" :persistent="true">
 			<v-card class="modal">
 				<v-card-title>
-					<h2 class="modal__title">Edit card information</h2>
+					<h2 class="modal__title">Редактировать данные карты</h2>
 				</v-card-title>
 				<v-card-text>
 					<v-form class="modal__form form" ref="form">
@@ -12,7 +12,7 @@
 							:rules="nameRules"
 							class="pb-4"
 							variant="outlined"
-							label="Name Of A New Card"
+							label="Имя карты"
 						></v-text-field>
 						<v-select
 							v-model="selectType"
@@ -21,7 +21,7 @@
 							:disabled="isSelectTypeDisabled"
 							class="pb-4"
 							variant="outlined"
-							label="Select Type Of Money"
+							label="Тип денег карты"
 						></v-select>
 						<v-select
 							v-model="selectBase"
@@ -30,7 +30,7 @@
 							:disabled="isSelectBaseDisabled"
 							class="pb-4"
 							variant="outlined"
-							label="Select A Base Card"
+							label="Выбор базовой карты"
 						></v-select>
 					</v-form>
 				</v-card-text>
@@ -45,7 +45,7 @@
 						<template v-slot:prepend>
 							<v-icon color="yellow"></v-icon>
 						</template>
-						Cancel
+						Отмена
 					</v-btn>
 				</v-card-actions>
 			</v-card>

@@ -1,15 +1,15 @@
 <template>
 	<div class="new-card">
 		<div class="new-card__title-block">
-			<h1 class="new-card__title">New Card</h1>
+			<h1 class="new-card__title">Новая карта</h1>
 			<div class="cards__breadcrumbs breadcrumbs">
-				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__link" @click="onRouteHome">Домашняя</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Кошелёк</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__link" @click="onRouteCards">Cards</span>
+				<span class="breadcrumbs__link" @click="onRouteCards">Карты</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__end">NewCard</span>
+				<span class="breadcrumbs__end">Новая карта</span>
 			</div>
 		</div>
 		<v-form class="new-card__form form" ref="form">
@@ -19,7 +19,7 @@
 				style="color: #fff"
 				class="pb-4"
 				variant="outlined"
-				label="Name Of A New Card"
+				label="Имя новой карты"
 			></v-text-field>
 			<v-select
 				v-model="selectType"
@@ -28,7 +28,7 @@
 				style="color: #fff"
 				class="pb-4"
 				variant="outlined"
-				label="Select Type Of Money"
+				label="Тип денег карты"
 			></v-select>
 			<v-select
 				v-model="selectBase"
@@ -37,7 +37,7 @@
 				style="color: #fff"
 				class="pb-4"
 				variant="outlined"
-				label="Select A Base Card"
+				label="Привязать к базовой карте"
 			></v-select>
 			<v-text-field
 				type="number"
@@ -46,7 +46,7 @@
 				style="color: #fff"
 				class="pb-4"
 				variant="outlined"
-				label="Start Amount"
+				label="Начальная сумма"
 			></v-text-field>
 		</v-form>
 		<div class="new-card__btn-block">
@@ -56,14 +56,14 @@
 				density="default"
 				color="green-accent-3"
 				@click="submit"
-				>Create</v-btn
+				>Создать</v-btn
 			>
 			<v-btn
 				class="new-card__base-btn new-card__clear-btn"
 				width="110"
 				density="default"
 				@click="handleReset"
-				>Clear</v-btn
+				>Очистить</v-btn
 			>
 			<v-btn
 				class="new-card__base-btn new-card__cancel-btn"
@@ -71,7 +71,7 @@
 				density="default"
 				color="blue-lighten-3"
 				@click="handleCancel"
-				>Cancel</v-btn
+				>Отменить</v-btn
 			>
 		</div>
 	</div>

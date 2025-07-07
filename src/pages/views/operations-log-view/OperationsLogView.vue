@@ -1,11 +1,11 @@
 <template>
 	<div class="operations-log ol">
 		<div class="ol__title-block">
-			<h1 class="ol__title">Operations log</h1>
+			<h1 class="ol__title">Журнал операций</h1>
 			<div class="ol__breadcrumbs breadcrumbs">
-				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__link" @click="onRouteHome">Домашняя</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__end">Operation log</span>
+				<span class="breadcrumbs__end">Журнал операций</span>
 			</div>
 		</div>
 		<main class="ol__main main">
@@ -13,9 +13,9 @@
 				<OperationLogItem v-for="(item, i) in logList" :key="i" :log-item="item" />
 			</div>
 			<div class="main__controls">
-				<v-btn class="button" @click="onDeleteToday">delete Today</v-btn>
-				<v-btn class="button" @click="onDeleteAll">delete All</v-btn>
-				<v-btn class="button" @click="onRouteHome">Home</v-btn>
+				<v-btn class="button" @click="onDeleteToday">Удалить сегодня</v-btn>
+				<v-btn class="button" @click="onDeleteAll">Удалить всё</v-btn>
+				<v-btn class="button" @click="onRouteHome">Домой</v-btn>
 			</div>
 		</main>
 		<footer class="ol__footer footer"></footer>
@@ -23,7 +23,7 @@
 
 	<Confirm
 		v-model="isConfirmModalVisible"
-		:confirm-action="'Confirm your action!'"
+		:confirm-action="'Подтвердите ваше действие!'"
 		@confirm="onConfirmation"
 	/>
 </template>

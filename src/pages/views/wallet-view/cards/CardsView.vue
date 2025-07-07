@@ -1,13 +1,13 @@
 <template>
 	<div class="cards">
 		<div class="cards__title-block">
-			<h1 class="cards__title">Cards</h1>
+			<h1 class="cards__title">Карты</h1>
 			<div class="cards__breadcrumbs breadcrumbs">
-				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__link" @click="onRouteHome">Домой</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Кошелёк</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__end">Cards</span>
+				<span class="breadcrumbs__end">Карты</span>
 			</div>
 		</div>
 		<div :key="refreshKey" ref="cardsArea" class="cards__area">
@@ -34,10 +34,10 @@
 		</div>
 		<v-spacer></v-spacer>
 		<div class="cards__btns">
-			<v-btn density="default" width="120" variant="elevated" @click="handleGoHome"> Home</v-btn>
-			<v-btn density="default" width="120" variant="elevated" @click="handleToNewCardPage"
-				>New Card</v-btn
-			>
+			<v-btn density="default" width="120" variant="elevated" @click="handleGoHome"> Домой </v-btn>
+			<v-btn density="default" width="120" variant="elevated" @click="handleToNewCardPage">
+				Новая карта
+			</v-btn>
 		</div>
 	</div>
 </template>

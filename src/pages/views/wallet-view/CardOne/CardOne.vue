@@ -3,11 +3,11 @@
 		<div class="card__title-block">
 			<h1 class="card__title">{{ card?.cardName }}</h1>
 			<div class="cards__breadcrumbs breadcrumbs">
-				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__link" @click="onRouteHome">Домой</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__link" @click="onRouteWallet">Wallet</span>
+				<span class="breadcrumbs__link" @click="onRouteWallet">Кошелёк</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__link" @click="onRouteCards">Cards</span>
+				<span class="breadcrumbs__link" @click="onRouteCards">Карты</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
 				<span class="breadcrumbs__end">{{ card ? card.cardName : 'card' }}</span>
 			</div>
@@ -26,17 +26,17 @@
 
 			<div class="card__main-info">
 				<div class="card__main-info-block">
-					<span class="card__main-info-label">Date of last modification:</span>
+					<span class="card__main-info-label">Дата последнего изменения:</span>
 					<span class="card__main-info-value">{{ card!.changesLastDate }}</span>
 				</div>
 				<div class="card__main-info-block">
-					<span class="card__main-info-label">Type of money on the card:</span>
+					<span class="card__main-info-label">Тип карты:</span>
 					<span class="card__main-info-value">{{ card!.cardMoneyType }}</span>
 				</div>
 				<div class="card__main-info-block">
-					<span class="card__main-info-label">Type of the card:</span>
+					<span class="card__main-info-label">Статус карты:</span>
 					<span class="card__main-info-value"
-						>{{ !card!.isVirtual ? 'Base card' : 'Virtual card of ' }}
+						>{{ !card!.isVirtual ? 'Базовая карта' : 'Виртуальная карта от ' }}
 						<span v-if="card!.isVirtual" class="card__main-info-value_virtual">{{
 							card!.baseCardName
 						}}</span>
@@ -45,8 +45,8 @@
 			</div>
 
 			<div class="card__main-info-btns">
-				<v-btn density="comfortable" class="delete" @click="onConfirmDelete">Delete card</v-btn>
-				<v-btn density="comfortable" @click="onEditCardModalOpen">Edit card</v-btn>
+				<v-btn density="comfortable" class="delete" @click="onConfirmDelete">Удалить</v-btn>
+				<v-btn density="comfortable" @click="onEditCardModalOpen">Редактировать</v-btn>
 			</div>
 
 			<div class="card__main-balance-btn">
@@ -60,8 +60,8 @@
 					<template v-slot:prepend>
 						<v-icon color="primary"></v-icon>
 					</template>
-					Change balance</v-btn
-				>
+					Изменить баланс
+				</v-btn>
 			</div>
 		</div>
 
@@ -70,13 +70,13 @@
 				<template v-slot:prepend>
 					<v-icon color="green"></v-icon>
 				</template>
-				Home
+				Домой
 			</v-btn>
 			<v-btn density="comfortable" prepend-icon="mdi-cancel" @click="doClose">
 				<template v-slot:prepend>
 					<v-icon color="yellow"></v-icon>
 				</template>
-				Close
+				Закрыть
 			</v-btn>
 		</div>
 	</div>
@@ -168,8 +168,8 @@
 	const onEditCardModalOpen = () => {
 		if (card.value!.virtualList.length > 0) {
 			isVisibleMessageBox.value = true;
-			messageBoxTitle.value = 'Warning!';
-			messageBoxMessage.value = 'This card has virtuals. Editing is not possible!';
+			messageBoxTitle.value = 'Внимание!';
+			messageBoxMessage.value = 'Эта карта имеет виртуальные карты. Редактирование невозможно!';
 		} else {
 			isVisible_EditInfoModal.value = true;
 		}
@@ -180,10 +180,10 @@
 	};
 
 	const onConfirmDelete = () => {
-		confirmAction.value = 'Confirm deletion';
+		confirmAction.value = 'Подтверждение удаления';
 		if (!card.value!.isVirtual && card.value!.virtualList.length > 0) {
 			confirmInfo.value =
-				'This is the base card. Deleting it will also delete all its virtual cards. Are you sure? This action is irreversible!';
+				'Статус карты - базовая. Удаление карты автоматически удалит все её виртуальные карты. Подтвердите действие. Эта операция необратима!';
 		}
 		isVisible_ConfirmModal.value = true;
 	};

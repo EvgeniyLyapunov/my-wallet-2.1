@@ -24,7 +24,7 @@
 						<template v-slot:prepend>
 							<v-icon color="yellow"></v-icon>
 						</template>
-						Cancel
+						Отмена
 					</v-btn>
 				</v-card-actions>
 			</v-card>
@@ -61,7 +61,7 @@
 		if (props.confirmInfo) {
 			return props.confirmInfo;
 		} else {
-			return 'Are you sure? This action is irreversible!';
+			return 'Вы уверены? Эта операция необратима!';
 		}
 	};
 

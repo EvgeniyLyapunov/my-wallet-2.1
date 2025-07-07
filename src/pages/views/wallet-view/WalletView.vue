@@ -1,24 +1,24 @@
 <template>
 	<div class="wallet">
 		<div class="wallet__title-block">
-			<h1 class="wallet__title">Wallet</h1>
+			<h1 class="wallet__title">Кошелёк</h1>
 			<div class="wallet__breadcrumbs breadcrumbs">
-				<span class="breadcrumbs__link" @click="onRouteHome">Home</span>
+				<span class="breadcrumbs__link" @click="onRouteHome">Домашняя</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__end">Wallet</span>
+				<span class="breadcrumbs__end">Кошелёк</span>
 			</div>
 		</div>
 		<div class="wallet__menu">
 			<router-link :to="{ name: 'cards_view' }" class="wallet__menu-link">
-				<span class="wallet__menu-link-item">Cards</span>
+				<span class="wallet__menu-link-item">Карты</span>
 			</router-link>
 
 			<router-link :to="{ name: 'newCard_view' }" class="wallet__menu-link">
-				<span class="wallet__menu-link-item">New card</span>
+				<span class="wallet__menu-link-item">Новая карта</span>
 			</router-link>
 
 			<router-link :to="{ name: 'home_view' }" class="wallet__menu-link">
-				<span class="wallet__menu-link-item">Home</span>
+				<span class="wallet__menu-link-item">Домой</span>
 			</router-link>
 		</div>
 	</div>
