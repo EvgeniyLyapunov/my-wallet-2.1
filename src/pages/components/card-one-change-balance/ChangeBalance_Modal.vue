@@ -3,7 +3,7 @@
 		<v-dialog v-model="isShow" :persistent="true">
 			<v-card class="modal">
 				<v-card-title>
-					<h2 class="modal__title">Change card balance</h2>
+					<h2 class="modal__title">Изменить баланс карты</h2>
 				</v-card-title>
 				<v-card-text class="modal__form">
 					<!-- Отображение текущей суммы карты -->
@@ -137,7 +137,7 @@
 				</v-card-text>
 				<div class="modal__footer">
 					<div class="modal__footer-btns">
-						<v-btn class="modal__footer-btn" @click="onCloseModal">Cancel</v-btn>
+						<v-btn class="modal__footer-btn" @click="onCloseModal">Отмена</v-btn>
 					</div>
 				</div>
 			</v-card>
@@ -160,7 +160,7 @@
 
 	<Confirm
 		v-model="isConfirmVisible"
-		:confirm-action="'Confirm your action!'"
+		:confirm-action="'Подтвердите ваши действия!'"
 		@confirm="onConfirmChangeBalance"
 	/>
 </template>
@@ -319,8 +319,8 @@
 
 			if (amount > gap) {
 				isVisible_MessageBox.value = true;
-				messageBox_Title.value = 'Info';
-				messageBox_Message.value = `The resource of the base card allows you to increase the amount of this card by ${gap} max.`;
+				messageBox_Title.value = 'Информация!';
+				messageBox_Message.value = `Сумма базовой карты позволяет увеличить баланс этой карты максимум на ${gap} руб.`;
 				return;
 			}
 		}
@@ -361,8 +361,8 @@
 			const gap: number = props.card!.currentSum - sumOfAllVirtual!;
 			if (amount > gap) {
 				isVisible_MessageBox.value = true;
-				messageBox_Title.value = 'Info';
-				messageBox_Message.value = `The resource of this card allows you to reduce the amount by a maximum of ${gap} rubles`;
+				messageBox_Title.value = 'Информация!';
+				messageBox_Message.value = `Баланс этой карты позволяет уменьшить сумму максимум на ${gap} руб.`;
 				return;
 			}
 			// если карта виртуальная
@@ -372,10 +372,10 @@
 			const gap = baseCard!.currentSum - sumOfAllVirtual!;
 			if (amount > gap + props.card!.currentSum) {
 				isVisible_MessageBox.value = true;
-				messageBox_Title.value = 'Info';
-				messageBox_Message.value = `The resource of the base card allows you to reduce the amount of this card by a maximum of ${
+				messageBox_Title.value = 'Информация!';
+				messageBox_Message.value = `Баланс базовой карты позволяет тебе уменьшить сумму этой карты на ${
 					props.card!.currentSum
-				} rubles to zero or ${props.card!.currentSum + gap} rubles to minus.`;
+				} руб. до нуля, или до ${gap} руб. в минус.`;
 				return;
 			}
 		}
@@ -429,9 +429,9 @@
 				if (amount > props.card!.currentSum + gap) {
 					isVisible_MessageBox.value = true;
 					messageBox_Title.value = 'Info';
-					messageBox_Message.value = `Resource of the base card allows you to increase the amount of this card up maximum to ${
+					messageBox_Message.value = `Баланс базовой карты позволяет увеличить сумму этой карты максимум до ${
 						props.card!.currentSum + gap
-					} value`;
+					} руб.`;
 					return;
 				}
 			}

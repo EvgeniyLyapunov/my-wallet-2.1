@@ -3,16 +3,16 @@
 		<v-dialog v-model="isShow" :persistent="true">
 			<v-card class="modal">
 				<v-card-title>
-					<h2 class="modal__title">Select virtual for change balance</h2>
+					<h2 class="modal__title">Выбор виртуальной карты</h2>
 				</v-card-title>
 				<v-card-text class="modal__form form">
 					<section class="form__descr">
 						<p class="form__descr-info">
-							You want to set a new balance for this card equal to
-							{{ props.amountForChange }} rubles.
+							Вы хотите установить новый баланс этой карты равный
+							{{ props.amountForChange }} руб.
 						</p>
 						<p class="form__descr-info">{{ descrMessage }}</p>
-						<p class="form__descr-label">So choose a virtual card to reduce its balance:</p>
+						<p class="form__descr-label">Выберите виртуальную карту для изменения её баланса:</p>
 					</section>
 					<section class="form__radio">
 						<VRadioGroup v-model="radioSelectedVirtual">
@@ -25,22 +25,21 @@
 					</section>
 					<section v-if="virtualCard" class="form__resume">
 						<p class="form__resume-text">
-							The new balance of the {{ props.card!.cardName }} card will be
-							{{ props.amountForChange }} rubles.
+							Новый баланс {{ props.card!.cardName }} карты будет {{ props.amountForChange }} руб.
 						</p>
 						<p class="form__resume-text">
-							The balance of the {{ virtualCard!.cardName }} virtual card will change and will be
-							{{ newVirtualSum }} rubles.
+							Баланс {{ virtualCard!.cardName }} виртуальной карты будет изменён и составит
+							{{ newVirtualSum }} руб.
 						</p>
 						<p class="form__resume-text">
-							If the value is negative, adjust the {{ virtualCard!.cardName }} virtual card amount
-							separately.
+							Если значение отрицательное у {{ virtualCard!.cardName }} виртуальной карты,
+							скорректируйте его вручную.
 						</p>
 					</section>
 					<div v-else class="form__resume-empty"></div>
 					<section class="form__btns btns">
 						<v-btn class="btns__button" :disabled="!virtualCard" @click="onOk">Ok</v-btn>
-						<v-btn class="btns__button" @click="onCloseModal">Cansel</v-btn>
+						<v-btn class="btns__button" @click="onCloseModal">Отмена</v-btn>
 					</section>
 				</v-card-text>
 			</v-card>
@@ -86,7 +85,7 @@
 			if (newValue) {
 				virtualCards.value = getVirtualCards_ByBaseCardId(props.card!.cardId);
 				sumOfAllVirtual.value = getSum_AllVirtualCardsOfBaseCard(props.card!)!;
-				descrMessage.value = `The sum of virtual cards of this card is ${sumOfAllVirtual.value!} rubles. The minimum sum of setting a new balance is ${sumOfAllVirtual.value!} rubles`;
+				descrMessage.value = `Сумма виртуальных карт этой карты ${sumOfAllVirtual.value!} руб. Минимально допустимая сумма баланса ${sumOfAllVirtual.value!} руб.`;
 			}
 		}
 	);

@@ -3,7 +3,7 @@
 		<v-dialog v-model="isShow" :persistent="true">
 			<v-card class="modal">
 				<v-card-title>
-					<h2 class="modal__title">Create and Delete Tags</h2>
+					<h2 class="modal__title">Создание и удаление тегов</h2>
 				</v-card-title>
 				<v-card-text>
 					<div class="modal__form">
@@ -14,7 +14,7 @@
 									'modal__form-label-span_active': isPlaceholderSpan,
 								}"
 							>
-								New Tag Name
+								Имя тега
 							</span>
 							<input
 								v-model="newTagName"
@@ -38,7 +38,7 @@
 				</v-card-text>
 				<div class="modal__footer">
 					<div class="modal__footer-btns">
-						<v-btn class="modal__footer-btn" @click="onCloseModal">Close</v-btn>
+						<v-btn class="modal__footer-btn" @click="onCloseModal">Закрыть</v-btn>
 					</div>
 				</div>
 			</v-card>
