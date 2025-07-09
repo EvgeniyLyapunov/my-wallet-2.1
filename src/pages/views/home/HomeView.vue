@@ -13,12 +13,16 @@
 				<span class="home__menu-link-item">Баланс</span>
 			</router-link>
 
-			<router-link :to="{ name: 'currentState_view' }" class="home__menu-link">
+			<router-link :to="{ name: 'statistics_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Статистика</span>
 			</router-link>
 
 			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Журнал операций</span>
+			</router-link>
+
+			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
+				<span class="home__menu-link-item">Планы покупок</span>
 			</router-link>
 		</div>
 		<div class="home__footer">

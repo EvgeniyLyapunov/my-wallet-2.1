@@ -19,10 +19,11 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     'balance_view': RouteRecordInfo<'balance_view', '/balance-view', Record<never, never>, Record<never, never>>,
-    'currentState_view': RouteRecordInfo<'currentState_view', '/current-state-view', Record<never, never>, Record<never, never>>,
-    'statistics': RouteRecordInfo<'statistics', '/statistics', Record<never, never>, Record<never, never>>,
     'home_view': RouteRecordInfo<'home_view', '/', Record<never, never>, Record<never, never>>,
     'operationsLog_view': RouteRecordInfo<'operationsLog_view', '/operations-log-view', Record<never, never>, Record<never, never>>,
+    'statistics_view': RouteRecordInfo<'statistics_view', '/statistics-view', Record<never, never>, Record<never, never>>,
+    'statistics': RouteRecordInfo<'statistics', '/statistics', Record<never, never>, Record<never, never>>,
+    'stat-all-operations': RouteRecordInfo<'stat-all-operations', '/stat-all-operations', Record<never, never>, Record<never, never>>,
     'wallet_view': RouteRecordInfo<'wallet_view', '/wallet-view', Record<never, never>, Record<never, never>>,
     'card-one_view': RouteRecordInfo<'card-one_view', '/card-one-view/:id', Record<never, never>, Record<never, never>>,
     'cards_view': RouteRecordInfo<'cards_view', '/cards-view', Record<never, never>, Record<never, never>>,
