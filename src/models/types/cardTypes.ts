@@ -68,6 +68,16 @@ export interface IStatisticOptions {
 }
 
 /**
+ * объект опций графика статистики Движение средств
+ */
+export interface IStatAllOptions {
+	from: Date;
+	to: Date;
+	periodType: StatisticsPeriodType;
+	changesDateTime: Date | null;
+}
+
+/**
  * объект резюме текущего графика статистики
  */
 export interface IStatisticsResume {
@@ -75,6 +85,15 @@ export interface IStatisticsResume {
 	end: Date;
 	amount: number;
 	dynamicLimit?: string;
+}
+
+/**
+ * объект резюме графика статистики Движение средств
+ */
+export interface IStatAllResume {
+	begin: Date;
+	end: Date;
+	amount: number;
 }
 
 /**

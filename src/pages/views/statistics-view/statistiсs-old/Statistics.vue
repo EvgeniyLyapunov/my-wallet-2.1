@@ -369,7 +369,7 @@
 	const breadcrumbsDivider: string = '/';
 
 	const onRouteCurrentState = () => {
-		router.push('/current-state-view');
+		router.push('/statistics-view');
 	};
 
 	const onRouteHome = () => {

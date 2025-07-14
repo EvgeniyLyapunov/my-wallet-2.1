@@ -73,6 +73,20 @@ export const useOperationsStore = defineStore(
 			operationsList.value = [];
 		};
 
+		const get_operationsByPeriod = (start: Date) => {
+			const from = moment.tz(start, 'Europe/Moscow').startOf('minute');
+			const to = moment.tz('Europe/Moscow');
+			let resultList: IOperation[];
+			resultList = operationsList.value.filter((item, i) => {
+				const operationDate = moment.tz(item.date, 'Europe/Moscow');
+				if (!operationDate.isBefore(from) && !operationDate.isAfter(to)) {
+					return true;
+				}
+			});
+
+			return resultList;
+		};
+
 		return {
 			getOperationsList,
 			operationsList,
@@ -81,6 +95,8 @@ export const useOperationsStore = defineStore(
 			cleanOperationsDeletedCard,
 			delete_TodayOperations,
 			delete_AllOperations,
+
+			get_operationsByPeriod,
 		};
 	},
 	{
