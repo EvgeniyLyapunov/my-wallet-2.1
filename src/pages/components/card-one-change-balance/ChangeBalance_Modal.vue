@@ -110,14 +110,7 @@
 								variant="text"
 								@click="onTagEditModalShow"
 							></v-btn>
-							<TagItem
-								v-for="tag in tagsList"
-								:key="tag.Id"
-								:tag="tag"
-								:mode="'Operation'"
-								@onAddTag="onAddTagForCurrentOperation"
-								@onCancelTag="onDeleteTagFromCurrentOperation"
-							/>
+							<TagItem v-for="tag in tagsList" :key="tag.Id" :tag="tag" :mode="'Operation'" />
 						</div>
 						<v-btn
 							v-if="!isVisible_Tags"
@@ -208,6 +201,7 @@
 		() => props.modelValue,
 		(newValue) => {
 			if (newValue) {
+				operationsStore.reset_CurrentSelectedTag();
 				tagsList.value = tagsStore.get_ChangeBalanceTagList();
 			}
 		}
@@ -291,18 +285,6 @@
 		onCloseModal();
 	};
 
-	// Tags for current operation
-
-	const onAddTagForCurrentOperation = (tag: ITag) => {
-		tagsForCurrentOperation.value = [...tagsForCurrentOperation.value, tag];
-	};
-
-	const onDeleteTagFromCurrentOperation = (tag: ITag) => {
-		tagsForCurrentOperation.value = tagsForCurrentOperation.value.filter(
-			(item) => item.Id !== tag.Id
-		);
-	};
-
 	// change balance
 
 	const onBalancePlus = () => {
@@ -331,16 +313,16 @@
 			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
 			type: 'plus',
-			tags: tagsForCurrentOperation.value.map((item) => item.Id),
+			tag: operationsStore.get_CurrentSelectedTag()
+				? operationsStore.get_CurrentSelectedTag()!.Id
+				: undefined,
 		};
 
-		if (operation.tags) {
-			operation.tags.forEach((item) => {
-				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
-				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
-					tagsStore.addNewTag_StatisticTagsList(tag);
-				}
-			});
+		if (operation.tag) {
+			const tag = tagsStore.get_TagFromChangeBalanceTagsList(operation.tag);
+			if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
+				tagsStore.addNewTag_StatisticTagsList(tag);
+			}
 		}
 
 		operationsStore.addOperationToList(operation);
@@ -386,16 +368,16 @@
 			moneyType: props.card!.cardMoneyType!,
 			cardId: props.card!.cardId,
 			type: 'minus',
-			tags: tagsForCurrentOperation.value.map((item) => item.Id),
+			tag: operationsStore.get_CurrentSelectedTag()
+				? operationsStore.get_CurrentSelectedTag()!.Id
+				: undefined,
 		};
 
-		if (operation.tags) {
-			operation.tags.forEach((item) => {
-				const tag = tagsStore.get_TagFromChangeBalanceTagsList(item);
-				if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
-					tagsStore.addNewTag_StatisticTagsList(tag);
-				}
-			});
+		if (operation.tag) {
+			const tag = tagsStore.get_TagFromChangeBalanceTagsList(operation.tag);
+			if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
+				tagsStore.addNewTag_StatisticTagsList(tag);
+			}
 		}
 
 		operationsStore.addOperationToList(operation);

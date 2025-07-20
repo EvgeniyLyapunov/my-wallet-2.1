@@ -1,4 +1,4 @@
-import type { IOperation, IStatisticOptions } from '@/models/types/cardTypes';
+import type { IOperation, IStatisticOptions, ITag } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
 import { useWalletStore } from './walletStore';
 import moment from 'moment-timezone';
@@ -8,9 +8,10 @@ export const useOperationsStore = defineStore(
 	() => {
 		const { getCardId_ByName } = useWalletStore();
 		const operationsList = ref<IOperation[]>([]);
+		let currentSelectedTag: ITag | undefined = undefined;
 
 		const getOperationsList = () => {
-			const list = [...operationsList.value].sort((a, b) => (a.date > b.date ? 1 : -1));
+			const list = [...operationsList.value];
 			return list;
 		};
 
@@ -48,11 +49,8 @@ export const useOperationsStore = defineStore(
 
 			if (optionsObj.tags.length > 0) {
 				resultList = resultList.filter((item) => {
-					if (item.tags.length === 0) return false;
-					const arr = item.tags.filter((t) => {
-						if (optionsObj.tags.some((teg) => teg.Id === t)) return true;
-					});
-					if (arr && arr.length > 0) return true;
+					if (!item.tag) return false;
+					if (optionsObj.tags.some((tag) => tag.Id === item.tag)) return true;
 				});
 			}
 			return resultList;
@@ -87,6 +85,18 @@ export const useOperationsStore = defineStore(
 			return resultList;
 		};
 
+		const get_CurrentSelectedTag = () => {
+			return currentSelectedTag;
+		};
+
+		const set_CurrentSelectedTag = (tag: ITag) => {
+			currentSelectedTag = tag;
+		};
+
+		const reset_CurrentSelectedTag = () => {
+			currentSelectedTag = undefined;
+		};
+
 		return {
 			getOperationsList,
 			operationsList,
@@ -97,6 +107,10 @@ export const useOperationsStore = defineStore(
 			delete_AllOperations,
 
 			get_operationsByPeriod,
+
+			get_CurrentSelectedTag,
+			set_CurrentSelectedTag,
+			reset_CurrentSelectedTag,
 		};
 	},
 	{

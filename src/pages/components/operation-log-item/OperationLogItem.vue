@@ -17,11 +17,9 @@
 						(props.logItem as IOperation).amount
 					}}</span>
 				</div>
-				<div v-if="tags.length > 0" class="operation__info-tags">
+				<div v-if="(props.logItem as IOperation).tag" class="operation__info-tags">
 					<span class="operation__info-tags-label">Tags:</span>
-					<span v-for="item in tags" :key="item" class="operation__info-tags-value">{{
-						item
-					}}</span>
+					<span class="operation__info-tags-value">{{ tag }}</span>
 				</div>
 				<div v-else class="operation__info-tags-empty"></div>
 			</div>
@@ -43,15 +41,14 @@
 
 	const isDate = computed<boolean>(() => typeof props.logItem === 'string');
 	const cardName = ref<string | undefined>('');
-	const tags = ref<string[]>([]);
+	const tag = ref<string>('');
 
 	onMounted(() => {
 		if (!isDate.value) {
 			cardName.value = getCardName_ById((props.logItem as IOperation).cardId);
-			(props.logItem as IOperation).tags.forEach((item) => {
-				const name = get_TagName_FromChangeBalanceTagsList_ById(item);
-				tags.value.push(name);
-			});
+			if ((props.logItem as IOperation).tag) {
+				tag.value = get_TagName_FromChangeBalanceTagsList_ById((props.logItem as IOperation).tag!);
+			}
 		}
 	});
 </script>

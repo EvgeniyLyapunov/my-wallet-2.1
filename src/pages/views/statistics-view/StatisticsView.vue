@@ -22,7 +22,7 @@
 			</router-link>
 
 			<router-link :to="{ name: 'newCard_view' }" class="statistic__menu-link">
-				<span class="statistic__menu-link-item">Динамический лимит</span>
+				<span class="statistic__menu-link-item">Ежедневный лимит</span>
 			</router-link>
 
 			<router-link :to="{ name: 'statistics' }" class="statistic__menu-link">

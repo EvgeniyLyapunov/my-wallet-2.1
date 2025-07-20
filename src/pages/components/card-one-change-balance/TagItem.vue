@@ -16,17 +16,19 @@
 
 <script setup lang="ts">
 	import type { ITag } from '@/models/types/cardTypes';
+	import { useOperationsStore } from '@/stores/operationsStore';
 	const props = defineProps<{
 		tag: ITag;
 		mode: 'Operation' | 'Delete';
 	}>();
 
 	const emit = defineEmits<{
-		onAddTag: [type: ITag];
-		onCancelTag: [type: ITag];
 		onDeleteTag: [type: ITag];
 		tagFromOptionStatistics: [type: () => ITag];
 	}>();
+
+	const { get_CurrentSelectedTag, reset_CurrentSelectedTag, set_CurrentSelectedTag } =
+		useOperationsStore();
 
 	const isSelected = ref<boolean>(false);
 
@@ -39,12 +41,20 @@
 			return;
 		}
 
-		if (isSelected.value) {
-			emit('onCancelTag', props.tag);
-			isSelected.value = false;
-		} else {
-			emit('onAddTag', props.tag);
+		if (get_CurrentSelectedTag() && get_CurrentSelectedTag()!.Id !== props.tag.Id) {
+			return;
+		}
+
+		if (!get_CurrentSelectedTag()) {
+			set_CurrentSelectedTag(props.tag);
 			isSelected.value = true;
+			return;
+		}
+
+		if (get_CurrentSelectedTag() && get_CurrentSelectedTag()!.Id === props.tag.Id) {
+			reset_CurrentSelectedTag();
+			isSelected.value = false;
+			return;
 		}
 	};
 

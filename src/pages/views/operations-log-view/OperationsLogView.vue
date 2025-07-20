@@ -44,13 +44,14 @@
 	const { getOperationsList, delete_TodayOperations, delete_AllOperations } = useOperationsStore();
 	const refreshKey = ref<string>(nanoid());
 	const logList = ref<(IOperation | string)[]>([]);
-	const sourceOperationsList = ref<IOperation[]>([]);
 
 	const router = useRouter();
 	const breadcrumbsDivider: string = '/';
 
-	onMounted(() => {
-		initList();
+	refreshKey.value = nanoid();
+
+	onMounted(async () => {
+		await initList();
 	});
 
 	const elem: HTMLElement | null = document.querySelector('.main__log');
@@ -60,11 +61,16 @@
 		elem.textContent;
 	}
 
-	const initList = () => {
-		sourceOperationsList.value = getOperationsList();
-		sourceOperationsList.value.reverse();
+	const initList = async () => {
+		logList.value = [];
+
+		const rawOperations = getOperationsList();
+		const sortedOperations = rawOperations.sort((a, b) => {
+			return new Date(b.date).getTime() - new Date(a.date).getTime();
+		});
+
 		let logDate: string;
-		sourceOperationsList.value.forEach((item, index) => {
+		sortedOperations.forEach((item, index) => {
 			if (index === 0) {
 				logDate = moment(item.date).format('DD.MM.YYYY');
 				logList.value.push(logDate);
@@ -80,6 +86,8 @@
 				logList.value.push(item);
 			}
 		});
+
+		await nextTick();
 		refreshKey.value = nanoid();
 	};
 
@@ -105,6 +113,7 @@
 		}
 
 		logList.value = [];
+
 		refreshKey.value = nanoid();
 		deletePoint.value = '';
 		nextTick();
