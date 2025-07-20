@@ -174,10 +174,11 @@
 		} else {
 			chartHeight.value = 250;
 		}
-		initStatisticChart();
 	});
 
 	onMounted(async () => {
+		await nextTick();
+		initStatisticChart();
 		chartUpdateKey.value = nanoid();
 	});
 
