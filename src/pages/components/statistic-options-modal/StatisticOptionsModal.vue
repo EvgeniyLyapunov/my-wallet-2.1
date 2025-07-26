@@ -219,8 +219,8 @@
 					cardNames.push(card.cardName);
 				}
 
-				if (item.tags.length > 0) {
-					tags = [...tags, ...item.tags];
+				if (item.tag) {
+					tags = [...tags, ...item.tag];
 				}
 			});
 

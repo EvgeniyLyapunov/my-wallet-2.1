@@ -24,6 +24,7 @@ declare module 'vue-router/auto-routes' {
     'statistics_view': RouteRecordInfo<'statistics_view', '/statistics-view', Record<never, never>, Record<never, never>>,
     'statistics': RouteRecordInfo<'statistics', '/statistics', Record<never, never>, Record<never, never>>,
     'stat-all-operations': RouteRecordInfo<'stat-all-operations', '/stat-all-operations', Record<never, never>, Record<never, never>>,
+    'statistic_daily_limit': RouteRecordInfo<'statistic_daily_limit', '/statistic-daily-limit', Record<never, never>, Record<never, never>>,
     'wallet_view': RouteRecordInfo<'wallet_view', '/wallet-view', Record<never, never>, Record<never, never>>,
     'card-one_view': RouteRecordInfo<'card-one_view', '/card-one-view/:id', Record<never, never>, Record<never, never>>,
     'cards_view': RouteRecordInfo<'cards_view', '/cards-view', Record<never, never>, Record<never, never>>,

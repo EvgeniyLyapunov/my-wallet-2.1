@@ -71,11 +71,11 @@ export interface IStatisticOptions {
 /**
  * объект опций графика статистики Движение средств
  */
-export interface IStatAllOptions {
+export interface IStatOptions {
 	from: Date;
 	to: Date;
 	periodType: StatisticsPeriodType;
-	changesDateTime: Date | null;
+	changesDateTime: Date | null; // дата изменения периода, если не менялся больше часа то по умолчанию 'salary month'
 }
 
 /**
@@ -95,6 +95,14 @@ export interface IStatAllResume {
 	begin: Date;
 	end: Date;
 	amount: number;
+}
+
+/**
+ *
+ */
+export interface IStatDailyLimit extends IStatAllResume {
+	dailyLimit: number;
+	dynamicDailyLimit: number;
 }
 
 /**

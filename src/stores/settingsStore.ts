@@ -7,8 +7,8 @@ export const useSettingsStore = defineStore(
 		const settingsObject = reactive<ISettings>({
 			isSaveLastStatisticOptions: true,
 			salaryMonthStart: 10,
-			dailyLimit: 0,
-			dailyLimitPeriod: undefined,
+			dailyLimit: 1000,
+			dailyLimitPeriod: 'Salary Month',
 		});
 
 		const get_SettingsObject = () => {

@@ -9,7 +9,7 @@ import type {
 	IStatisticsSubtitle,
 	StatisticsPeriodType,
 	IStatisticsResume,
-	IStatAllOptions,
+	IStatOptions,
 } from '@/models/types/cardTypes';
 import moment from 'moment-timezone';
 
@@ -100,16 +100,16 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		statisticOptions.tags = tags;
 	};
 
-	const statAllPeriodOption = reactive<IStatAllOptions>({
+	const statAllPeriodOption = reactive<IStatOptions>({
 		from: moment.tz('Europe/Moscow').startOf('day').toDate(),
 		to: moment.tz('Europe/Moscow').toDate(),
 		periodType: 'Today',
 		changesDateTime: null,
 	});
 
-	const get_StatAllPeriodOption = (): IStatAllOptions => {
+	const get_StatAllPeriodOption = (): IStatOptions => {
 		const lastChanged = moment(statAllPeriodOption.changesDateTime);
-		if (statAllPeriodOption.changesDateTime === null || isMoreThanOneHourAgo(lastChanged)) {
+		if (isMoreThanOneHourAgo(lastChanged) || statAllPeriodOption.changesDateTime === null) {
 			const currentDay = moment().date();
 			if (currentDay > get_SettingsObject().salaryMonthStart) {
 				// Если текущий день больше числа начала фин месяца, получаем дату этого месяца

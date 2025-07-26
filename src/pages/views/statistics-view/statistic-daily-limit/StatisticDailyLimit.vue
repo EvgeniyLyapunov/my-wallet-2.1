@@ -1,19 +1,19 @@
 <template>
-	<div class="stat-all">
+	<div class="stat-lim">
 		<!-- header -->
-		<section class="stat-all__header header">
-			<h1 class="header__title">Движение средств</h1>
+		<section class="stat-lim__header header">
+			<h1 class="header__title">Дневной лимит</h1>
 			<div class="breadcrumbs">
 				<span class="breadcrumbs__link" @click="onRouteHome">Домашняя</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
 				<span class="breadcrumbs__link" @click="onRouteStatisticsView">Статистика</span>
 				<span class="breadcrumbs__divider">&nbsp;&nbsp;{{ breadcrumbsDivider }}&nbsp;&nbsp;</span>
-				<span class="breadcrumbs__end">Движение средств</span>
+				<span class="breadcrumbs__end">Дневной лимит</span>
 			</div>
 		</section>
 
 		<!-- main -->
-		<main class="stat-all__main main">
+		<main class="stat-lim__main main">
 			<!-- resume -->
 			<section class="main-resum">
 				<div class="main-resum__field">
@@ -38,6 +38,26 @@
 						}).format(resume.amount)
 					}}</span>
 				</div>
+				<div class="main-resum__field">
+					<span class="main-resum__field-label">Дневной лимит:</span>
+					<span class="main-resum__field-value">{{
+						new Intl.NumberFormat('ru', {
+							style: 'currency',
+							currency: 'RUB',
+							minimumFractionDigits: 0,
+						}).format(resume.dailyLimit)
+					}}</span>
+				</div>
+				<div class="main-resum__field">
+					<span class="main-resum__field-label">Динамический лимит:</span>
+					<span class="main-resum__field-value">{{
+						new Intl.NumberFormat('ru', {
+							style: 'currency',
+							currency: 'RUB',
+							minimumFractionDigits: 0,
+						}).format(resume.dynamicDailyLimit)
+					}}</span>
+				</div>
 			</section>
 			<!-- chart -->
 			<section class="main-chart">
@@ -52,7 +72,7 @@
 			<!-- period -->
 			<section class="main-period">
 				<span class="main-period__label">Период на графике:</span>
-				<VRadioGroup v-model="radioPeriod" :inline="true">
+				<VRadioGroup v-model="radioPeriod" class="main-period__radio-group" :inline="true">
 					<VRadio color="#fff" value="Today">
 						<template #label>
 							<span class="main-period__radio-label">Сегодня</span>
@@ -74,9 +94,14 @@
 						</template>
 					</VRadio>
 				</VRadioGroup>
+				<v-checkbox
+					v-model="isDailyDynamicLimit"
+					color="orange"
+					label="Показать динамический дневной лимит"
+					hide-details
+				></v-checkbox>
 			</section>
 		</main>
-
 		<!-- actions -->
 		<section class="stat-all__actions actions">
 			<v-btn
@@ -103,19 +128,18 @@
 
 <script setup lang="ts">
 	import { nanoid } from 'nanoid';
+	import moment from 'moment';
 	import VueApexCharts from 'vue3-apexcharts';
-	import { useStatisticsStore } from '@/stores/statisticsStore';
-	import { useOperationsStore } from '@/stores/operationsStore';
-	import moment from 'moment-timezone';
 	import type {
 		IStatOptions,
 		IStatAllResume,
 		StatisticsPeriodType,
+		IStatDailyLimit,
 	} from '@/models/types/cardTypes';
 
 	definePage({
-		name: 'stat-all-operations',
-		path: '/stat-all-operations',
+		name: 'statistic_daily_limit',
+		path: '/statistic-daily-limit',
 	});
 
 	moment.updateLocale('en', {
@@ -126,22 +150,31 @@
 
 	const { get_StatAllPeriodOption, set_StatisticPeriod } = useStatisticsStore();
 	const { get_operationsByPeriod } = useOperationsStore();
+	const { get_SettingsObject } = useSettingsStore();
 
-	const resume = ref<IStatAllResume>({
+	const resume = ref<IStatDailyLimit>({
 		begin: moment.tz('Europe/Moscow').toDate(),
 		end: moment.tz('Europe/Moscow').toDate(),
 		amount: 0,
+		dailyLimit: 0,
+		dynamicDailyLimit: 0,
 	});
 
 	const chartHeight = ref<number>(0);
 	const chartUpdateKey = ref<string>('1');
 	const xAxis = ref<string[]>([]);
 	const yAxis = ref<number[]>([]);
+	const yAxisDailyLimit = ref<number[]>([]);
+	const yAxisDynamicDailyLimit = ref<number[]>([]);
 
 	let series = reactive([
 		{
 			name: 'Сумма',
 			data: yAxis.value,
+		},
+		{
+			name: 'Дневной лимит',
+			data: yAxisDailyLimit,
 		},
 	]);
 
@@ -167,7 +200,7 @@
 		dataLabels: {
 			enabled: false,
 		},
-		colors: ['#1E88E5', '#EF5350'],
+		colors: ['#1E88E5', '#fff', '#ff9800'],
 		stroke: {
 			curve: 'smooth',
 		},
@@ -197,13 +230,34 @@
 	onBeforeUnmount(() => {
 		xAxis.value = [];
 		yAxis.value = [];
+		yAxisDailyLimit.value = [];
+		yAxisDynamicDailyLimit.value = [];
 	});
 
 	const initStatisticChart = () => {
 		const periodObj: IStatOptions = get_StatAllPeriodOption();
 		radioPeriod.value = periodObj.periodType;
+
 		xAxis.value = [];
 		yAxis.value = [];
+		yAxisDailyLimit.value = [];
+		yAxisDynamicDailyLimit.value = [];
+
+		let dailyLimit = -Math.abs(get_SettingsObject().dailyLimit);
+
+		// если выбран показ ежедневного лимита, на график добавляется новая линия
+		if (isDailyDynamicLimit.value) {
+			if (!series[2]) {
+				series.push({
+					name: 'Динамический лимит',
+					data: [],
+				});
+			}
+		} else {
+			if (series[2]) {
+				series.pop();
+			}
+		}
 
 		const operationsList = get_operationsByPeriod(periodObj.from);
 		operationsList.sort((a, b) => {
@@ -223,6 +277,9 @@
 
 		periodDates.reverse();
 
+		// начальная инициализация переменной динамического лимита
+		let dynamicLimit = -Math.abs(get_SettingsObject().dailyLimit);
+
 		periodDates.forEach((d, index) => {
 			const day = moment(d).date().toString();
 			const amount = operationsList
@@ -239,15 +296,51 @@
 
 			xAxis.value.push(day);
 			yAxis.value.push(amount);
+			yAxisDailyLimit.value.push(dailyLimit);
+
+			// если не выбран показ ежедневного лимита к следующей итерации
+			if (!isDailyDynamicLimit.value) return;
+
+			// если это первая итерация, то ежедневный динамический лимит равен ежедневному лимиту
+			if (index === 0) {
+				yAxisDynamicDailyLimit.value.push(dailyLimit);
+				return;
+			}
+
+			// если это не первая итерация, получаем сумму расхода за предыдущий день
+			const previousAmount = yAxis.value[index - 1];
+
+			// динамический лимит - динамический лимит за предыдущий день
+			// плюс/минус разница динамического лимит за предыдущий день и суммы расхода за предыдущий день
+			dynamicLimit = dynamicLimit += dailyLimit - previousAmount;
+			if (dynamicLimit <= 0) {
+				yAxisDynamicDailyLimit.value.push(dynamicLimit);
+			} else {
+				yAxisDynamicDailyLimit.value.push(0);
+			}
 		});
 
 		series[0].data = yAxis.value;
+		series[1].data = yAxisDailyLimit.value;
+		if (series[2]) {
+			series[2].data = yAxisDynamicDailyLimit.value;
+		}
+
 		chartOptions.xaxis.categories = xAxis.value;
+
+		let resumeDynamicLimit: number = 0;
+		if (dynamicLimit > 0) {
+			resumeDynamicLimit = dynamicLimit;
+		} else {
+			resumeDynamicLimit = Math.abs(dynamicLimit);
+		}
 
 		resume.value = {
 			begin: periodObj.from,
 			end: periodObj.to,
 			amount: yAxis.value.reduce((acc, item) => acc + item, 0),
+			dailyLimit: Math.abs(dailyLimit),
+			dynamicDailyLimit: isDailyDynamicLimit.value ? resumeDynamicLimit : 0,
 		};
 	};
 
@@ -257,6 +350,16 @@
 		() => radioPeriod.value,
 		(newValue) => {
 			set_StatisticPeriod(newValue);
+			initStatisticChart();
+			chartUpdateKey.value = nanoid();
+		}
+	);
+
+	const isDailyDynamicLimit = ref<boolean>(false);
+
+	watch(
+		() => isDailyDynamicLimit.value,
+		(newValue) => {
 			initStatisticChart();
 			chartUpdateKey.value = nanoid();
 		}
@@ -275,5 +378,5 @@
 </script>
 
 <style scoped lang="scss">
-	@import './stat-all-operations.scss';
+	@import './statistic-daily-limit.scss';
 </style>
