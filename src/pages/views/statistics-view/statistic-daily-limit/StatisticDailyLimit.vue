@@ -288,7 +288,12 @@
 					const currentItemDate = moment(d).startOf('day');
 					return opDate.isSame(currentItemDate);
 				})
-				.reduce((acc: any, item: { type: string; amount: number }) => {
+				.reduce((acc: any, item) => {
+					// исключаем операции имеющие исключающий тег
+					if (item.exclusionTag) {
+						return acc;
+					}
+
 					const sum = item.type === 'minus' ? -Math.abs(item.amount) : item.amount;
 					const res = acc + sum;
 					return res;

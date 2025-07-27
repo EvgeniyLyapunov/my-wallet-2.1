@@ -202,6 +202,7 @@
 		(newValue) => {
 			if (newValue) {
 				operationsStore.reset_CurrentSelectedTag();
+				operationsStore.set_IsCurrentSelectedExclusionTag(false);
 				tagsList.value = tagsStore.get_ChangeBalanceTagList();
 			}
 		}
@@ -316,6 +317,7 @@
 			tag: operationsStore.get_CurrentSelectedTag()
 				? operationsStore.get_CurrentSelectedTag()!.Id
 				: undefined,
+			exclusionTag: operationsStore.get_IsCurrentSelectedExclusionTag(),
 		};
 
 		if (operation.tag) {
@@ -371,6 +373,7 @@
 			tag: operationsStore.get_CurrentSelectedTag()
 				? operationsStore.get_CurrentSelectedTag()!.Id
 				: undefined,
+			exclusionTag: operationsStore.get_IsCurrentSelectedExclusionTag(),
 		};
 
 		if (operation.tag) {

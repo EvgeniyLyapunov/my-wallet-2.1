@@ -9,6 +9,7 @@ export const useOperationsStore = defineStore(
 		const { getCardId_ByName } = useWalletStore();
 		const operationsList = ref<IOperation[]>([]);
 		let currentSelectedTag: ITag | undefined = undefined;
+		let isCurrentSelectedExclusionTag: boolean = false;
 
 		const getOperationsList = () => {
 			const list = [...operationsList.value];
@@ -97,6 +98,14 @@ export const useOperationsStore = defineStore(
 			currentSelectedTag = undefined;
 		};
 
+		const get_IsCurrentSelectedExclusionTag = () => {
+			return isCurrentSelectedExclusionTag;
+		};
+
+		const set_IsCurrentSelectedExclusionTag = (flag: boolean) => {
+			isCurrentSelectedExclusionTag = flag;
+		};
+
 		return {
 			getOperationsList,
 			operationsList,
@@ -111,6 +120,8 @@ export const useOperationsStore = defineStore(
 			get_CurrentSelectedTag,
 			set_CurrentSelectedTag,
 			reset_CurrentSelectedTag,
+			get_IsCurrentSelectedExclusionTag,
+			set_IsCurrentSelectedExclusionTag,
 		};
 	},
 	{

@@ -4,8 +4,18 @@ import type { ITag } from '@/models/types/cardTypes';
 export const useTagsStore = defineStore(
 	'tagsStore',
 	() => {
-		const changeBalanceTagsList = ref<ITag[]>([]);
-		const statisticTagsList = ref<ITag[]>([]);
+		const changeBalanceTagsList = ref<ITag[]>([
+			{
+				Id: '###',
+				Name: '###',
+			},
+		]);
+		const statisticTagsList = ref<ITag[]>([
+			{
+				Id: '###',
+				Name: '###',
+			},
+		]);
 
 		const checkForUniqueTagIn_ChangeBalanceList = (tag: ITag): boolean => {
 			return changeBalanceTagsList.value.some((item) => item.Name === tag.Name);

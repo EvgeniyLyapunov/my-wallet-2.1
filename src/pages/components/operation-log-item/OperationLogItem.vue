@@ -18,8 +18,13 @@
 					}}</span>
 				</div>
 				<div v-if="(props.logItem as IOperation).tag" class="operation__info-tags">
-					<span class="operation__info-tags-label">Tags:</span>
+					<span class="operation__info-tags-label">tag:</span>
 					<span class="operation__info-tags-value">{{ tag }}</span>
+					<span
+						v-if="(props.logItem as IOperation).exclusionTag"
+						class="operation__info-tags-value_exclusion"
+						>&nbsp;###</span
+					>
 				</div>
 				<div v-else class="operation__info-tags-empty"></div>
 			</div>

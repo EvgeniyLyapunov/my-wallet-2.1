@@ -5,7 +5,7 @@
 	>
 		<span class="tag__name">{{ props.tag.Name }}</span>
 		<v-btn
-			v-show="props.mode === 'Delete'"
+			v-show="props.mode === 'Delete' && props.tag.Id !== '###'"
 			class="tag__delbtn"
 			variant="text"
 			icon="mdi-delete"
@@ -27,8 +27,13 @@
 		tagFromOptionStatistics: [type: () => ITag];
 	}>();
 
-	const { get_CurrentSelectedTag, reset_CurrentSelectedTag, set_CurrentSelectedTag } =
-		useOperationsStore();
+	const {
+		get_CurrentSelectedTag,
+		reset_CurrentSelectedTag,
+		set_CurrentSelectedTag,
+		get_IsCurrentSelectedExclusionTag,
+		set_IsCurrentSelectedExclusionTag,
+	} = useOperationsStore();
 
 	const isSelected = ref<boolean>(false);
 
@@ -38,6 +43,17 @@
 
 	const onTagTap = () => {
 		if (props.mode === 'Delete') {
+			return;
+		}
+
+		if (props.tag.Id === '###') {
+			if (get_IsCurrentSelectedExclusionTag()) {
+				isSelected.value = false;
+				set_IsCurrentSelectedExclusionTag(false);
+			} else {
+				isSelected.value = true;
+				set_IsCurrentSelectedExclusionTag(true);
+			}
 			return;
 		}
 

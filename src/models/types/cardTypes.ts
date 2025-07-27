@@ -15,7 +15,7 @@ export interface IOperation {
 	type: TOperationType;
 	cardId: string;
 	tag?: string; // id тега
-	exclusionTags?: string[]; // id исключающих тэгов
+	exclusionTag: boolean;
 }
 
 export type TCardMoney = 'cash' | 'bank';
