@@ -10,12 +10,38 @@ export const useTagsStore = defineStore(
 				Name: '###',
 			},
 		]);
+
 		const statisticTagsList = ref<ITag[]>([
 			{
 				Id: '###',
 				Name: '###',
 			},
 		]);
+
+		// Обновление уже существующих данных на клиенте --- Исключающий тег
+
+		let isChangeLocalStorage = false;
+		const changeLocalStorage = () => {
+			if (isChangeLocalStorage) return;
+			if (!localStorage.getItem('tagsStore')) return;
+
+			const tempObj: { changeBalanceTagsList: ITag[]; statisticTagsList: ITag[] } = JSON.parse(
+				localStorage.getItem('tagsStore')!
+			);
+
+			if (!tempObj.changeBalanceTagsList.find((item) => item.Id === '###')) {
+				tempObj.changeBalanceTagsList.unshift({ Id: '###', Name: '###' });
+				tempObj.statisticTagsList.unshift({ Id: '###', Name: '###' });
+				isChangeLocalStorage = true;
+
+				localStorage.removeItem('tagsStore');
+				localStorage.setItem('tagsStore', JSON.stringify(tempObj));
+			}
+		};
+
+		changeLocalStorage();
+
+		// ^^^ Обновление уже существующих данных на клиенте --- Исключающий тег ^^^
 
 		const checkForUniqueTagIn_ChangeBalanceList = (tag: ITag): boolean => {
 			return changeBalanceTagsList.value.some((item) => item.Name === tag.Name);

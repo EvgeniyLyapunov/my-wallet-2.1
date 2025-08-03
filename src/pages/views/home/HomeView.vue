@@ -20,10 +20,6 @@
 			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
 				<span class="home__menu-link-item">Журнал операций</span>
 			</router-link>
-
-			<router-link :to="{ name: 'operationsLog_view' }" class="home__menu-link">
-				<span class="home__menu-link-item">Планы покупок</span>
-			</router-link>
 		</div>
 		<div class="home__footer">
 			<span class="home__footer-copy">Copyright &copy;</span>

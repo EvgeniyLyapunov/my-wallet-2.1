@@ -25,8 +25,8 @@
 				<span class="statistic__menu-link-item">Теги по месяцам</span>
 			</router-link>
 
-			<router-link :to="{ name: 'statistics' }" class="statistic__menu-link">
-				<span class="statistic__menu-link-item">Настройки</span>
+			<router-link :to="{ name: 'options-view' }" class="statistic__menu-link">
+				<span class="statistic__menu-link-item">Опции</span>
 			</router-link>
 
 			<router-link :to="{ name: 'home_view' }" class="statistic__menu-link">

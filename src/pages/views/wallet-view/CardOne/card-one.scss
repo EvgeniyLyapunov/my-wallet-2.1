@@ -88,25 +88,6 @@
 	}
 }
 
-.breadcrumbs {
-	position: relative;
-	z-index: 2;
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: flex-start;
-	&__link {
-		font-size: 14px;
-		color: #fff;
-	}
-	&__divider {
-		color: #c6c6c6;
-	}
-	&__end {
-		color: #7ca1d4;
-	}
-}
-
 :deep(.v-btn.v-btn--density-compact) {
 	width: 35%;
 	font-size: 13px;
