@@ -4,6 +4,7 @@ import bankIcon from '@/assets/images/icons/bank-card.png';
 export interface ITag {
 	Id: string;
 	Name: string;
+	Color?: string;
 }
 
 export type TOperationType = 'plus' | 'minus';

@@ -1,13 +1,15 @@
 import { defineStore } from 'pinia';
 import type { ITag } from '@/models/types/cardTypes';
+import { useOperationsStore } from '@/stores/operationsStore';
 
 export const useTagsStore = defineStore(
 	'tagsStore',
 	() => {
-		const changeBalanceTagsList = ref<ITag[]>([
+		const tagsList = ref<ITag[]>([
 			{
 				Id: '###',
 				Name: '###',
+				Color: '###',
 			},
 		]);
 
@@ -15,64 +17,101 @@ export const useTagsStore = defineStore(
 			{
 				Id: '###',
 				Name: '###',
+				Color: '###',
 			},
 		]);
 
-		// Обновление уже существующих данных на клиенте --- Исключающий тег
+		const regularTagsColor = ref<string[]>([
+			'#ff0000',
+			'#0aff99',
+			'#ff8700',
+			'#0aefff',
+			'#ffd300',
+			'#147df5',
+			'#deff0a',
+			'#580aff',
+			'#a1ff0a',
+			'#be0aff',
+		]);
 
-		let isChangeLocalStorage = false;
-		const changeLocalStorage = () => {
-			if (isChangeLocalStorage) return;
-			if (!localStorage.getItem('tagsStore')) return;
+		const { getOperationsList, deleteAllOperations_ByTagId } = useOperationsStore();
 
-			const tempObj: { changeBalanceTagsList: ITag[]; statisticTagsList: ITag[] } = JSON.parse(
-				localStorage.getItem('tagsStore')!
-			);
+		// обновление актуальности тегов для статистики
+		const refreshStatisticsTags = () => {
+			const operationsList = getOperationsList();
+			const uniqeTagsId = new Set<string>();
+			operationsList.forEach((o) => {
+				if (!o.tag || o.tag === '###') return;
+				uniqeTagsId.add(o.tag!);
+			});
 
-			if (!tempObj.changeBalanceTagsList.find((item) => item.Id === '###')) {
-				tempObj.changeBalanceTagsList.unshift({ Id: '###', Name: '###' });
-				tempObj.statisticTagsList.unshift({ Id: '###', Name: '###' });
-				isChangeLocalStorage = true;
+			const tags: ITag[] = [
+				{
+					Id: '###',
+					Name: '###',
+					Color: '###',
+				},
+			];
 
-				localStorage.removeItem('tagsStore');
-				localStorage.setItem('tagsStore', JSON.stringify(tempObj));
+			const uniqe = Array.from(uniqeTagsId);
+
+			uniqe.forEach((t) => {
+				const tag = get_TagFromTagsList(t);
+				tags.push(tag!);
+			});
+
+			statisticTagsList.value = tags;
+		};
+
+		const checkForUniqueTagIn_TagsList = (tag: ITag): boolean => {
+			return tagsList.value.some((item) => item.Name === tag.Name);
+		};
+
+		const addNewTag_ToTagsList = (tag: ITag) => {
+			tagsList.value.push(tag);
+			tagsList.value.forEach((tag, index) => {
+				if (tag.Id === '###') tag.Color = '###';
+				tag.Color = regularTagsColor.value[index];
+			});
+		};
+
+		const setActualTagFirst = (id: string) => {
+			const activeTagIndex = tagsList.value.findIndex((t) => t.Id === id);
+			if (activeTagIndex === -1 || activeTagIndex === 1 || tagsList.value.length < 2) {
+				return;
 			}
+			const [item] = tagsList.value.splice(activeTagIndex, 1);
+			tagsList.value.splice(1, 0, item);
 		};
 
-		changeLocalStorage();
-
-		// ^^^ Обновление уже существующих данных на клиенте --- Исключающий тег ^^^
-
-		const checkForUniqueTagIn_ChangeBalanceList = (tag: ITag): boolean => {
-			return changeBalanceTagsList.value.some((item) => item.Name === tag.Name);
-		};
-
-		const addNewTag_ToChangeBalanceTagList = (tag: ITag) => {
-			changeBalanceTagsList.value.push(tag);
-		};
-
-		const get_TagFromChangeBalanceTagsList = (tagId: string): ITag | undefined => {
-			if (changeBalanceTagsList.value.some((item) => item.Id === tagId)) {
-				return changeBalanceTagsList.value.filter((item) => item.Id === tagId)[0];
+		const get_TagFromTagsList = (tagId: string): ITag | undefined => {
+			if (tagsList.value.some((item) => item.Id === tagId)) {
+				return tagsList.value.filter((item) => item.Id === tagId)[0];
 			} else {
 				return undefined;
 			}
 		};
 
-		const get_TagName_FromChangeBalanceTagsList_ById = (id: string): string => {
-			if (changeBalanceTagsList.value.find((item) => item.Id === id)) {
-				return changeBalanceTagsList.value.find((item) => item.Id === id)!.Name;
+		const get_TagName_FromTagsList_ById = (id: string): string => {
+			if (tagsList.value.find((item) => item.Id === id)) {
+				return tagsList.value.find((item) => item.Id === id)!.Name;
 			} else {
 				return '';
 			}
 		};
 
-		const get_ChangeBalanceTagList = () => {
-			return changeBalanceTagsList.value;
+		const get_TagsList = () => {
+			return tagsList.value;
 		};
 
-		const delete_FromChangeBalanceTagList = (tag: ITag) => {
-			changeBalanceTagsList.value = changeBalanceTagsList.value.filter((item) => item.Id != tag.Id);
+		const delete_FromTagsList = (tag: ITag) => {
+			console.log(tag);
+			deleteAllOperations_ByTagId(tag.Id);
+			tagsList.value = tagsList.value.filter((item) => item.Id != tag.Id);
+			tagsList.value.forEach((tag, index) => {
+				if (tag.Id === '###') tag.Color = '###';
+				tag.Color = regularTagsColor.value[index];
+			});
 		};
 
 		const checkForUniqueTagIn_StatisticTagsList = (tag: ITag): boolean => {
@@ -80,6 +119,9 @@ export const useTagsStore = defineStore(
 		};
 
 		const addNewTag_StatisticTagsList = (tag: ITag) => {
+			let index = tagsList.value.length;
+			if (index >= 10) index = index % 10;
+			tag.Color = regularTagsColor.value[index];
 			statisticTagsList.value.push(tag);
 		};
 
@@ -100,18 +142,20 @@ export const useTagsStore = defineStore(
 		};
 
 		return {
-			changeBalanceTagsList,
+			tagsList,
 			statisticTagsList,
-			checkForUniqueTagIn_ChangeBalanceList,
-			addNewTag_ToChangeBalanceTagList,
+			checkForUniqueTagIn_TagsList,
+			addNewTag_ToTagsList,
+			setActualTagFirst,
 			checkForUniqueTagIn_StatisticTagsList,
 			addNewTag_StatisticTagsList,
-			get_ChangeBalanceTagList,
-			get_TagFromChangeBalanceTagsList,
-			get_TagName_FromChangeBalanceTagsList_ById,
+			get_TagsList,
+			get_TagFromTagsList,
+			get_TagName_FromTagsList_ById,
+			refreshStatisticsTags,
 			get_StatisticTagsList,
 			get_TagFromStatisticTagsList,
-			delete_FromChangeBalanceTagList,
+			delete_FromTagsList,
 			delete_FromStatisticTagsList,
 		};
 	},

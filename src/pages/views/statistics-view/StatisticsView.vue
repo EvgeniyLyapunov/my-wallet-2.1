@@ -17,12 +17,8 @@
 				<span class="statistic__menu-link-item">Ежедневный лимит</span>
 			</router-link>
 
-			<router-link :to="{ name: 'newCard_view' }" class="statistic__menu-link">
-				<span class="statistic__menu-link-item">Месячный остаток</span>
-			</router-link>
-
-			<router-link :to="{ name: 'newCard_view' }" class="statistic__menu-link">
-				<span class="statistic__menu-link-item">Теги по месяцам</span>
+			<router-link :to="{ name: 'stat-tags-chart' }" class="statistic__menu-link">
+				<span class="statistic__menu-link-item">Расходы по тегам</span>
 			</router-link>
 
 			<router-link :to="{ name: 'options-view' }" class="statistic__menu-link">

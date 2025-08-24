@@ -72,6 +72,12 @@ export const useOperationsStore = defineStore(
 			operationsList.value = [];
 		};
 
+		const deleteAllOperations_ByTagId = (id: string) => {
+			operationsList.value = operationsList.value.filter(
+				(o) => o.tag === undefined || o.tag !== id
+			);
+		};
+
 		const get_operationsByPeriod = (start: Date) => {
 			const from = moment.tz(start, 'Europe/Moscow').startOf('minute');
 			const to = moment.tz('Europe/Moscow');
@@ -114,6 +120,7 @@ export const useOperationsStore = defineStore(
 			cleanOperationsDeletedCard,
 			delete_TodayOperations,
 			delete_AllOperations,
+			deleteAllOperations_ByTagId,
 
 			get_operationsByPeriod,
 

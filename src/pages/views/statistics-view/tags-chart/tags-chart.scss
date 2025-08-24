@@ -1,0 +1,87 @@
+@import '@/style/mixins.scss';
+
+.tags-chart {
+	@include basePageWithBorder;
+	display: flex;
+	flex-direction: column;
+	&::after {
+		background: url('@/assets/images/bg/bg_stat_all.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+}
+
+.header {
+	padding: 20px 30px;
+	width: 100%;
+	height: 90px;
+	&__title {
+		font-size: 24px;
+		font-weight: 700;
+		color: #fff;
+	}
+}
+
+.main {
+	padding: 0 30px;
+	width: 100%;
+	height: calc(100% - 180px);
+	display: flex;
+	flex-direction: column;
+	&-resum {
+		width: 100%;
+		margin-bottom: 20px;
+		display: flex;
+		flex-direction: column;
+		&__field {
+			display: flex;
+			align-items: center;
+			&-label {
+				width: 160px;
+				font-size: 16px;
+				font-weight: 700;
+				color: #dadada;
+			}
+			&-value-block {
+				width: calc(100% - 160px);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			&-value-devider {
+				color: #fff;
+				font-size: 18px;
+			}
+			&-value {
+				color: #fff;
+			}
+		}
+	}
+	&-chart {
+		margin-bottom: 20px;
+	}
+	&-period {
+		&__label {
+			color: #fff;
+		}
+		&__radio-label {
+			color: #fff;
+		}
+	}
+}
+
+.actions {
+	padding: 20px 30px;
+	width: 100%;
+	height: 90px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	&__btn {
+		height: 32px !important;
+		text-transform: none !important;
+		font-size: 14px;
+		&-home {
+			margin-right: 15px;
+		}
+	}
+}

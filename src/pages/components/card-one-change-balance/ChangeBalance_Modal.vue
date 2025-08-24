@@ -203,7 +203,7 @@
 			if (newValue) {
 				operationsStore.reset_CurrentSelectedTag();
 				operationsStore.set_IsCurrentSelectedExclusionTag(false);
-				tagsList.value = tagsStore.get_ChangeBalanceTagList();
+				tagsList.value = tagsStore.get_TagsList();
 			}
 		}
 	);
@@ -241,7 +241,7 @@
 
 	watch(isVisidle_TagEditModal, (newValue) => {
 		if (!newValue) {
-			tagsList.value = tagsStore.get_ChangeBalanceTagList();
+			tagsList.value = tagsStore.get_TagsList();
 		}
 	});
 
@@ -320,14 +320,10 @@
 			exclusionTag: operationsStore.get_IsCurrentSelectedExclusionTag(),
 		};
 
-		if (operation.tag) {
-			const tag = tagsStore.get_TagFromChangeBalanceTagsList(operation.tag);
-			if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
-				tagsStore.addNewTag_StatisticTagsList(tag);
-			}
-		}
-
 		operationsStore.addOperationToList(operation);
+		if (operation.tag) {
+			tagsStore.setActualTagFirst(operation.tag);
+		}
 
 		emit('cardPlus', amount);
 		onCloseModal();
@@ -376,14 +372,10 @@
 			exclusionTag: operationsStore.get_IsCurrentSelectedExclusionTag(),
 		};
 
-		if (operation.tag) {
-			const tag = tagsStore.get_TagFromChangeBalanceTagsList(operation.tag);
-			if (tag && !tagsStore.checkForUniqueTagIn_StatisticTagsList(tag)) {
-				tagsStore.addNewTag_StatisticTagsList(tag);
-			}
-		}
-
 		operationsStore.addOperationToList(operation);
+		if (operation.tag) {
+			tagsStore.setActualTagFirst(operation.tag);
+		}
 
 		emit('cardMinus', amount);
 		onCloseModal();

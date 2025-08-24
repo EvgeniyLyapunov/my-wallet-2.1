@@ -44,6 +44,13 @@
 			</v-card>
 		</v-dialog>
 	</div>
+
+	<Confirm
+		v-model="isConfirmVisible"
+		:confirm-action="'Подтвердите ваши действия!'"
+		:confirmInfo="'Удаляя тег - вы удаляете из истории операций все операции с этим тегом! Эта операция необратима!'"
+		@confirm="onConfirmDelete"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +58,7 @@
 	import { nanoid } from 'nanoid';
 	import TagItem from '@/pages/components/card-one-change-balance/TagItem.vue';
 	import type { ITag } from '@/models/types/cardTypes';
+	import Confirm from '@/pages/components/confirms/Confirm.vue';
 
 	const emit = defineEmits<{
 		'update:modelValue': [type: boolean];
@@ -73,7 +81,7 @@
 		() => props.modelValue,
 		(newvalue) => {
 			if (newvalue) {
-				tagsList.value = tagsStore.get_ChangeBalanceTagList();
+				tagsList.value = tagsStore.get_TagsList();
 			}
 		}
 	);
@@ -81,6 +89,9 @@
 	const tagsStore = useTagsStore();
 	const newTagName = ref<string>('');
 	const tagsList = ref<ITag[]>([]);
+
+	const confirmDeleteTag = ref<ITag | null>(null);
+	const isConfirmVisible = ref<boolean>(false);
 
 	const isPlaceholderSpan = ref<boolean>(false);
 	const onInputFocus = () => {
@@ -102,19 +113,24 @@
 			Name: newTagName.value.trim(),
 		};
 
-		if (tagsStore.checkForUniqueTagIn_ChangeBalanceList(newTag)) {
+		if (tagsStore.checkForUniqueTagIn_TagsList(newTag)) {
 			return;
 		}
 
-		tagsStore.addNewTag_ToChangeBalanceTagList(newTag);
+		tagsStore.addNewTag_ToTagsList(newTag);
 
 		newTagName.value = '';
 		isPlaceholderSpan.value = false;
 	};
 
 	const onDeleteTag = (tag: ITag) => {
-		tagsStore.delete_FromChangeBalanceTagList(tag);
-		tagsList.value = tagsStore.get_ChangeBalanceTagList();
+		isConfirmVisible.value = true;
+		confirmDeleteTag.value = tag;
+	};
+
+	const onConfirmDelete = () => {
+		tagsStore.delete_FromTagsList(confirmDeleteTag.value!);
+		tagsList.value = tagsStore.get_TagsList();
 	};
 
 	const onCloseModal = () => {
