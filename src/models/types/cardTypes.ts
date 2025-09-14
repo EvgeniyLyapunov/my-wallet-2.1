@@ -117,3 +117,11 @@ export interface ISettings {
 	dailyLimit: number;
 	dailyLimitPeriod: DailyLimitPeriodType;
 }
+
+export type DeletePointType =
+	| 'lastOperation'
+	| 'today'
+	| 'beforeCurrentMonth'
+	| 'beforeCurentSalaryMonth'
+	| 'all'
+	| '';

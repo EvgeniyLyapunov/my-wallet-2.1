@@ -12,13 +12,27 @@
 			<div class="main__log" :key="refreshKey">
 				<OperationLogItem v-for="(item, i) in logList" :key="i" :log-item="item" />
 			</div>
-			<div class="main__controls">
-				<v-btn class="button" @click="onDeleteToday">Удалить сегодня</v-btn>
-				<v-btn class="button" @click="onDeleteAll">Удалить всё</v-btn>
-				<v-btn class="button" @click="onRouteHome">Домой</v-btn>
-			</div>
 		</main>
-		<footer class="ol__footer footer"></footer>
+		<footer class="ol__footer footer">
+			<OperationsLogControlsPanel
+				:is-show="isControlsPanelShow"
+				@delete-point-select="onDeletePointSelect"
+				@toggle-visible="onControlsPanelToggleShow"
+			/>
+			<v-btn
+				class="footer__button"
+				prepend-icon="mdi-home"
+				density="default"
+				width="120"
+				variant="elevated"
+				@click="onRouteHome"
+			>
+				Домой
+			</v-btn>
+			<v-icon class="footer__btn-show-controls" @click="() => onControlsPanelToggleShow(true)"
+				>mdi-eraser</v-icon
+			>
+		</footer>
 	</div>
 
 	<Confirm
@@ -30,9 +44,10 @@
 
 <script setup lang="ts">
 	import OperationLogItem from '@/pages/components/operation-log-item/OperationLogItem.vue';
+	import OperationsLogControlsPanel from '@/pages/components/operation-log-controls/OperationsLogControlsPanel.vue';
 	import { useOperationsStore } from '@/stores/operationsStore';
 	import Confirm from '@/pages/components/confirms/Confirm.vue';
-	import type { IOperation } from '@/models/types/cardTypes';
+	import type { IOperation, DeletePointType } from '@/models/types/cardTypes';
 	import moment from 'moment';
 	import { nanoid } from 'nanoid';
 
@@ -41,9 +56,13 @@
 		path: '/operations-log-view',
 	});
 
-	const { getOperationsList, delete_TodayOperations, delete_AllOperations } = useOperationsStore();
+	const { getOperationsList, delete_lastOperation, delete_TodayOperations, delete_AllOperations } =
+		useOperationsStore();
 	const refreshKey = ref<string>(nanoid());
 	const logList = ref<(IOperation | string)[]>([]);
+
+	const isControlsPanelShow = ref<boolean>(false);
+	const isConfirmModalVisible = ref<boolean>(false);
 
 	const router = useRouter();
 	const breadcrumbsDivider: string = '/';
@@ -91,25 +110,35 @@
 		refreshKey.value = nanoid();
 	};
 
-	const deletePoint = ref<'today' | 'all' | ''>('');
+	const deletePoint = ref<DeletePointType>('');
 
-	const onDeleteToday = () => {
-		deletePoint.value = 'today';
-		isConfirmModalVisible.value = true;
+	const onControlsPanelToggleShow = (isShow: boolean) => {
+		isControlsPanelShow.value = isShow;
 	};
 
-	const onDeleteAll = () => {
-		deletePoint.value = 'all';
+	const onDeletePointSelect = (point: DeletePointType) => {
+		deletePoint.value = point;
 		isConfirmModalVisible.value = true;
+		isControlsPanelShow.value = false;
 	};
 
-	const isConfirmModalVisible = ref<boolean>(false);
 	const onConfirmation = () => {
 		if (deletePoint.value === '') return;
-		if (deletePoint.value === 'all') {
-			delete_AllOperations();
-		} else if (deletePoint.value === 'today') {
-			delete_TodayOperations();
+
+		switch (deletePoint.value) {
+			case 'lastOperation':
+				delete_lastOperation();
+				break;
+			case 'today':
+				delete_TodayOperations();
+				break;
+			case 'beforeCurrentMonth':
+				break;
+			case 'beforeCurentSalaryMonth':
+				break;
+			case 'all':
+				delete_AllOperations();
+				break;
 		}
 
 		logList.value = [];

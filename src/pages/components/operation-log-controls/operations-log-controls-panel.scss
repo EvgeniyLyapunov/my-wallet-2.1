@@ -1,0 +1,64 @@
+@import '@/style/mixins.scss';
+
+.olc-panel {
+	@include basePageWithBorder;
+	position: absolute !important;
+	z-index: 10;
+	bottom: 75px;
+	left: 30px;
+	width: calc(100% - 60px) !important;
+	height: unset !important;
+	padding: 30px 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px;
+	box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease-out, visibility 0s 0s;
+	&::after {
+		background: url('@/assets/images/bg/bg_operations_log.jpg') center / cover no-repeat;
+		filter: blur(3px);
+	}
+	&__field {
+		width: 100%;
+		padding: 0 10px;
+		margin-bottom: 15px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		&:last-child {
+			margin-bottom: 0;
+		}
+		&-label {
+			font-size: 16px;
+			font-weight: 500;
+			color: #fff;
+		}
+		&-btn {
+			width: 34px !important;
+			height: 34px !important;
+			text-transform: none;
+		}
+	}
+	&__actives {
+		width: 100%;
+		padding: 0 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	&__button {
+		width: 100% !important;
+		height: 34px !important;
+		text-transform: none;
+	}
+}
+
+.element-hidden {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s, visibility 0s 0.5s;
+}

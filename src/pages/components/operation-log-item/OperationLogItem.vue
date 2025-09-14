@@ -42,7 +42,7 @@
 	}>();
 
 	const { getCardName_ById } = useWalletStore();
-	const { get_TagName_FromChangeBalanceTagsList_ById } = useTagsStore();
+	const { get_TagName_FromTagsList_ById } = useTagsStore();
 
 	const isDate = computed<boolean>(() => typeof props.logItem === 'string');
 	const cardName = ref<string | undefined>('');
@@ -52,7 +52,7 @@
 		if (!isDate.value) {
 			cardName.value = getCardName_ById((props.logItem as IOperation).cardId);
 			if ((props.logItem as IOperation).tag) {
-				tag.value = get_TagName_FromChangeBalanceTagsList_ById((props.logItem as IOperation).tag!);
+				tag.value = get_TagName_FromTagsList_ById((props.logItem as IOperation).tag!);
 			}
 		}
 	});

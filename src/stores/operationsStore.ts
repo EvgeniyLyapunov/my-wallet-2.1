@@ -62,6 +62,10 @@ export const useOperationsStore = defineStore(
 			operationsList.value = [...list];
 		};
 
+		const delete_lastOperation = () => {
+			operationsList.value.pop();
+		};
+
 		const delete_TodayOperations = () => {
 			operationsList.value = operationsList.value.filter(
 				(item) => moment(item.date).date() !== moment().date()
@@ -118,6 +122,7 @@ export const useOperationsStore = defineStore(
 			addOperationToList,
 			get_OperationsByStatisticOptions,
 			cleanOperationsDeletedCard,
+			delete_lastOperation,
 			delete_TodayOperations,
 			delete_AllOperations,
 			deleteAllOperations_ByTagId,

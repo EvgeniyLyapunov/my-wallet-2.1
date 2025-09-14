@@ -78,12 +78,8 @@
 	});
 
 	const { get_SettingsObject, set_DailyLimit, set_SalaryMonthStart } = useSettingsStore();
-	const {
-		get_StatisticTagsList,
-		get_ChangeBalanceTagList,
-		addNewTag_StatisticTagsList,
-		addNewTag_ToChangeBalanceTagList,
-	} = useTagsStore();
+	const { get_StatisticTagsList, get_TagsList, addNewTag_StatisticTagsList, addNewTag_ToTagsList } =
+		useTagsStore();
 
 	const currentSettings = get_SettingsObject();
 

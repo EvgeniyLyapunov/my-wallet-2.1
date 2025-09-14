@@ -111,8 +111,8 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 		const lastChanged = moment(statAllPeriodOption.changesDateTime);
 		if (isMoreThanOneHourAgo(lastChanged) || statAllPeriodOption.changesDateTime === null) {
 			const currentDay = moment().date();
-			if (currentDay > get_SettingsObject().salaryMonthStart) {
-				// Если текущий день больше числа начала фин месяца, получаем дату этого месяца
+			if (currentDay >= get_SettingsObject().salaryMonthStart) {
+				// Если текущий день больше или равен числу начала фин месяца, получаем дату этого месяца
 				statAllPeriodOption.from = moment()
 					.date(get_SettingsObject().salaryMonthStart)
 					.startOf('day')
@@ -159,8 +159,8 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 			case 'Salary Month':
 				const currentDay = moment().date();
 
-				if (currentDay > get_SettingsObject().salaryMonthStart) {
-					// Если текущий день больше числа начала фин месяца, получаем дату этого месяца
+				if (currentDay >= get_SettingsObject().salaryMonthStart) {
+					// Если текущий день больше или равен числу начала фин месяца, получаем дату этого месяца
 					set_FromDate(
 						moment().date(get_SettingsObject().salaryMonthStart).startOf('day').toDate()
 					);
