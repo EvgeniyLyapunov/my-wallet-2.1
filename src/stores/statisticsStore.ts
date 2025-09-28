@@ -110,21 +110,7 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 	const get_StatAllPeriodOption = (): IStatOptions => {
 		const lastChanged = moment(statAllPeriodOption.changesDateTime);
 		if (isMoreThanOneHourAgo(lastChanged) || statAllPeriodOption.changesDateTime === null) {
-			const currentDay = moment().date();
-			if (currentDay >= get_SettingsObject().salaryMonthStart) {
-				// Если текущий день больше или равен числу начала фин месяца, получаем дату этого месяца
-				statAllPeriodOption.from = moment()
-					.date(get_SettingsObject().salaryMonthStart)
-					.startOf('day')
-					.toDate();
-			} else {
-				// Если текущий день меньше числа начала фин месяца, получаем дату прошлого месяца
-				statAllPeriodOption.from = moment()
-					.subtract(1, 'months')
-					.date(get_SettingsObject().salaryMonthStart)
-					.startOf('day')
-					.toDate();
-			}
+			statAllPeriodOption.from = get_CurrentSalaryMonthDate();
 			statAllPeriodOption.to = moment.tz('Europe/Moscow').toDate();
 			(statAllPeriodOption.periodType = 'Salary Month'),
 				(statAllPeriodOption.changesDateTime = null);
@@ -157,26 +143,31 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 				set_FromDate(moment().startOf('month').toDate());
 				break;
 			case 'Salary Month':
-				const currentDay = moment().date();
-
-				if (currentDay >= get_SettingsObject().salaryMonthStart) {
-					// Если текущий день больше или равен числу начала фин месяца, получаем дату этого месяца
-					set_FromDate(
-						moment().date(get_SettingsObject().salaryMonthStart).startOf('day').toDate()
-					);
-				} else {
-					// Если текущий день меньше числа начала фин месяца, получаем дату прошлого месяца
-					set_FromDate(
-						moment()
-							.subtract(1, 'months')
-							.date(get_SettingsObject().salaryMonthStart)
-							.startOf('day')
-							.toDate()
-					);
-				}
+				set_FromDate(get_CurrentSalaryMonthDate());
 				break;
 		}
 		set_ToDate(moment.tz('Europe/Moscow').startOf('minute').toDate());
+	};
+
+	const get_CurrentSalaryMonthDate = () => {
+		const currentDay = moment().date();
+		let currentSalaryMonthDate = moment().toDate();
+
+		if (currentDay >= get_SettingsObject().salaryMonthStart) {
+			// Если текущий день больше или равен числу начала фин месяца, получаем дату этого месяца
+			currentSalaryMonthDate = moment()
+				.date(get_SettingsObject().salaryMonthStart)
+				.startOf('day')
+				.toDate();
+		} else {
+			// Если текущий день меньше числа начала фин месяца, получаем дату прошлого месяца
+			currentSalaryMonthDate = moment()
+				.subtract(1, 'months')
+				.date(get_SettingsObject().salaryMonthStart)
+				.startOf('day')
+				.toDate();
+		}
+		return currentSalaryMonthDate;
 	};
 
 	return {
@@ -193,5 +184,6 @@ export const useStatisticsStore = defineStore('statisticsStore', () => {
 
 		statAllPeriodOption,
 		get_StatAllPeriodOption,
+		get_CurrentSalaryMonthDate,
 	};
 });

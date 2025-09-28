@@ -1,12 +1,14 @@
 import type { IOperation, IStatisticOptions, ITag } from '@/models/types/cardTypes';
 import { defineStore } from 'pinia';
-import { useWalletStore } from './walletStore';
+import { useWalletStore } from '@/stores/walletStore';
+import { useStatisticsStore } from '@/stores/statisticsStore';
 import moment from 'moment-timezone';
 
 export const useOperationsStore = defineStore(
 	'operationsStore',
 	() => {
 		const { getCardId_ByName } = useWalletStore();
+		const { get_CurrentSalaryMonthDate } = useStatisticsStore();
 		const operationsList = ref<IOperation[]>([]);
 		let currentSelectedTag: ITag | undefined = undefined;
 		let isCurrentSelectedExclusionTag: boolean = false;
@@ -72,6 +74,21 @@ export const useOperationsStore = defineStore(
 			);
 		};
 
+		const delete_BeforeCurrentMonthOperations = () => {
+			const firstDayTimestamp = moment().startOf('month').valueOf();
+
+			operationsList.value = operationsList.value.filter(
+				(item) => moment(item.date).valueOf() >= firstDayTimestamp
+			);
+		};
+
+		const delete_BeforeCurrentSalaryMonthOperations = () => {
+			const firstDayTimestamp = get_CurrentSalaryMonthDate().getTime();
+			operationsList.value = operationsList.value.filter(
+				(item) => moment(item.date).valueOf() >= firstDayTimestamp
+			);
+		};
+
 		const delete_AllOperations = () => {
 			operationsList.value = [];
 		};
@@ -124,6 +141,8 @@ export const useOperationsStore = defineStore(
 			cleanOperationsDeletedCard,
 			delete_lastOperation,
 			delete_TodayOperations,
+			delete_BeforeCurrentMonthOperations,
+			delete_BeforeCurrentSalaryMonthOperations,
 			delete_AllOperations,
 			deleteAllOperations_ByTagId,
 

@@ -56,8 +56,14 @@
 		path: '/operations-log-view',
 	});
 
-	const { getOperationsList, delete_lastOperation, delete_TodayOperations, delete_AllOperations } =
-		useOperationsStore();
+	const {
+		getOperationsList,
+		delete_lastOperation,
+		delete_TodayOperations,
+		delete_BeforeCurrentMonthOperations,
+		delete_BeforeCurrentSalaryMonthOperations,
+		delete_AllOperations,
+	} = useOperationsStore();
 	const refreshKey = ref<string>(nanoid());
 	const logList = ref<(IOperation | string)[]>([]);
 
@@ -133,8 +139,10 @@
 				delete_TodayOperations();
 				break;
 			case 'beforeCurrentMonth':
+				delete_BeforeCurrentMonthOperations();
 				break;
 			case 'beforeCurentSalaryMonth':
+				delete_BeforeCurrentSalaryMonthOperations();
 				break;
 			case 'all':
 				delete_AllOperations();
