@@ -1,180 +1,205 @@
-import type { ICard } from '@/models/types/cardTypes';
-import { defineStore } from 'pinia';
-import { useCardsViewStore } from './cardsViewStore';
+import type { ICard, ICardSelectItem } from "@/models/types/cardTypes";
+import { defineStore } from "pinia";
+import { useCardsViewStore } from "./cardsViewStore";
 
 export const useWalletStore = defineStore(
-	'walletStore',
-	() => {
-		const cardViewStore = useCardsViewStore();
-		// список карт
-		const cardList = ref<ICard[]>([]);
+  "walletStore",
+  () => {
+    const cardViewStore = useCardsViewStore();
+    // список карт
+    const cardList = ref<ICard[]>([]);
 
-		const baseCards_CashMoney_NamesList = computed<string[]>(() => {
-			const baseCards = ['base'];
-			cardList.value.forEach((card) => {
-				if (card.baseCardName === 'base' && card.cardMoneyType === 'cash') {
-					baseCards.push(card.cardName);
-				}
-			});
-			return baseCards;
-		});
+    const baseCards_CashMoney_NamesList = computed<string[]>(() => {
+      const baseCards = ["base"];
+      cardList.value.forEach((card) => {
+        if (card.baseCardName === "base" && card.cardMoneyType === "cash") {
+          baseCards.push(card.cardName);
+        }
+      });
+      return baseCards;
+    });
 
-		const baseCards_BankMoney_NamesList = computed<string[]>(() => {
-			const baseCards = ['base'];
-			cardList.value.forEach((card) => {
-				if (card.baseCardName === 'base' && card.cardMoneyType === 'bank') {
-					baseCards.push(card.cardName);
-				}
-			});
-			return baseCards;
-		});
+    const baseCards_BankMoney_NamesList = computed<string[]>(() => {
+      const baseCards = ["base"];
+      cardList.value.forEach((card) => {
+        if (card.baseCardName === "base" && card.cardMoneyType === "bank") {
+          baseCards.push(card.cardName);
+        }
+      });
+      return baseCards;
+    });
 
-		const baseCardList_Bank = (): ICard[] => {
-			return cardList.value.filter((item) => !item.isVirtual && item.cardMoneyType === 'bank');
-		};
+    const dailyLimitCardArray = computed<ICardSelectItem[]>(() => {
+      if (cardList.value.length === 0) return [];
+      const arr = cardList.value.map((item) => {
+        const selectItemCard: ICardSelectItem = {
+          title: item.cardName,
+          value: item.cardId,
+        };
+        return selectItemCard;
+      });
+      return arr;
+    });
 
-		const baseCardList_Cash = (): ICard[] => {
-			return cardList.value.filter((item) => !item.isVirtual && item.cardMoneyType === 'cash');
-		};
+    const baseCardList_Bank = (): ICard[] => {
+      return cardList.value.filter(
+        (item) => !item.isVirtual && item.cardMoneyType === "bank",
+      );
+    };
 
-		const getGeneralAmount = (): number => {
-			if (cardList.value.length === 0) {
-				return 0;
-			}
-			return cardList.value
-				.map((item) => {
-					if (!item.isVirtual) {
-						return item.currentSum;
-					} else {
-						return 0;
-					}
-				})
-				.reduce((acc, i) => acc! + i!, 0)!;
-		};
+    const baseCardList_Cash = (): ICard[] => {
+      return cardList.value.filter(
+        (item) => !item.isVirtual && item.cardMoneyType === "cash",
+      );
+    };
 
-		const getCardId_ByName = (name: string): string => {
-			if (cardList.value.length === 0) return '';
-			if (!cardList.value.find((item) => item.cardName === name)) return '';
-			return cardList.value.find((item) => item.cardName === name)!.cardId;
-		};
+    const getGeneralAmount = (): number => {
+      if (cardList.value.length === 0) {
+        return 0;
+      }
+      return cardList.value
+        .map((item) => {
+          if (!item.isVirtual) {
+            return item.currentSum;
+          } else {
+            return 0;
+          }
+        })
+        .reduce((acc, i) => acc! + i!, 0)!;
+    };
 
-		const checkNewCardName = (name: string): boolean => {
-			if (cardList.value.length === 0) return true;
-			return cardList.value.find((item) => item.cardName === name) ? false : true;
-		};
+    const getCardId_ByName = (name: string): string => {
+      if (cardList.value.length === 0) return "";
+      if (!cardList.value.find((item) => item.cardName === name)) return "";
+      return cardList.value.find((item) => item.cardName === name)!.cardId;
+    };
 
-		const getCard_ByName = (name: string): ICard | null => {
-			if (cardList.value.length === 0) return null;
-			if (!cardList.value.find((item) => item.cardName === name)) return null;
-			return cardList.value.find((item) => item.cardName === name)!;
-		};
+    const checkNewCardName = (name: string): boolean => {
+      if (cardList.value.length === 0) return true;
+      return cardList.value.find((item) => item.cardName === name)
+        ? false
+        : true;
+    };
 
-		const getCard_ById = (id: string): ICard | undefined => {
-			if (cardList.value.length === 0) return;
-			if (!cardList.value.find((item) => item.cardId === id)) return;
-			return cardList.value.find((item) => item.cardId === id)!;
-		};
+    const getCard_ByName = (name: string): ICard | null => {
+      if (cardList.value.length === 0) return null;
+      if (!cardList.value.find((item) => item.cardName === name)) return null;
+      return cardList.value.find((item) => item.cardName === name)!;
+    };
 
-		const getCardName_ById = (id: string): string => {
-			if (cardList.value.length === 0) return '';
-			return cardList.value.filter((item) => item.cardId === id)[0].cardName;
-		};
+    const getCard_ById = (id: string): ICard | undefined => {
+      if (cardList.value.length === 0) return;
+      if (!cardList.value.find((item) => item.cardId === id)) return;
+      return cardList.value.find((item) => item.cardId === id)!;
+    };
 
-		const getSum_AllVirtualCardsOfBaseCard = (card: ICard): number | null => {
-			if (card.isVirtual) {
-				return null;
-			}
+    const getCardName_ById = (id: string): string => {
+      if (cardList.value.length === 0) return "";
+      return cardList.value.filter((item) => item.cardId === id)[0].cardName;
+    };
 
-			if (card.virtualList.length === 0) {
-				return 0;
-			}
+    const getSum_AllVirtualCardsOfBaseCard = (card: ICard): number | null => {
+      if (card.isVirtual) {
+        return null;
+      }
 
-			const vCards: ICard[] = card.virtualList.map((idcard) => {
-				const vc = getCard_ById(idcard)!;
-				return vc;
-			});
+      if (card.virtualList.length === 0) {
+        return 0;
+      }
 
-			return vCards.reduce((acc, item) => {
-				return acc + item.currentSum;
-			}, 0);
-		};
+      const vCards: ICard[] = card.virtualList.map((idcard) => {
+        const vc = getCard_ById(idcard)!;
+        return vc;
+      });
 
-		const getVirtualCards_ByBaseCardId = (id: string): ICard[] => {
-			const baseCard = getCard_ById(id);
-			return baseCard!.virtualList.map((item) => getCard_ById(item)!);
-		};
+      return vCards.reduce((acc, item) => {
+        return acc + item.currentSum;
+      }, 0);
+    };
 
-		const addCard_ToList = (card: ICard) => {
-			cardList.value.push(card);
-			cardViewStore.addNewCardOnView(card);
-		};
+    const getVirtualCards_ByBaseCardId = (id: string): ICard[] => {
+      const baseCard = getCard_ById(id);
+      return baseCard!.virtualList.map((item) => getCard_ById(item)!);
+    };
 
-		const removeCard_FromList = (removingCardId: string) => {
-			cardList.value = cardList.value.filter((card) => card.cardId !== removingCardId);
-		};
+    const addCard_ToList = (card: ICard) => {
+      cardList.value.push(card);
+      cardViewStore.addNewCardOnView(card);
+    };
 
-		const cardListCount = (): number => {
-			return cardList.value.length;
-		};
+    const removeCard_FromList = (removingCardId: string) => {
+      cardList.value = cardList.value.filter(
+        (card) => card.cardId !== removingCardId,
+      );
+    };
 
-		const deleteCard = (idCard: string) => {
-			const card = getCard_ById(idCard);
+    const cardListCount = (): number => {
+      return cardList.value.length;
+    };
 
-			// Удаление всех карт из листа виртуальных карт удаляемой карты
-			if (!card!.isVirtual && card!.virtualList.length > 0) {
-				card!.virtualList.forEach((vc) => {
-					const vcard = getCard_ById(vc);
+    const deleteCard = (idCard: string) => {
+      const card = getCard_ById(idCard);
 
-					cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map((c) => {
-						if (c === vcard!.cardName) {
-							return 'empty';
-						} else {
-							return c;
-						}
-					});
+      // Удаление всех карт из листа виртуальных карт удаляемой карты
+      if (!card!.isVirtual && card!.virtualList.length > 0) {
+        card!.virtualList.forEach((vc) => {
+          const vcard = getCard_ById(vc);
 
-					removeCard_FromList(vc);
-				});
-			}
+          cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map(
+            (c) => {
+              if (c === vcard!.cardName) {
+                return "empty";
+              } else {
+                return c;
+              }
+            },
+          );
 
-			// Удаление удаляемой карты из листа виртуальных карт, если удаляемая карта - виртуальная
-			if (card!.isVirtual) {
-				const baseCard = getCard_ById(card!.baseCardId!);
-				baseCard!.virtualList = baseCard!.virtualList.filter((item) => item !== card!.cardId);
-			}
+          removeCard_FromList(vc);
+        });
+      }
 
-			// Удаление самой карты
-			cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map((c) => {
-				if (c === card!.cardName) {
-					return 'empty';
-				} else {
-					return c;
-				}
-			});
-			removeCard_FromList(idCard);
-		};
+      // Удаление удаляемой карты из листа виртуальных карт, если удаляемая карта - виртуальная
+      if (card!.isVirtual) {
+        const baseCard = getCard_ById(card!.baseCardId!);
+        baseCard!.virtualList = baseCard!.virtualList.filter(
+          (item) => item !== card!.cardId,
+        );
+      }
 
-		return {
-			cardList,
-			baseCards_CashMoney_NamesList,
-			baseCards_BankMoney_NamesList,
-			baseCardList_Bank,
-			baseCardList_Cash,
-			getGeneralAmount,
-			checkNewCardName,
-			addCard_ToList,
-			removeCard_FromList,
-			cardListCount,
-			getCard_ByName,
-			getCardId_ByName,
-			getCardName_ById,
-			getSum_AllVirtualCardsOfBaseCard,
-			getCard_ById,
-			getVirtualCards_ByBaseCardId,
-			deleteCard,
-		};
-	},
-	{
-		persist: true,
-	}
+      // Удаление самой карты
+      cardViewStore.сardsPlacesList = cardViewStore.сardsPlacesList.map((c) => {
+        if (c === card!.cardName) {
+          return "empty";
+        } else {
+          return c;
+        }
+      });
+      removeCard_FromList(idCard);
+    };
+
+    return {
+      cardList,
+      baseCards_CashMoney_NamesList,
+      baseCards_BankMoney_NamesList,
+      dailyLimitCardArray,
+      baseCardList_Bank,
+      baseCardList_Cash,
+      getGeneralAmount,
+      checkNewCardName,
+      addCard_ToList,
+      removeCard_FromList,
+      cardListCount,
+      getCard_ByName,
+      getCardId_ByName,
+      getCardName_ById,
+      getSum_AllVirtualCardsOfBaseCard,
+      getCard_ById,
+      getVirtualCards_ByBaseCardId,
+      deleteCard,
+    };
+  },
+  {
+    persist: true,
+  },
 );
