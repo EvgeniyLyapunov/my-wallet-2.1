@@ -125,11 +125,7 @@ import type {
   IStatAllResume,
   StatisticsPeriodType,
 } from "@/models/types/cardTypes";
-
-definePage({
-  name: "stat-all-operations",
-  path: "/stat-all-operations",
-});
+import { useRouter } from "vue-router";
 
 moment.updateLocale("en", {
   week: {

@@ -89,11 +89,7 @@
 <script setup lang="ts">
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useWalletStore } from "@/stores/walletStore";
-
-definePage({
-  name: "options-view",
-  path: "/options-view",
-});
+import { useRouter } from "vue-router";
 
 const {
   get_SettingsObject,

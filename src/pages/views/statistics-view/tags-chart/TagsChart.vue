@@ -125,11 +125,7 @@ import type {
   IStatOptions,
   StatisticsPeriodType,
 } from "@/models/types/cardTypes";
-
-definePage({
-  name: "stat-tags-chart",
-  path: "/stat-tags-chart",
-});
+import { useRouter } from "vue-router";
 
 moment.updateLocale("en", {
   week: {

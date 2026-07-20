@@ -155,11 +155,7 @@ import type {
   StatisticsPeriodType,
   IStatDailyLimit,
 } from "@/models/types/cardTypes";
-
-definePage({
-  name: "statistic_daily_limit",
-  path: "/statistic-daily-limit",
-});
+import { useRouter } from "vue-router";
 
 moment.updateLocale("en", {
   week: {

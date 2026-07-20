@@ -28,12 +28,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-definePage({
-  name: "home_view",
-  path: "/",
-});
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
 @import "./home-view.scss";
