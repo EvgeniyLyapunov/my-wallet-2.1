@@ -35,11 +35,11 @@
           <span class="main-resum__field-label">Период:</span>
           <div class="main-resum__field-value-block">
             <span class="main-resum__field-value">{{
-              moment.tz(resume.begin, "Europe/Moscow").format("DD.MM.YYYY")
+              dayjs.tz(resume.begin).format("DD.MM.YYYY")
             }}</span>
             <span class="main-resum__field-value-devider">/</span>
             <span class="main-resum__field-value">{{
-              moment.tz(resume.end, "Europe/Moscow").format("DD.MM.YYYY")
+              dayjs.tz(resume.end).format("DD.MM.YYYY")
             }}</span>
           </div>
         </div>
@@ -118,8 +118,12 @@
 
 <script setup lang="ts">
 import { nanoid } from "nanoid";
-import VueApexCharts from "vue3-apexcharts";
-import moment from "moment-timezone";
+import { defineAsyncComponent } from "vue";
+import dayjs, { type ConfigType } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import updateLocale from "dayjs/plugin/updateLocale";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import type {
   IStatOptions,
   IStatAllResume,
@@ -127,10 +131,15 @@ import type {
 } from "@/models/types/cardTypes";
 import { useRouter } from "vue-router";
 
-moment.updateLocale("en", {
-  week: {
-    dow: 1, // Устанавливаем понедельник как первый день недели
-  },
+const VueApexCharts = defineAsyncComponent(() => import("vue3-apexcharts"));
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(updateLocale);
+dayjs.extend(isSameOrAfter);
+
+dayjs.updateLocale("en", {
+  weekStart: 1, // Устанавливаем понедельник как первый день недели
 });
 
 const { get_StatAllPeriodOption, set_StatisticPeriod } = useStatisticsStore();
@@ -139,8 +148,8 @@ const { settingsObject } = useSettingsStore();
 const { getCardName_ById } = useWalletStore();
 
 const resume = ref<IStatAllResume>({
-  begin: moment.tz("Europe/Moscow").toDate(),
-  end: moment.tz("Europe/Moscow").toDate(),
+  begin: dayjs().tz().toDate(),
+  end: dayjs().tz().toDate(),
   amount: 0,
 });
 
@@ -219,27 +228,27 @@ const initStatisticChart = () => {
   const operationsList = get_operationsByPeriod(periodObj.from);
   operationsList.sort((a, b) => {
     return (
-      moment.tz(a.date, "Europe/Moscow").startOf("minute").toDate().getTime() -
-      moment.tz(b.date, "Europe/Moscow").startOf("minute").toDate().getTime()
+      dayjs.tz(a.date).startOf("minute").toDate().getTime() -
+      dayjs.tz(b.date).startOf("minute").toDate().getTime()
     );
   });
 
   const periodDates: Date[] = [];
-  const from = moment.tz(periodObj.from, "Europe/Moscow").startOf("day");
-  const to = moment.tz(periodObj.to, "Europe/Moscow").startOf("day");
+  const from = dayjs.tz(periodObj.from).startOf("day");
+  const to = dayjs.tz(periodObj.to).startOf("day");
 
-  for (let m = to.clone(); m.isSameOrAfter(from); m.subtract(1, "days")) {
+  for (let m = to.clone(); m.isSameOrAfter(from); m = m.subtract(1, "days")) {
     periodDates.push(m.toDate());
   }
 
   periodDates.reverse();
 
   periodDates.forEach((d, index) => {
-    const day = moment(d).date().toString();
+    const day = dayjs(d).date().toString();
     const amount = operationsList
-      .filter((op: { date: moment.MomentInput }) => {
-        const opDate = moment(op.date).startOf("day");
-        const currentItemDate = moment(d).startOf("day");
+      .filter((op: { date: dayjs.ConfigType }) => {
+        const opDate = dayjs(op.date).startOf("day");
+        const currentItemDate = dayjs(d).startOf("day");
         return opDate.isSame(currentItemDate);
       })
       .reduce((acc: any, item: { type: string; amount: number }) => {

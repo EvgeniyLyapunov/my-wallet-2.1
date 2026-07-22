@@ -3,8 +3,8 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-
-const hash = Math.floor(Math.random() * 90000) + 10000;
+import { visualizer } from "rollup-plugin-visualizer";
+import vuetify from "vite-plugin-vuetify";
 
 export default defineConfig({
   plugins: [
@@ -30,6 +30,14 @@ export default defineConfig({
       dirs: ["src/stores"],
     }),
     vue(),
+    vuetify({ autoImport: true }),
+    visualizer({
+      template: "treemap",
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+      filename: "analyse.html",
+    }) as any,
   ],
   resolve: {
     alias: {
@@ -43,8 +51,24 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: `[name]` + hash + `.js`,
-        chunkFileNames: `[name]` + hash + `.js`,
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("vue") ||
+              id.includes("pinia") ||
+              id.includes("vue-router")
+            ) {
+              return "vue-core";
+            }
+            if (id.includes("vuetify")) {
+              return "vuetify";
+            }
+            if (id.includes("apexcharts")) {
+              return "apexcharts";
+            }
+            return "vendor";
+          }
+        },
       },
     },
   },

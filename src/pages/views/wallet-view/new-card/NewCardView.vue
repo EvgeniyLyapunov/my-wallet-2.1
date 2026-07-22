@@ -84,7 +84,9 @@
 </template>
 
 <script setup lang="ts">
-import moment from "moment-timezone";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { nanoid } from "nanoid";
 import type { ICard } from "@/models/types/cardTypes";
 import { useWalletStore } from "@/stores/walletStore";
@@ -98,6 +100,9 @@ const router = useRouter();
 const walletStore = useWalletStore();
 const cardService = useCardService();
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 const newCard = ref<ICard | null>({
   baseCardId: "",
   cardId: "",
@@ -107,7 +112,7 @@ const newCard = ref<ICard | null>({
   virtualList: [],
   currentSum: 0,
   screenLocation: 0,
-  changesLastDate: moment.tz("Europe/Moscow").format("DD-MM-YYYY HH:mm"),
+  changesLastDate: dayjs.tz().format("DD-MM-YYYY HH:mm"),
 });
 
 const form = ref();

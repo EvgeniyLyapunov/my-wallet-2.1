@@ -1,18 +1,17 @@
-@import './fonts.scss';
-@import './variables.scss';
+@import "./fonts.scss";
+@import "./variables.scss";
 
 html {
-	height: 100vh;
-	min-height: -webkit-fill-available;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 body {
-	height: 100vh;
-	min-height: -webkit-fill-available;
-	margin: 0;
-	font-family: 'San-Francisco', sans-serif;
-	color: #333;
-	background-color: #f2f2f2;
+  height: 100dvh;
+  margin: 0;
+  font-family: "San-Francisco", sans-serif;
+  color: #333;
+  background-color: #f2f2f2;
 }
 
 h1,
@@ -20,63 +19,64 @@ h2,
 h3,
 h4,
 p {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 ul {
-	padding: 0;
-	margin: 0;
-	list-style: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 a,
 a:active,
 a:focus {
-	color: #333;
-	text-decoration: none;
+  color: #333;
+  text-decoration: none;
 }
 
 .visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	padding: 0;
-	overflow: hidden;
-	border: 0;
-	clip: rect(0 0 0 0);
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
 }
 
 .container {
-	position: relative;
-	width: 100%;
-	overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .breadcrumbs {
-	position: relative;
-	z-index: 2;
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: flex-start;
-	&__link {
-		font-size: 14px;
-		color: #fff;
-		cursor: pointer;
-	}
-	&__divider {
-		color: #c6c6c6;
-	}
-	&__end {
-		color: #ffb74d;
-	}
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  &__link {
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+  }
+  &__divider {
+    color: #c6c6c6;
+  }
+  &__end {
+    color: #ffb74d;
+  }
 }
 
 @media (min-width: 475px) {
-	.container {
-		width: 475px;
-		margin: 0 auto;
-	}
+  .container {
+    width: 475px;
+    margin: 0 auto;
+  }
 }

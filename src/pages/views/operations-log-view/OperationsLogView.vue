@@ -56,9 +56,9 @@ import OperationsLogControlsPanel from "@/pages/components/operation-log-control
 import { useOperationsStore } from "@/stores/operationsStore";
 import Confirm from "@/pages/components/confirms/Confirm.vue";
 import type { IOperation, DeletePointType } from "@/models/types/cardTypes";
-import moment from "moment";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
+import dayjs from "dayjs";
 
 const {
   getOperationsList,
@@ -101,16 +101,16 @@ const initList = async () => {
   let logDate: string;
   sortedOperations.forEach((item, index) => {
     if (index === 0) {
-      logDate = moment(item.date).format("DD.MM.YYYY");
+      logDate = dayjs(item.date).format("DD.MM.YYYY");
       logList.value.push(logDate);
       logList.value.push(item);
       return;
     }
 
-    if (moment(item.date).format("DD.MM.YYYY") === logDate) {
+    if (dayjs(item.date).format("DD.MM.YYYY") === logDate) {
       logList.value.push(item);
     } else {
-      logDate = moment(item.date).format("DD.MM.YYYY");
+      logDate = dayjs(item.date).format("DD.MM.YYYY");
       logList.value.push(logDate);
       logList.value.push(item);
     }

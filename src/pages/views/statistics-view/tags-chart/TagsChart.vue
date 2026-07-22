@@ -35,11 +35,11 @@
           <span class="main-resum__field-label">Период:</span>
           <div class="main-resum__field-value-block">
             <span class="main-resum__field-value">{{
-              moment.tz(resume.begin, "Europe/Moscow").format("DD.MM.YYYY")
+              dayjs.tz(resume.begin).format("DD.MM.YYYY")
             }}</span>
             <span class="main-resum__field-value-devider">/</span>
             <span class="main-resum__field-value">{{
-              moment.tz(resume.end, "Europe/Moscow").format("DD.MM.YYYY")
+              dayjs.tz(resume.end).format("DD.MM.YYYY")
             }}</span>
           </div>
         </div>
@@ -118,8 +118,11 @@
 
 <script setup lang="ts">
 import { nanoid } from "nanoid";
-import VueApexCharts from "vue3-apexcharts";
-import moment from "moment-timezone";
+import { defineAsyncComponent } from "vue";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import updateLocale from "dayjs/plugin/updateLocale";
 import type {
   IStatAllResume,
   IStatOptions,
@@ -127,10 +130,14 @@ import type {
 } from "@/models/types/cardTypes";
 import { useRouter } from "vue-router";
 
-moment.updateLocale("en", {
-  week: {
-    dow: 1, // Устанавливаем понедельник как первый день недели
-  },
+const VueApexCharts = defineAsyncComponent(() => import("vue3-apexcharts"));
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(updateLocale);
+
+dayjs.updateLocale("en", {
+  weekStart: 1, // Устанавливаем понедельник как первый день недели
 });
 
 const { get_StatAllPeriodOption, set_StatisticPeriod } = useStatisticsStore();
@@ -140,8 +147,8 @@ const { get_SettingsObject, settingsObject } = useSettingsStore();
 const { getCardName_ById } = useWalletStore();
 
 const resume = ref<IStatAllResume>({
-  begin: moment.tz("Europe/Moscow").toDate(),
-  end: moment.tz("Europe/Moscow").toDate(),
+  begin: dayjs().tz().toDate(),
+  end: dayjs().tz().toDate(),
   amount: 0,
 });
 
@@ -188,8 +195,8 @@ const initTagsChart = () => {
   const operationsList = get_operationsByPeriod(periodObj.from);
   operationsList.sort((a, b) => {
     return (
-      moment.tz(a.date, "Europe/Moscow").startOf("minute").toDate().getTime() -
-      moment.tz(b.date, "Europe/Moscow").startOf("minute").toDate().getTime()
+      dayjs.tz(a.date).startOf("minute").toDate().getTime() -
+      dayjs.tz(b.date).startOf("minute").toDate().getTime()
     );
   });
 

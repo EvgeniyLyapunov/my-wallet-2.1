@@ -7,7 +7,12 @@ import { defineStore } from "pinia";
 import { useWalletStore } from "@/stores/walletStore";
 import { useStatisticsStore } from "@/stores/statisticsStore";
 import { useSettingsStore } from "@/stores/settingsStore";
-import moment from "moment-timezone";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const useOperationsStore = defineStore(
   "operationsStore",
@@ -31,13 +36,11 @@ export const useOperationsStore = defineStore(
     const get_OperationsByStatisticOptions = (
       optionsObj: IStatisticOptions,
     ): IOperation[] => {
-      const from = moment
-        .tz(optionsObj.from, "Europe/Moscow")
-        .startOf("minute");
-      const to = moment.tz("Europe/Moscow");
+      const from = dayjs.tz(optionsObj.from).startOf("minute");
+      const to = dayjs.tz();
       let resultList: IOperation[];
       resultList = operationsList.value.filter((item, i) => {
-        const operationDate = moment.tz(item.date, "Europe/Moscow");
+        const operationDate = dayjs.tz(item.date);
         if (!operationDate.isBefore(from) && !operationDate.isAfter(to)) {
           return true;
         }
@@ -84,22 +87,22 @@ export const useOperationsStore = defineStore(
 
     const delete_TodayOperations = () => {
       operationsList.value = operationsList.value.filter(
-        (item) => moment(item.date).date() !== moment().date(),
+        (item) => dayjs(item.date).date() !== dayjs().date(),
       );
     };
 
     const delete_BeforeCurrentMonthOperations = () => {
-      const firstDayTimestamp = moment().startOf("month").valueOf();
+      const firstDayTimestamp = dayjs().startOf("month").valueOf();
 
       operationsList.value = operationsList.value.filter(
-        (item) => moment(item.date).valueOf() >= firstDayTimestamp,
+        (item) => dayjs(item.date).valueOf() >= firstDayTimestamp,
       );
     };
 
     const delete_BeforeCurrentSalaryMonthOperations = () => {
       const firstDayTimestamp = get_CurrentSalaryMonthDate().getTime();
       operationsList.value = operationsList.value.filter(
-        (item) => moment(item.date).valueOf() >= firstDayTimestamp,
+        (item) => dayjs(item.date).valueOf() >= firstDayTimestamp,
       );
     };
 
@@ -114,11 +117,11 @@ export const useOperationsStore = defineStore(
     };
 
     const get_operationsByPeriod = (start: Date) => {
-      const from = moment.tz(start, "Europe/Moscow").startOf("minute");
-      const to = moment.tz("Europe/Moscow");
+      const from = dayjs.tz(start).startOf("minute");
+      const to = dayjs.tz();
       let resultList: IOperation[];
       resultList = operationsList.value.filter((item, i) => {
-        const operationDate = moment.tz(item.date, "Europe/Moscow");
+        const operationDate = dayjs.tz(item.date);
         if (!operationDate.isBefore(from) && !operationDate.isAfter(to)) {
           return true;
         }
