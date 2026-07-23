@@ -14,6 +14,7 @@
     <main class="bv-main">
       <!-- General -->
       <section class="bv-main__general">
+        <!-- General bank -->
         <div class="bv-main__general-field">
           <v-icon class="bv-main__general-field__icon" color="#01579b"
             >mdi-bank</v-icon
@@ -27,6 +28,8 @@
             }).format(generalBank)
           }}</span>
         </div>
+
+        <!-- General cash -->
         <div class="bv-main__general-field">
           <v-icon class="bv-main__general-field__icon" color="#2E7D32"
             >mdi-cash-multiple</v-icon
@@ -41,118 +44,121 @@
           }}</span>
         </div>
       </section>
-      <!-- Bank -->
-      <section class="bv-main__money">
-        <div class="bv-main__money__picto">
-          <v-icon class="bv-main__money__picto-icon" color="#01579b"
-            >mdi-bank</v-icon
-          >
-        </div>
-        <ul class="bv-main__money__list">
-          <li
-            v-for="item in baseCards_Bank"
-            :key="item.cardId"
-            class="bv-main__money__card"
-          >
-            <!-- base -->
-            <div class="bv-main__money__card-base">
-              <span class="bv-main__money__card-base-name"
-                >{{ item ? item.cardName : "" }}:</span
-              >
-              <span class="bv-main__money__card-base-amount">{{
-                item
-                  ? new Intl.NumberFormat("ru", {
-                      style: "currency",
-                      currency: "RUB",
-                      minimumFractionDigits: 0,
-                    }).format(item.currentSum)
-                  : ""
-              }}</span>
-            </div>
-            <!-- virtual -->
-            <div
-              v-if="item.virtualList.length > 0"
-              v-for="unit in getVirtualCards_ByBaseCardId(item.cardId)"
-              class="bv-main__money__card-virtuals"
+
+      <div class="bv-main__money-wrapper">
+        <!-- Bank -->
+        <section class="bv-main__money">
+          <div class="bv-main__money__picto">
+            <v-icon class="bv-main__money__picto-icon" color="#01579b"
+              >mdi-bank</v-icon
             >
-              <v-icon
-                class="bv-main__money__card-virtuals-icon"
-                color="#ffff00"
-              >
-                mdi-alpha-v-box
-              </v-icon>
-              <span class="bv-main__money__card-virtuals-name">{{
-                unit ? unit.cardName : ""
-              }}</span>
-              <span class="bv-main__money__card-virtuals-amount">{{
-                unit
-                  ? new Intl.NumberFormat("ru", {
-                      style: "currency",
-                      currency: "RUB",
-                      minimumFractionDigits: 0,
-                    }).format(unit.currentSum)
-                  : ""
-              }}</span>
-            </div>
-          </li>
-        </ul>
-      </section>
-      <!-- Cash -->
-      <section class="bv-main__money">
-        <div class="bv-main__money__picto">
-          <v-icon class="bv-main__money__picto-icon" color="#2E7D32"
-            >mdi-cash-multiple</v-icon
-          >
-        </div>
-        <ul class="bv-main__money__list">
-          <li
-            v-for="item in baseCards_Cash"
-            :key="item.cardId"
-            class="bv-main__money__card"
-          >
-            <!-- base -->
-            <div class="bv-main__money__card-base">
-              <span class="bv-main__money__card-base-name"
-                >{{ item ? item.cardName : "" }}:</span
-              >
-              <span class="bv-main__money__card-base-amount">{{
-                item
-                  ? new Intl.NumberFormat("ru", {
-                      style: "currency",
-                      currency: "RUB",
-                      minimumFractionDigits: 0,
-                    }).format(item.currentSum)
-                  : ""
-              }}</span>
-            </div>
-            <!-- virtual -->
-            <div
-              v-if="item.virtualList.length > 0"
-              v-for="unit in getVirtualCards_ByBaseCardId(item.cardId)"
-              class="bv-main__money__card-virtuals"
+          </div>
+          <ul class="bv-main__money__list">
+            <li
+              v-for="item in baseCards_Bank"
+              :key="item.cardId"
+              class="bv-main__money__card"
             >
-              <v-icon
-                class="bv-main__money__card-virtuals-icon"
-                color="#ffff00"
+              <!-- base -->
+              <div class="bv-main__money__card-base">
+                <span class="bv-main__money__card-base-name"
+                  >{{ item ? item.cardName : "" }}:</span
+                >
+                <span class="bv-main__money__card-base-amount">{{
+                  item
+                    ? new Intl.NumberFormat("ru", {
+                        style: "currency",
+                        currency: "RUB",
+                        minimumFractionDigits: 0,
+                      }).format(item.currentSum)
+                    : ""
+                }}</span>
+              </div>
+              <!-- virtual -->
+              <div
+                v-if="item.virtualList.length > 0"
+                v-for="unit in getVirtualCards_ByBaseCardId(item.cardId)"
+                class="bv-main__money__card-virtuals"
               >
-                mdi-alpha-v-box
-              </v-icon>
-              <span class="bv-main__money__card-virtuals-name">{{
-                unit ? unit.cardName : ""
-              }}</span>
-              <span class="bv-main__money__card-virtuals-amount">{{
-                unit
-                  ? new Intl.NumberFormat("ru", {
-                      style: "currency",
-                      currency: "RUB",
-                      minimumFractionDigits: 0,
-                    }).format(unit.currentSum)
-                  : ""
-              }}</span>
-            </div>
-          </li>
-        </ul>
-      </section>
+                <v-icon
+                  class="bv-main__money__card-virtuals-icon"
+                  color="#ffff00"
+                >
+                  mdi-alpha-v-box
+                </v-icon>
+                <span class="bv-main__money__card-virtuals-name">{{
+                  unit ? unit.cardName : ""
+                }}</span>
+                <span class="bv-main__money__card-virtuals-amount">{{
+                  unit
+                    ? new Intl.NumberFormat("ru", {
+                        style: "currency",
+                        currency: "RUB",
+                        minimumFractionDigits: 0,
+                      }).format(unit.currentSum)
+                    : ""
+                }}</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+        <!-- Cash -->
+        <section class="bv-main__money">
+          <div class="bv-main__money__picto">
+            <v-icon class="bv-main__money__picto-icon" color="#2E7D32"
+              >mdi-cash-multiple</v-icon
+            >
+          </div>
+          <ul class="bv-main__money__list">
+            <li
+              v-for="item in baseCards_Cash"
+              :key="item.cardId"
+              class="bv-main__money__card"
+            >
+              <!-- base -->
+              <div class="bv-main__money__card-base">
+                <span class="bv-main__money__card-base-name"
+                  >{{ item ? item.cardName : "" }}:</span
+                >
+                <span class="bv-main__money__card-base-amount">{{
+                  item
+                    ? new Intl.NumberFormat("ru", {
+                        style: "currency",
+                        currency: "RUB",
+                        minimumFractionDigits: 0,
+                      }).format(item.currentSum)
+                    : ""
+                }}</span>
+              </div>
+              <!-- virtual -->
+              <div
+                v-if="item.virtualList.length > 0"
+                v-for="unit in getVirtualCards_ByBaseCardId(item.cardId)"
+                class="bv-main__money__card-virtuals"
+              >
+                <v-icon
+                  class="bv-main__money__card-virtuals-icon"
+                  color="#ffff00"
+                >
+                  mdi-alpha-v-box
+                </v-icon>
+                <span class="bv-main__money__card-virtuals-name">{{
+                  unit ? unit.cardName : ""
+                }}</span>
+                <span class="bv-main__money__card-virtuals-amount">{{
+                  unit
+                    ? new Intl.NumberFormat("ru", {
+                        style: "currency",
+                        currency: "RUB",
+                        minimumFractionDigits: 0,
+                      }).format(unit.currentSum)
+                    : ""
+                }}</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
 
     <!-- actions -->
