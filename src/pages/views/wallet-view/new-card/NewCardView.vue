@@ -58,27 +58,36 @@
     <div class="new-card__btn-block">
       <v-btn
         class="new-card__base-btn new-card__next-btn"
-        width="110"
+        width="70"
         density="default"
         color="green-accent-3"
         @click="submit"
-        >Создать</v-btn
       >
+        <template #default>
+          <v-icon icon="mdi-creation" end></v-icon>
+        </template>
+      </v-btn>
       <v-btn
         class="new-card__base-btn new-card__clear-btn"
-        width="110"
+        width="70"
         density="default"
         @click="handleReset"
-        >Очистить</v-btn
       >
+        <template #default>
+          <v-icon icon="mdi-autorenew" end></v-icon>
+        </template>
+      </v-btn>
       <v-btn
         class="new-card__base-btn new-card__cancel-btn"
-        width="110"
+        width="70"
         density="default"
         color="blue-lighten-3"
         @click="handleCancel"
-        >Отменить</v-btn
       >
+        <template #default>
+          <v-icon icon="mdi-close" end></v-icon>
+        </template>
+      </v-btn>
     </div>
   </div>
 </template>
