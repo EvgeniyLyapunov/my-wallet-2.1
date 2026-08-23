@@ -120,10 +120,6 @@
 import { nanoid } from "nanoid";
 import { defineAsyncComponent } from "vue";
 import dayjs, { type ConfigType } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import updateLocale from "dayjs/plugin/updateLocale";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import type {
   IStatOptions,
   IStatAllResume,
@@ -132,15 +128,6 @@ import type {
 import { useRouter } from "vue-router";
 
 const VueApexCharts = defineAsyncComponent(() => import("vue3-apexcharts"));
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(updateLocale);
-dayjs.extend(isSameOrAfter);
-
-dayjs.updateLocale("en", {
-  weekStart: 1, // Устанавливаем понедельник как первый день недели
-});
 
 const { get_StatAllPeriodOption, set_StatisticPeriod } = useStatisticsStore();
 const { get_operationsByPeriod } = useOperationsStore();

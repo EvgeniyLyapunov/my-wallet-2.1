@@ -223,11 +223,6 @@ import MessageBox from "@/pages/components/confirms/MessageBox.vue";
 import Confirm from "@/pages/components/confirms/Confirm.vue";
 import SelectVirtualModal from "./SelectVirtualModal.vue";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const emit = defineEmits<{
   "update:modelValue": [type: boolean];

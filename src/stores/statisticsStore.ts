@@ -12,11 +12,6 @@ import type {
   IStatOptions,
 } from "@/models/types/cardTypes";
 import dayjs, { type ConfigType } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const useStatisticsStore = defineStore("statisticsStore", () => {
   const { get_SettingsObject } = useSettingsStore();

@@ -1,0 +1,6 @@
+{
+  "name": "MyWallet2",
+  "short_name": "MyWallet2",
+  "start_url": "/?v=1",
+  "display": "standalone"
+}

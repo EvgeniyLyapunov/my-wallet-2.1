@@ -72,9 +72,6 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import updateLocale from "dayjs/plugin/updateLocale";
 import { nanoid } from "nanoid";
 import {
   type ICard,
@@ -91,14 +88,6 @@ import { useWalletStore } from "@/stores/walletStore";
 import { useTagsStore } from "@/stores/tagsStore";
 
 import TagItem from "@/pages/components/card-one-change-balance/TagItem.vue";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(updateLocale);
-
-dayjs.updateLocale("en", {
-  weekStart: 1, // Устанавливаем понедельник как первый день недели
-});
 
 const emit = defineEmits<{
   "update:modelValue": [type: boolean];

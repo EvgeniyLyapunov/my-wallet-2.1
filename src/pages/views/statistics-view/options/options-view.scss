@@ -83,6 +83,7 @@
     justify-content: space-between;
     align-items: flex-start;
     &-label {
+      margin-bottom: 8px;
       display: inline-block;
       width: 100%;
       font-size: 14px;
@@ -90,6 +91,10 @@
       color: #fff;
     }
   }
+}
+
+:deep(.v-input__details) {
+  display: none;
 }
 
 .actions {

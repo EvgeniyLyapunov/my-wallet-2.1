@@ -3,11 +3,6 @@ import { defineStore } from "pinia";
 import { useWalletStore } from "@/stores/walletStore";
 import { useCardsViewStore } from "@/stores/cardsViewStore";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export const useCardService = defineStore("cardService", () => {
   const walletStore = useWalletStore();

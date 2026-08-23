@@ -94,8 +94,6 @@
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import { nanoid } from "nanoid";
 import type { ICard } from "@/models/types/cardTypes";
 import { useWalletStore } from "@/stores/walletStore";
@@ -108,9 +106,6 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const walletStore = useWalletStore();
 const cardService = useCardService();
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const newCard = ref<ICard | null>({
   baseCardId: "",

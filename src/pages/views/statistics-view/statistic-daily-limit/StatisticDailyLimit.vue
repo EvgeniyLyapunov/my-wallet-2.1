@@ -156,17 +156,8 @@ import type {
 } from "@/models/types/cardTypes";
 import { useRouter } from "vue-router";
 import dayjs, { type ConfigType } from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 
 const VueApexCharts = defineAsyncComponent(() => import("vue3-apexcharts"));
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
-dayjs.updateLocale("en", {
-  weekStart: 1, // Устанавливаем понедельник как первый день недели
-});
 
 const { get_StatAllPeriodOption, set_StatisticPeriod } = useStatisticsStore();
 const { get_operationsByPeriod } = useOperationsStore();

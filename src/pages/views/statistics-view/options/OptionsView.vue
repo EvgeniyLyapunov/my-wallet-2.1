@@ -39,17 +39,26 @@
       </div>
       <div class="main__field-select">
         <span class="main__field-select-label">Статистика для карты:</span>
-        <div class="main__field">
-          <v-select
-            v-model="selectDailyLimitCard"
-            :items="walletStore.dailyLimitCardArray"
-            style="color: #fff"
-            class="pb-4"
-            variant="outlined"
-            label="Карта:"
-            :clearable="true"
-          ></v-select>
-        </div>
+        <v-select
+          v-model="selectDailyLimitCard"
+          :items="walletStore.dailyLimitCardArray"
+          style="color: #fff; width: 100%"
+          variant="outlined"
+          label="Карта:"
+          :clearable="true"
+        ></v-select>
+      </div>
+      <div class="main__field">
+        <span class="main__field-label">Сброс кэша приложения:</span>
+        <v-btn
+          class="actions__btn"
+          density="default"
+          width="100"
+          color="warning"
+          variant="tonal"
+          @click="onHardUpdateApp"
+          >Очистить</v-btn
+        >
       </div>
     </main>
 
@@ -127,6 +136,31 @@ const onInputFocus = (e: FocusEvent) => {
   if ((e.target as HTMLInputElement).id === "input-salary-month") {
     isSalaryInputError.value = false;
   }
+};
+
+const onHardUpdateApp = async () => {
+  // 1. На всякий случай убиваем Service Worker (если он вдруг откуда-то взялся)
+  if ("serviceWorker" in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (const registration of registrations) {
+      await registration.unregister();
+    }
+  }
+
+  // 2. Очищаем хранилище кэшированных файлов браузера (НЕ localStorage!)
+  if ("caches" in window) {
+    const keys = await caches.keys();
+    for (const key of keys) {
+      await caches.delete(key);
+    }
+  }
+
+  // 3. САМОЕ ГЛАВНОЕ ДЛЯ ЯРЛЫКОВ CHROME:
+  // Перезагружаем страницу, добавляя к URL уникальный параметр.
+  // Это заставит Chrome игнорировать старый кэш и скачать свежий index.html с сервера.
+  const currentUrl = window.location.origin + window.location.pathname;
+  const timeStamp = new Date().getTime();
+  window.location.href = `${currentUrl}?v=${timeStamp}`;
 };
 
 const onSave = () => {
