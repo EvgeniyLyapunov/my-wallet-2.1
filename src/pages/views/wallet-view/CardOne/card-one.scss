@@ -1,112 +1,139 @@
-@import '@/style/mixins.scss';
+@import "@/style/mixins.scss";
 
 .card {
-	@include basePageWithBorder;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	&::after {
-		background: url('@/assets/images/bg/bg_card_one.jpg') center / cover no-repeat;
-		filter: blur(3px);
-	}
-	&__title-block {
-		padding: 20px 0 0 30px;
-	}
-	&__title {
-		font-size: 24px;
-		font-weight: 700;
-		color: #fff;
-	}
-	&__under-title {
-		position: relative;
-		z-index: 1;
-		padding: 0;
-		font-size: 12px;
-		color: #fff;
-	}
-	&__main {
-		padding: 30px 30px 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: flex-start;
-		&-sum {
-			width: 100%;
-			align-self: center;
-			color: #fff;
-			font-size: 60px;
-			font-weight: 700;
-			text-align: center;
-		}
-		&-info {
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			justify-content: flex-start;
-			align-items: flex-start;
-			&-block {
-				width: 100%;
-				display: flex;
-				flex-direction: column;
-				justify-content: flex-start;
-				align-items: flex-start;
-				margin-bottom: 15px;
-			}
-			&-label {
-				font-size: 14px;
-				font-weight: 700;
-				color: #ccc;
-			}
-			&-value {
-				font-size: 20px;
-				font-weight: 400;
-				color: #fff;
-				&_virtual {
-					color: #ffff00;
-				}
-			}
-		}
-		&-info-btns {
-			width: 100%;
-			display: flex;
-			justify-content: space-evenly;
-			align-items: center;
-			margin-bottom: 15vh;
-		}
-		&-balance-btn {
-			width: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-	}
-	&__footer {
-		padding: 50px 30px;
-		display: flex;
-		justify-content: space-evenly;
-		align-items: center;
-	}
+  @include basePageWithBorder;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  &::after {
+    background: url("@/assets/images/bg/bg_card_one.jpg") center / cover
+      no-repeat;
+    filter: blur(3px);
+  }
+
+  --block-width: calc(100% - 60px);
+
+  &__title-block {
+    width: var(--block-width);
+    height: 90px;
+    padding-top: 15px;
+  }
+
+  &__main {
+    width: var(--block-width);
+    height: calc(100% - 172px);
+  }
+
+  &__footer {
+    width: var(--block-width);
+    height: 82px;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  &__under-title {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    font-size: 12px;
+    color: #fff;
+  }
+  &__main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    &-sum {
+      width: 100%;
+      align-self: center;
+      color: #fff;
+      font-size: 60px;
+      font-weight: 700;
+      text-align: center;
+    }
+    &-info {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      &-block {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+      &-label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ccc;
+      }
+      &-value {
+        font-size: 20px;
+        font-weight: 400;
+        color: #fff;
+        &_virtual {
+          color: #ffff00;
+        }
+      }
+    }
+    &-info-btns {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 35px;
+    }
+    &-balance-btn {
+      width: 100%;
+      margin-bottom: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &__footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+  }
 }
 
 :deep(.v-btn.v-btn--density-compact) {
-	width: 35%;
-	font-size: 13px;
-	text-transform: none;
+  width: 35%;
+  font-size: 13px;
+  text-transform: none;
 }
 
 :deep(.v-btn.v-btn--density-compact.delete) {
-	color: red;
+  color: red;
 }
 
 :deep(.v-btn.v-btn--density-default) {
-	width: 90%;
-	height: 50px;
-	font-size: 18px;
+  width: 35%;
+  height: 30px;
+  font-size: 13px;
+  text-transform: none;
 }
 
 :deep(.v-btn.v-btn--density-comfortable) {
-	width: 45%;
-	height: 40px;
-	font-size: 14px;
-	text-transform: none;
+  width: 35%;
+  height: 40px;
+  font-size: 14px;
+  text-transform: none;
+}
+
+:deep(.card__main-balance-btn .v-btn.v-btn--density-comfortable) {
+  width: calc(70% + 35px);
+  height: 40px;
+  font-size: 14px;
+  text-transform: none;
 }

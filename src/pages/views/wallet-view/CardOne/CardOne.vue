@@ -59,13 +59,13 @@
           >Удалить</v-btn
         >
         <v-btn density="comfortable" @click="onEditCardModalOpen"
-          >Редактировать</v-btn
+          >Изменить</v-btn
         >
       </div>
 
       <div class="card__main-balance-btn">
         <v-btn
-          density="default"
+          density="comfortable"
           rounded="lg"
           elevation="16"
           prepend-icon="mdi-swap-horizontal-bold"
@@ -80,13 +80,13 @@
     </div>
 
     <div class="card__footer">
-      <v-btn density="comfortable" prepend-icon="mdi-home" @click="goHome">
+      <v-btn density="default" prepend-icon="mdi-home" @click="goHome">
         <template v-slot:prepend>
           <v-icon color="green"></v-icon>
         </template>
         Домой
       </v-btn>
-      <v-btn density="comfortable" prepend-icon="mdi-cancel" @click="doClose">
+      <v-btn density="default" prepend-icon="mdi-cancel" @click="doClose">
         <template v-slot:prepend>
           <v-icon color="yellow"></v-icon>
         </template>
