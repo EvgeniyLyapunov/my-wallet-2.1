@@ -32,23 +32,10 @@
           @touchstart="
             ($event: MouseEvent | TouchEvent) => startLongPress($event, i, obj)
           "
-          @mousemove="
-            ($event: MouseEvent | TouchEvent) => handleMove($event, i)
-          "
-          @touchmove="
-            ($event: MouseEvent | TouchEvent) => handleMove($event, i)
-          "
-          @touchend="
-            ($event: MouseEvent | TouchEvent) => endLongPress($event, obj)
-          "
-          @mouseup="
-            ($event: MouseEvent | TouchEvent) => endLongPress($event, obj)
-          "
         />
       </div>
       <div :class="cardNameСlassObject">{{ showCardName }}</div>
     </div>
-    <v-spacer></v-spacer>
     <div class="cards__btns">
       <v-btn
         density="default"
@@ -148,6 +135,17 @@ const startLongPress = (
 
   draggedCardName.value = cardName;
   targetElement.value = e.currentTarget as HTMLElement; // Сохраняем текущий элемент
+
+  // ВЕШАЕМ ГЛОБАЛЬНЫЕ СЛУШАТЕЛИ К ОКНУ БРАУЗЕРА
+  window.addEventListener("mousemove", handleMove as EventListener, {
+    passive: false,
+  });
+  window.addEventListener("touchmove", handleMove as EventListener, {
+    passive: false,
+  });
+  window.addEventListener("mouseup", endLongPress as EventListener);
+  window.addEventListener("touchend", endLongPress as EventListener);
+
   longPressTimeout = setTimeout(() => {
     if (e instanceof TouchEvent) {
       if (targetElement.value) {
@@ -212,50 +210,56 @@ const startLongPress = (
   }, 700); // Время задержки для долгого тапа (в миллисекундах)
 };
 
-const handleMove = (e: MouseEvent | TouchEvent, index: number) => {
+const handleMove = (e: MouseEvent | TouchEvent) => {
+  if (!isLongPress.value) return;
   e.preventDefault();
 
   let shadowPlaceIndex: number;
   const cardsPlacesList: HTMLElement[] =
     cardsArea.value.querySelectorAll(".cards__area-place");
 
-  if (isLongPress.value && draggedElementIndex.value === index) {
-    if (e instanceof TouchEvent) {
-      if (targetElement.value) {
-        // координаты тапа в текущей итерации события move относительно "родительского элемента для всех карт"
-        const startAbsX = e.touches[0].clientX - parentRect.value!.left;
-        const startAbsY = e.touches[0].clientY - parentRect.value!.top;
+  if (e instanceof TouchEvent) {
+    if (targetElement.value) {
+      // координаты тапа в текущей итерации события move относительно "родительского элемента для всех карт"
+      const startAbsX = e.touches[0].clientX - parentRect.value!.left;
+      const startAbsY = e.touches[0].clientY - parentRect.value!.top;
 
-        // случай выхода move за границы родительского элемента
-        if (
-          e.touches[0].clientX < parentRect.value!.left ||
-          e.touches[0].clientX > parentRect.value!.right ||
-          e.touches[0].clientY < parentRect.value!.top ||
-          e.touches[0].clientY > parentRect.value!.bottom
-        ) {
-          return;
-        }
+      // случай выхода move за границы родительского элемента
+      if (
+        e.touches[0].clientX < parentRect.value!.left ||
+        e.touches[0].clientX > parentRect.value!.right ||
+        e.touches[0].clientY < parentRect.value!.top ||
+        e.touches[0].clientY > parentRect.value!.bottom
+      ) {
+        return;
+      }
 
-        // текущая позиция перемещаемой	карты относительно родителя
-        const absPosElemX = startAbsX - elemTouchX.value!;
-        const absPosElemY = startAbsY - elemTouchY.value!;
+      // текущая позиция перемещаемой	карты относительно родителя
+      const absPosElemX = startAbsX - elemTouchX.value!;
+      const absPosElemY = startAbsY - elemTouchY.value!;
 
-        targetElement.value.style.top = `${absPosElemY}px`;
-        targetElement.value.style.left = `${absPosElemX}px`;
+      targetElement.value.style.top = `${absPosElemY}px`;
+      targetElement.value.style.left = `${absPosElemX}px`;
 
-        // отображение тени карты - то место куда она может встать если прямо сейчас закончить перемещение
-        // расчитывается по координатам текущего тапа
-        shadowPlaceIndex = getPositionShadow(
-          e,
-          startAbsX,
-          startAbsY,
-          cardsPlacesList,
-        );
+      // отображение тени карты - то место куда она может встать если прямо сейчас закончить перемещение
+      // расчитывается по координатам текущего тапа
+      shadowPlaceIndex = getPositionShadow(
+        e,
+        startAbsX,
+        startAbsY,
+        cardsPlacesList,
+      );
 
+      const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
+        shadowPlaceIndex,
+        draggedCardName.value,
+      );
+      if (shadowPlaceIndex > -1) {
         const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
           shadowPlaceIndex,
           draggedCardName.value,
         );
+
         if (checkedShadowPlaceIndex > -1) {
           cardsPlacesList.forEach((item) => {
             if (+item.dataset.place! === checkedShadowPlaceIndex) {
@@ -266,38 +270,45 @@ const handleMove = (e: MouseEvent | TouchEvent, index: number) => {
           });
         }
       }
-      // if e instanceof MouseEvent
-    } else {
-      if (targetElement.value) {
-        const startAbsX = e.clientX - parentRect.value!.left;
-        const startAbsY = e.clientY - parentRect.value!.top;
+    }
+    // if e instanceof MouseEvent
+  } else {
+    if (targetElement.value) {
+      const startAbsX = e.clientX - parentRect.value!.left;
+      const startAbsY = e.clientY - parentRect.value!.top;
 
-        if (
-          e.clientX < parentRect.value!.left ||
-          e.clientX > parentRect.value!.right ||
-          e.clientY < parentRect.value!.top ||
-          e.clientY > parentRect.value!.bottom
-        ) {
-          return;
-        }
+      if (
+        e.clientX < parentRect.value!.left ||
+        e.clientX > parentRect.value!.right ||
+        e.clientY < parentRect.value!.top ||
+        e.clientY > parentRect.value!.bottom
+      ) {
+        return;
+      }
 
-        const absPosElemX = startAbsX - elemTouchX.value!;
-        const absPosElemY = startAbsY - elemTouchY.value!;
+      const absPosElemX = startAbsX - elemTouchX.value!;
+      const absPosElemY = startAbsY - elemTouchY.value!;
 
-        targetElement.value.style.top = `${absPosElemY}px`;
-        targetElement.value.style.left = `${absPosElemX}px`;
+      targetElement.value.style.top = `${absPosElemY}px`;
+      targetElement.value.style.left = `${absPosElemX}px`;
 
-        shadowPlaceIndex = getPositionShadow(
-          e,
-          startAbsX,
-          startAbsY,
-          cardsPlacesList,
-        );
+      shadowPlaceIndex = getPositionShadow(
+        e,
+        startAbsX,
+        startAbsY,
+        cardsPlacesList,
+      );
 
+      const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
+        shadowPlaceIndex,
+        draggedCardName.value,
+      );
+      if (shadowPlaceIndex > -1) {
         const checkedShadowPlaceIndex = cardsViewStore.checkPlaceForCardShadow(
           shadowPlaceIndex,
           draggedCardName.value,
         );
+
         if (checkedShadowPlaceIndex > -1) {
           cardsPlacesList.forEach((item) => {
             if (+item.dataset.place! === checkedShadowPlaceIndex) {
@@ -312,17 +323,24 @@ const handleMove = (e: MouseEvent | TouchEvent, index: number) => {
   }
 };
 
-const endLongPress = (e: MouseEvent | TouchEvent, cardName: string) => {
-  e.preventDefault();
+const endLongPress = (e: MouseEvent | TouchEvent) => {
+  // ПРИ ОТПУСКАНИИ УБИРАЕМ ГЛОБАЛЬНЫЕ СЛУШАТЕЛИ С ОКНА
+  window.removeEventListener("mousemove", handleMove as EventListener);
+  window.removeEventListener("touchmove", handleMove as EventListener);
+  window.removeEventListener("mouseup", endLongPress as EventListener);
+  window.removeEventListener("touchend", endLongPress as EventListener);
 
+  if (!draggedCardName.value) return;
+
+  e.preventDefault();
   showCardName.value = undefined;
 
   // случай когда нажатие переходит в клик а не в удержание
   if (isLongPress.value === false) {
     clearTimeout(longPressTimeout!);
     longPressTimeout = null;
-    isLongPress.value = false;
-    openCard(e, cardName);
+    openCard(e, draggedCardName.value);
+    draggedCardName.value = "";
     return;
   }
 
@@ -425,7 +443,7 @@ const endLongPress = (e: MouseEvent | TouchEvent, cardName: string) => {
     cardsViewStore.moveCardOnView(card!);
   }
 
-  clearTimeout(longPressTimeout.value);
+  clearTimeout(longPressTimeout);
   longPressTimeout = null;
   isLongPress.value = false;
   targetElement.value!.classList.remove("cards__obj-dropped");
@@ -444,7 +462,7 @@ function getPositionShadow(
 ): number {
   let endX = X;
   let endY = Y;
-  let shadowPlaceIndex = 0;
+  let shadowPlaceIndex = -1;
 
   if (e instanceof TouchEvent) {
     if (

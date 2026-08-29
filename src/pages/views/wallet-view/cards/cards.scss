@@ -1,86 +1,94 @@
-@import '@/style/mixins.scss';
+@import "@/style/mixins.scss";
 
 .cards {
-	@include basePageWithBorder;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	&::after {
-		background: url('@/assets/images/bg/bg_wallet.jpg') center / cover no-repeat;
-		filter: blur(3px);
-	}
-	&__title-block {
-		padding: 20px 0 0 30px;
-	}
-	&__title {
-		font-size: 24px;
-		font-weight: 700;
-		color: #fff;
-	}
-	&__under-title {
-		position: relative;
-		z-index: 1;
-		padding: 0;
-		font-size: 12px;
-		color: #fff;
-	}
-	&__area {
-		position: relative;
-		z-index: 1;
-		width: 80%;
-		align-self: center;
-		display: flex;
-		flex-wrap: wrap;
-		&-place {
-			width: 33.33%;
-			height: 12vh;
-			// outline: 2px solid rgb(255, 213, 0);
-		}
-		&-card-name {
-			display: none;
-			position: absolute;
-			z-index: 2;
-			top: -40px;
-			left: 0;
-			width: 100%;
-			height: 30px;
-			font-size: 16px;
-			font-weight: 700;
-			text-align: center;
-			align-content: center;
-			background: #fff;
-			border-radius: 5px;
-			&_show {
-				display: block;
-			}
-		}
-	}
-	&__btns {
-		position: absolute;
-		bottom: 5vh;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 1;
-		width: 80%;
-		align-self: center;
-		display: flex;
-		justify-content: space-around;
-	}
-	&__obj-dropped {
-		box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-	}
-	&__shadow-style {
-		outline-offset: -6px;
-		outline: 2px solid rgb(0, 255, 13);
-	}
-}
+  @include basePageWithBorder;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  &::after {
+    background: url("@/assets/images/bg/bg_wallet.jpg") center / cover no-repeat;
+    filter: blur(3px);
+  }
 
-:deep(.v-spacer) {
-	height: 6vh;
-	flex-grow: 0;
+  --block-width: calc(100% - 60px);
+
+  &__title-block {
+    width: var(--block-width);
+    height: 90px;
+    padding-top: 15px;
+  }
+
+  &__area {
+    width: var(--block-width);
+    height: calc(100% - 172px);
+  }
+
+  &__btns {
+    width: var(--block-width);
+    height: 82px;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  &__under-title {
+    position: relative;
+    z-index: 1;
+    padding: 0;
+    font-size: 12px;
+    color: #fff;
+  }
+  &__area {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    display: flex;
+    flex-wrap: wrap;
+    &-place {
+      width: 33.33%;
+      height: calc(100% / 6);
+    }
+    &-card-name {
+      display: none;
+      position: absolute;
+      z-index: 2;
+      top: -10px;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      align-content: center;
+      background: #fff;
+      border-radius: 5px;
+      &_show {
+        display: block;
+      }
+    }
+  }
+  &__btns {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+  }
+  &__obj-dropped {
+    box-shadow:
+      rgba(0, 0, 0, 0.3) 0px 19px 38px,
+      rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  }
+  &__shadow-style {
+    outline-offset: -6px;
+    outline: 2px solid rgb(0, 255, 13);
+  }
 }
 
 :deep(.v-btn.v-btn--density-default) {
-	font-size: 13px;
-	text-transform: none;
+  font-size: 13px;
+  text-transform: none;
 }
