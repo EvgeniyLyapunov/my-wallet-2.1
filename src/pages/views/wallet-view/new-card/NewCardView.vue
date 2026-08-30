@@ -18,43 +18,48 @@
         <span class="breadcrumbs__end">Новая карта</span>
       </div>
     </div>
-    <v-form class="new-card__form form" ref="form">
-      <v-text-field
-        v-model="name"
-        :rules="nameRules"
-        style="color: #fff"
-        class="pb-4"
-        variant="outlined"
-        label="Имя новой карты"
-      ></v-text-field>
-      <v-select
-        v-model="selectType"
-        :items="selectTypeItems"
-        :rules="selectTypeRules"
-        style="color: #fff"
-        class="pb-4"
-        variant="outlined"
-        label="Тип денег карты"
-      ></v-select>
-      <v-select
-        v-model="selectBase"
-        :items="selectBaseItems"
-        :rules="selectBaseRules"
-        style="color: #fff"
-        class="pb-4"
-        variant="outlined"
-        label="Привязать к базовой карте"
-      ></v-select>
-      <v-text-field
-        type="number"
-        v-model="startAmount"
-        :rules="startAmountRules"
-        style="color: #fff"
-        class="pb-4"
-        variant="outlined"
-        label="Начальная сумма"
-      ></v-text-field>
-    </v-form>
+    <div class="new-card__form" ref="form">
+      <div class="new-card__form-field">
+        <v-text-field
+          v-model="name"
+          class="new-card__form-input"
+          :rules="nameRules"
+          style="color: #fff"
+          variant="outlined"
+          label="Имя новой карты"
+        ></v-text-field>
+      </div>
+      <div class="new-card__form-field">
+        <v-select
+          v-model="selectType"
+          :items="selectTypeItems"
+          :rules="selectTypeRules"
+          style="color: #fff"
+          variant="outlined"
+          label="Тип денег карты"
+        ></v-select>
+      </div>
+      <div class="new-card__form-field">
+        <v-select
+          v-model="selectBase"
+          :items="selectBaseItems"
+          :rules="selectBaseRules"
+          style="color: #fff"
+          variant="outlined"
+          label="Привязать к базовой карте"
+        ></v-select>
+      </div>
+      <div class="new-card__form-field">
+        <v-text-field
+          type="number"
+          v-model="startAmount"
+          :rules="startAmountRules"
+          style="color: #fff"
+          variant="outlined"
+          label="Начальная сумма"
+        ></v-text-field>
+      </div>
+    </div>
     <div class="new-card__btn-block">
       <v-btn
         class="new-card__base-btn new-card__next-btn"

@@ -1,42 +1,50 @@
-@import '@/style/mixins.scss';
+@import "@/style/mixins.scss";
 
 .wallet {
-	@include basePageWithBorder;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	&::after {
-		background: url('@/assets/images/bg/bg_wallet.jpg') center / cover no-repeat;
-		filter: blur(3px);
-	}
-	&__title-block {
-		padding: 20px 0 0 30px;
-	}
-	&__title {
-		font-size: 24px;
-		font-weight: 700;
-		color: #fff;
-	}
-	&__menu {
-		position: absolute;
-		z-index: 10;
-		top: 50%;
-		transform: translateY(-50%);
-		display: flex;
-		align-self: center;
-		flex-direction: column;
-		align-items: flex-start;
-		filter: unset;
-		&-link {
-			margin-bottom: 40%;
-			&:last-child {
-				margin-bottom: 0;
-			}
-			&-item {
-				font-size: 30px;
-				font-weight: 700;
-				color: #fff;
-			}
-		}
-	}
+  @include basePageWithBorder;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  &::after {
+    background: url("@/assets/images/bg/bg_wallet.jpg") center / cover no-repeat;
+    filter: blur(3px);
+  }
+
+  --block-width: calc(100% - 60px);
+
+  &__title-block {
+    width: var(--block-width);
+    height: 90px;
+    padding-top: 15px;
+  }
+
+  &__menu {
+    width: var(--block-width);
+    height: calc(100% - 90px);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10%;
+    filter: unset;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  &__menu {
+    &-link {
+      width: 100%;
+      &-item {
+        padding-left: 25%;
+        font-size: 30px;
+        font-weight: 700;
+        color: #fff;
+      }
+    }
+  }
 }
