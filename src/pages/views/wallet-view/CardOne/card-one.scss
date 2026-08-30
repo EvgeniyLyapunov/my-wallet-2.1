@@ -23,12 +23,12 @@
 
   &__main {
     width: var(--block-width);
-    height: calc(100% - 172px);
+    height: calc(100% - 190px);
   }
 
   &__footer {
     width: var(--block-width);
-    height: 82px;
+    height: 100px;
   }
 
   &__title {
@@ -43,21 +43,27 @@
     font-size: 12px;
     color: #fff;
   }
+
   &__main {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
+    gap: 20px;
     &-sum {
       width: 100%;
-      align-self: center;
+      height: 120px;
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #fff;
       font-size: 60px;
       font-weight: 700;
-      text-align: center;
     }
     &-info {
       width: 100%;
+      margin-bottom: 20px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -86,6 +92,7 @@
     }
     &-info-btns {
       width: 100%;
+      margin-bottom: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -93,7 +100,6 @@
     }
     &-balance-btn {
       width: 100%;
-      margin-bottom: 35px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -117,23 +123,23 @@
   color: red;
 }
 
-:deep(.v-btn.v-btn--density-default) {
-  width: 35%;
-  height: 30px;
-  font-size: 13px;
-  text-transform: none;
-}
-
 :deep(.v-btn.v-btn--density-comfortable) {
   width: 35%;
-  height: 40px;
+  height: 36px;
   font-size: 14px;
   text-transform: none;
 }
 
 :deep(.card__main-balance-btn .v-btn.v-btn--density-comfortable) {
   width: calc(70% + 35px);
-  height: 40px;
+  height: 36px;
+  font-size: 14px;
+  text-transform: none;
+}
+
+:deep(.v-btn.v-btn--density-default) {
+  width: 35%;
+  height: 36px;
   font-size: 14px;
   text-transform: none;
 }

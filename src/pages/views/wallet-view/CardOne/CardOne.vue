@@ -66,8 +66,6 @@
       <div class="card__main-balance-btn">
         <v-btn
           density="comfortable"
-          rounded="lg"
-          elevation="16"
           prepend-icon="mdi-swap-horizontal-bold"
           @click="onShow_ChangeBalanceModal"
         >

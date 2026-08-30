@@ -13,6 +13,7 @@
         >
         <span class="breadcrumbs__end">Карты</span>
       </div>
+      <div :class="cardNameСlassObject">{{ showCardName }}</div>
     </div>
     <div :key="refreshKey" ref="cardsArea" class="cards__area">
       <div
@@ -34,23 +35,10 @@
           "
         />
       </div>
-      <div :class="cardNameСlassObject">{{ showCardName }}</div>
     </div>
     <div class="cards__btns">
-      <v-btn
-        density="default"
-        width="120"
-        variant="elevated"
-        @click="handleGoHome"
-      >
-        Домой
-      </v-btn>
-      <v-btn
-        density="default"
-        width="120"
-        variant="elevated"
-        @click="handleToNewCardPage"
-      >
+      <v-btn density="default" width="120" @click="handleGoHome"> Домой </v-btn>
+      <v-btn density="default" width="120" @click="handleToNewCardPage">
         Новая карта
       </v-btn>
     </div>
@@ -75,8 +63,8 @@ const parentRect = ref<DOMRect>();
 
 const showCardName = ref<string | undefined>();
 const cardNameСlassObject = computed(() => ({
-  "cards__area-card-name": true, // Этот класс всегда применяется
-  "cards__area-card-name_show": showCardName.value, // Этот класс применяется в зависимости от isActive
+  "cards__title-block-card-name": true, // Этот класс всегда применяется
+  "cards__title-block-card-name_show": showCardName.value, // Этот класс применяется в зависимости от isActive
 }));
 
 // const longPressTimeout = ref<ReturnType<typeof setTimeout> | null>(null);
