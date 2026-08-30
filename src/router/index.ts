@@ -73,4 +73,15 @@ const router = createRouter({
   ],
 });
 
+router.onError((error, to) => {
+  if (
+    error.message.includes("Failed to fetch dynamically imported module") ||
+    error.message.includes("Importing a module script failed") ||
+    error.name === "ChunkLoadError"
+  ) {
+    // Если произошла ошибка загрузки модуля - делаем жесткую перезагрузку на нужный URL
+    window.location.href = to.fullPath;
+  }
+});
+
 export default router;
