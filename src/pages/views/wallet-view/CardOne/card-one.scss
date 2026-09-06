@@ -119,8 +119,16 @@
   text-transform: none;
 }
 
-:deep(.v-btn.v-btn--density-compact.delete) {
+:deep(.v-btn.v-btn--density-comfortable.delete) {
   color: red;
+}
+
+:deep(.v-btn.v-btn--density-comfortable.edit) {
+  color: #ffd500;
+}
+
+:deep(.v-btn.v-btn--density-comfortable.info) {
+  color: green;
 }
 
 :deep(.v-btn.v-btn--density-comfortable) {

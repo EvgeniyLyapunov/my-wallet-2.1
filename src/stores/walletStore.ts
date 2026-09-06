@@ -190,11 +190,11 @@ export const useWalletStore = defineStore(
       addCard_ToList,
       removeCard_FromList,
       cardListCount,
+      getCard_ById,
       getCard_ByName,
       getCardId_ByName,
       getCardName_ById,
       getSum_AllVirtualCardsOfBaseCard,
-      getCard_ById,
       getVirtualCards_ByBaseCardId,
       deleteCard,
     };

@@ -55,12 +55,36 @@
       </div>
 
       <div class="card__main-info-btns">
-        <v-btn density="comfortable" class="delete" @click="onConfirmDelete"
-          >Удалить</v-btn
+        <v-btn
+          density="comfortable"
+          width="70"
+          class="delete"
+          @click="onConfirmDelete"
         >
-        <v-btn density="comfortable" @click="onEditCardModalOpen"
-          >Изменить</v-btn
+          <template #default>
+            <v-icon icon="mdi-trash-can" size="26px"></v-icon>
+          </template>
+        </v-btn>
+        <v-btn
+          density="comfortable"
+          width="70"
+          class="edit"
+          @click="onEditCardModalOpen"
         >
+          <template #default>
+            <v-icon icon="mdi-pencil" size="26px"></v-icon>
+          </template>
+        </v-btn>
+        <v-btn
+          density="comfortable"
+          width="70"
+          class="info"
+          @click="onFreeVirtualSpaceInfoOpen"
+        >
+          <template #default>
+            <v-icon icon="mdi-information-variant" size="26px"></v-icon>
+          </template>
+        </v-btn>
       </div>
 
       <div class="card__main-balance-btn">
@@ -210,6 +234,30 @@ const deleteCard = () => {
   cleanOperationsDeletedCard(id.value);
   walletStore.deleteCard(id.value);
   router.push("/cards-view");
+};
+
+/**
+ * Показ свободной суммы для виртуальных карт
+ */
+const onFreeVirtualSpaceInfoOpen = () => {
+  let isVirtual = false;
+  let freeSpace = 0;
+  if (card.value!.isVirtual) {
+    isVirtual = true;
+    const baseCard = walletStore.getCard_ById(card.value!.baseCardId!);
+    const sumOfVirts =
+      walletStore.getSum_AllVirtualCardsOfBaseCard(baseCard!) ?? 0;
+    freeSpace = baseCard!.currentSum - sumOfVirts;
+  } else {
+    const sumOfVirts =
+      walletStore.getSum_AllVirtualCardsOfBaseCard(card.value!) ?? 0;
+    freeSpace = card.value!.currentSum - sumOfVirts;
+  }
+  messageBoxTitle.value = "Свободная сумма";
+  messageBoxMessage.value = isVirtual
+    ? `Свободная сумма базовой карты - ${freeSpace}`
+    : `Свободная сумма для виртуальных карт - ${freeSpace}`;
+  isVisibleMessageBox.value = true;
 };
 
 const onShow_ChangeBalanceModal = () => {
