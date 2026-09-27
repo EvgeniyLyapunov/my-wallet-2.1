@@ -18,7 +18,7 @@
         <span class="breadcrumbs__end">Новая карта</span>
       </div>
     </div>
-    <div class="new-card__form" ref="form">
+    <v-form class="new-card__form" ref="form" @submit.prevent>
       <div class="new-card__form-field">
         <v-text-field
           v-model="name"
@@ -59,7 +59,7 @@
           label="Начальная сумма"
         ></v-text-field>
       </div>
-    </div>
+    </v-form>
     <div class="new-card__btn-block">
       <v-btn
         class="new-card__base-btn new-card__next-btn"
@@ -107,6 +107,7 @@ import type { TCardMoney } from "@/models/types/cardTypes";
 import bankIcon from "@/assets/images/icons/bank-card.png";
 import cashIcon from "@/assets/images/icons/cash.png";
 import { useRouter } from "vue-router";
+import type { VForm } from "vuetify/components";
 
 const router = useRouter();
 const walletStore = useWalletStore();
@@ -124,7 +125,7 @@ const newCard = ref<ICard | null>({
   changesLastDate: dayjs.tz().format("DD-MM-YYYY HH:mm"),
 });
 
-const form = ref();
+const form = ref<VForm | null>(null);
 const name = ref<string>("");
 const nameRules = [
   (value: string) => {
@@ -202,12 +203,17 @@ const handleCancel = () => {
 };
 
 const handleReset = () => {
-  form.value.reset();
+  if (form.value) {
+    form.value.reset();
+  }
 };
 
 async function validate() {
-  const { valid } = await form.value.validate();
-  return valid;
+  if (form.value) {
+    const { valid } = await form.value.validate();
+    return valid;
+  }
+  return false;
 }
 
 const submit = async () => {
